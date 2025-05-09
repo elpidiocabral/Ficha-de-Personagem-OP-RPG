@@ -80,6 +80,8 @@
       margin: 0;
       font-size: 2rem;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      display: inline-block;
+      max-width: calc(100% - 140px); /* deixa espaço pro botão */
     }
 
     /* -- SISTEMA DE ABAS -- */
@@ -370,6 +372,65 @@
     /* Ajuste para harmonizar com a aparência dos botões */
     select:hover {
       border-color: #2980b9; /* Cor ligeiramente mais escura ao passar o mouse */
+    }
+
+    /* novas reservas */
+    
+    .reserva-titulo {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    body.dark-mode .reserva-titulo {
+      color: var(--primary-light);
+    }
+
+    .reserva-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .reserva-linha {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    .reserva-input-container, 
+    .reserva-dados-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reserva-input-container {
+      flex: 1;
+    }
+
+    .reserva-dados-container {
+      flex: 2;
+    }
+
+    .reserva-input-container label,
+    .reserva-dados-container label {
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-light);
+    }
+
+    .dados-texto {
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      background: var(--primary-light);
+      color: white;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      min-width: 80px;
     }
 
     /* -- STATUS BARS -- */
@@ -710,13 +771,143 @@
         -moz-appearance: textfield;
     }
 
+    /* DARKMODE */
+    body.dark-mode {
+      --background: #121212;
+      --card: #1e1e1e;
+      --text: #e0e0e0;
+      --text-light: #aaaaaa;
+      --border: #333;
+      --border-dark: #555;
+      --shadow: rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .form-control,
+    body.dark-mode select {
+      background-color: #222;
+      color: #f0f0f0;
+      border-color: #444;
+    }
+
+    body.dark-mode .card-header h2,
+    body.dark-mode .attribute-name,
+    body.dark-mode label {
+      color: var(--text);
+    }
+
+    body.dark-mode .tab-button {
+      color: white;
+    }
+
+    body.dark-mode .tab-button.active {
+      background: var(--primary);
+    }
+
+    /* Modo escuro: cartões, inputs, selects, atributos */
+    body.dark-mode .card {
+      background-color: #1e1e1e;
+      border-color: #444;
+    }
+
+    body.dark-mode .form-control,
+    body.dark-mode select {
+      background-color: #2c2c2c;
+      color: #e0e0e0;
+      border: 1px solid #555;
+    }
+
+    body.dark-mode .form-control::placeholder,
+    body.dark-mode textarea::placeholder {
+      color: #888;
+    }
+
+    body.dark-mode .attribute-box {
+      background: linear-gradient(to bottom, #2b2b2b, #1c1c1c);
+      border-color: #555;
+    }
+
+    body.dark-mode .attribute-name,
+    body.dark-mode .card-header h2,
+    body.dark-mode label,
+    body.dark-mode small,
+    body.dark-mode .status-name,
+    body.dark-mode .list-item-title,
+    body.dark-mode .list-item-subtitle,
+    body.dark-mode .ataque-nome,
+    body.dark-mode .ataque-bonus,
+    body.dark-mode .ataque-dano {
+      color: #f0f0f0;
+    }
+
+    body.dark-mode .list-item {
+      background: #2a2a2a;
+      border-color: #555;
+    }
+
+    body.dark-mode .tab-content {
+      background: #1b1b1b;
+    }
+
+    body.dark-mode .tab-button {
+      background: #333;
+      color: #eee;
+    }
+
+    body.dark-mode .tab-button.active {
+      background: var(--primary-dark);
+      color: white;
+    }
+
+    body.dark-mode .ataque-item {
+      background-color: #2a2a2a;
+      border-color: #444;
+    }
+
+    body.dark-mode .ataque-nome,
+    body.dark-mode .ataque-bonus,
+    body.dark-mode .ataque-dano {
+      color: #f0f0f0;
+    }
+
+    /* Modo escuro: botões */
+    .theme-toggle-pill {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.4rem 1rem;
+      border: none;
+      background-color: #212121;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 999px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.3s ease;
+    }
+
+    .theme-toggle-pill:hover {
+      background-color: #333;
+    }
+
+    body.dark-mode .theme-toggle-pill {
+      background-color: #eeeeee;
+      color: #222;
+    }
+
+    body.dark-mode .theme-toggle-pill:hover {
+      background-color: #dcdcdc;
+    }
+
+
   </style>
 </head>
-<body>
+<body> 
   <div class="container">
     <div class="header">
-      <h1>Ficha One Piece RPG - A Vontade Dos Mares</h1>
-    </div>
+      <h1 style="margin-right: 40px;">Ficha One Piece RPG - A Vontade Dos Mares</h1>
+      <button id="toggleThemeBtn" class="theme-toggle-pill" onclick="alternarTema()">Modo Escuro</button>
+    </div>    
   <!-- comentário -->
   <!-- Sistema de Abas -->
   <div class="tabs">
@@ -946,7 +1137,7 @@
         <!-- Ferimentos e Lesões -->
         <div class="card">
           <div class="card-header">
-            <h2>Ferimentos/Lesões e Descanso</h2>
+            <h2>Ferimentos e Lesões</h2>
           </div>
         
           <div class="grid">
@@ -965,41 +1156,53 @@
           </div>
         
           <div id="listaFerimentosLesoes" class="mt-2"></div>
-
-          <hr/>
-          <br/>
-
+ 
           <!-- Adição das Barras de Reserva de Vida e Vigor -->
-          <div class="status-bar">
-            <div class="status-header">
-              <span class="status-name" style="font-size: 16px;">Reserva de Vida</span>
-              <span class="status-value">
-                  Atual <input type="number" id="reservaVidaAtual" value="0" style="width: 60px;"> 
-                  <b>/</b>
-                  Max <input type="number" id="reservaVidaMax" value="0" style="width: 60px;" readonly>
-              </span>
+            <div class="card-header">
+              <h2>Reservas de Vida e Vigor</h2>
             </div>
-            <div class="progress-container">
-                <div id="reservaVidaBar" class="progress-bar" style="width: 100%; background: #1e88e5;"></div>
+            <div class="grid">
+              <div class="col-6">
+                <div class="reserva-container">
+                  <div class="reserva-header">
+                    <span class="reserva-titulo">Reserva de Vida</span>
+                    <div class="reserva-info">
+                      <span class="reserva-label">Baseado em: Resistência</span>
+                    </div>
+                  </div>
+                  <div class="reserva-linha">
+                    <div class="reserva-input-container">
+                      <label for="reservaVidaQtd">Quantidade</label>
+                      <input type="number" id="reservaVidaQtd" class="form-control" min="0" value="1">
+                    </div>
+                    <div class="reserva-dados-container">
+                      <label>Dados</label>
+                      <div id="reservaVidaDados" class="dados-texto">1d6</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="reserva-container">
+                  <div class="reserva-header">
+                    <span class="reserva-titulo">Reserva de Vigor</span>
+                    <div class="reserva-info">
+                      <span class="reserva-label">Baseado em: Persistência</span>
+                    </div>
+                  </div>
+                  <div class="reserva-linha">
+                    <div class="reserva-input-container">
+                      <label for="reservaVigorQtd">Quantidade</label>
+                      <input type="number" id="reservaVigorQtd" class="form-control" min="0" value="1">
+                    </div>
+                    <div class="reserva-dados-container">
+                      <label>Dados</label>
+                      <div id="reservaVigorDados" class="dados-texto">1d6</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div class="status-bar">
-            <div class="status-header">
-              <span class="status-name" style="font-size: 16px;">Reserva de Vigor</span>
-              <span class="status-value">
-                  Atual <input type="number" id="reservaVigorAtual" value="0" style="width: 60px;"> 
-                  <b>/</b>
-                  Max <input type="number" id="reservaVigorMax" value="0" style="width: 60px;" readonly>
-              </span>
-            </div>
-            <div class="progress-container">
-                <div id="reservaVigorBar" class="progress-bar" style="width: 100%; background: #ff9800;"></div>
-            </div>
-          </div>
-          <div class="btn-group mt-1">
-            <button type="button" class="btn btn-secondary" onclick="resetarReservas()">Recuperar Tudo</button>
-          </div>
 
         </div>
         
@@ -1334,7 +1537,7 @@
         <!-- Competências - Aptidão -->
         <div class="card">
           <div class="card-header">
-            <h2>Competências / Aptidões</h2>
+            <h2>Competências / Aptidões / Trunfos</h2>
           </div>
 
           <div class="grid">
@@ -1364,18 +1567,19 @@
             <div class="col-2">
               <div class="form-group">
                 <label for="compTipo">Tipo</label>
-                <select id="compTipo" class="form-control">
+                <select id="compTipo" class="form-control" onchange="toggleNivelInput()">
                   <option value="competencia">Competência</option>
                   <option value="aptidao">Aptidão</option>
-                </select>
+                  <option value="trunfo">Trunfo</option>
+                </select>                
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-2" id="nivelWrapper">
               <div class="form-group">
                 <label for="compNivel">Nível</label>
                 <input type="number" id="compNivel" class="form-control" value="0">
               </div>
-            </div>
+            </div>            
             <div class="col-12">
               <div class="form-group">
                 <label for="compObs">Observações</label>
@@ -1391,6 +1595,8 @@
             <div id="listaCompetencias" class="grid-10"></div>
             <h3>Aptidões</h3>
             <div id="listaAptidoes" class="grid-10"></div>
+            <h3>Trunfos</h3>
+            <div id="listaTrunfos" class="grid-10"></div>
           </div>
         </div>
         
@@ -1430,14 +1636,24 @@
           </div>
           
           <div class="form-group">
+            <label for="habCustoCompra">Custo de Compra (PH)</label>
+            <input type="number" id="habCustoCompra" class="form-control" placeholder="Ex: 10 PH">
+          </div>
+          
+          <div class="form-group">
             <label for="habCusto">Custo de Uso</label>
-            <input type="text" id="habCusto" class="form-control" placeholder="2d6 de Vigor | Ação e Complemento">
+            <input type="text" id="habCusto" class="form-control" placeholder="Ex: 2d6 de Vigor, Ação e Complemento">
+          </div>
+          
+          <div class="form-group">
+            <label for="habAlcance">Alcance e Duração</label>
+            <input type="text" id="habAlcance" class="form-control" placeholder="Ex: 10m, Instantâneo">
           </div>
           
           <div class="form-group">
             <label for="habDesc">Descrição e Efeito(s)</label>
             <textarea id="habDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
-          </div>
+          </div>          
           
           <button type="button" id="btnHabilidade" class="btn btn-primary" onclick="adicionarOuSalvarEdicaoHabilidade()">Adicionar Habilidade</button>
           
@@ -1472,14 +1688,24 @@
           </div>
           
           <div class="form-group">
+            <label for="frutaCustoCompra">Custo de Compra (PH)</label>
+            <input type="number" id="frutaCustoCompra" class="form-control" placeholder="Ex: 0">
+          </div>
+          
+          <div class="form-group">
             <label for="frutaCusto">Custo de Uso</label>
-            <input type="text" id="frutaCusto" class="form-control" placeholder="2d6 de Vigor | Ação e Complemento">
+            <input type="text" id="frutaCusto" class="form-control" placeholder="2d6 de Vigor, Ação e Complemento">
+          </div>
+          
+          <div class="form-group">
+            <label for="frutaAlcance">Alcance e Duração</label>
+            <input type="text" id="frutaAlcance" class="form-control" placeholder="Ex: 6m, 1 turno">
           </div>
           
           <div class="form-group">
             <label for="frutaDesc">Descrição/Efeito</label>
             <textarea id="frutaDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
-          </div>
+          </div>          
           
           <button type="button" id="btnFruta" class="btn btn-secondary" onclick="adicionarOuSalvarEdicaoFruta()">Adicionar Habilidade da Fruta</button>
           
@@ -1540,7 +1766,7 @@
           </div>
           
           <div class="form-group">
-            <label for="defeitos">Defeitos</label>
+            <label for="defeitos">Características Maléficas</label>
             <textarea id="defeitos" class="form-control" rows="2"></textarea>
           </div>
           
@@ -1615,7 +1841,7 @@
           </div>
           
           <div class="form-group">
-            <label for="sessaoResumo">Resumo / Ocorridos</label>
+            <label for="sessaoResumo">Resumo / Ocorridos / Treino Ganho</label>
             <textarea id="sessaoResumo" class="form-control" rows="3" placeholder="Ex: Conhecemos a nova ilha..."></textarea>
           </div>
           
@@ -1653,21 +1879,27 @@
           <div class="grid">
             <div class="col-6">
               <div class="form-group">
-                <label for="itemNome">Nome do Item / Equipamento</label>
-                <input type="text" id="itemNome" class="form-control" placeholder="Ex: Ruyi Jingu Bang">
+                <label for="itemNome">Nome do Equipamento/Arma/Ferramenta </label>
+                <input type="text" id="itemNome" class="form-control" placeholder="Ex: Sabre Pirata Ace">
+              </div>
+            </div>            
+            <div class="col-4">
+              <div class="form-group">
+                <label for="itemDurabilidade">Durabilidade / Usos</label>
+                <input type="number" id="itemDurabilidade" class="form-control" placeholder="Ex: 20">
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-12">
               <div class="form-group">
                 <label for="itemDesc">Descrição / Observações</label>
-                <textarea id="itemDesc" class="form-control" rows="2" placeholder="Ex: Bastão mágico que se alonga..."></textarea>
+                <textarea id="itemDesc" class="form-control" rows="2" placeholder="Ex: Espada Bastardar, Meito de Grau Supremo."></textarea>
               </div>
             </div>
           </div>
           
-          <button type="button" class="btn btn-primary" onclick="adicionarItem()">Adicionar Item</button>
-          
-          <div id="listaItens" class="mt-2"></div>
+          <button type="button" class="btn btn-primary" id="btnAdicionarItem" onclick="adicionarItem()">Adicionar Item</button>
+          <br/><br/>
+          <div id="listaItens" class="grid"></div>
         </div>
       </div>
     </div>
@@ -1685,6 +1917,11 @@
 <!-- Comentário 2-->
   </div>
   <script>
+  // Aplica o modo escuro imediatamente no <body> antes de qualquer renderização
+  if (localStorage.getItem('temaRPG') === 'escuro') {
+    document.body.classList.add('dark-mode');
+  }
+  let itemEditandoIndex = null; // variável 
   /* ---------- VARIÁVEIS GLOBAIS PARA EDIÇÃO ---------- */
   let editingHabilidadeIndex = -1;  // Para Habilidades comuns
   let editingFrutaIndex = -1;       // Para Habilidades da Fruta
@@ -1834,6 +2071,9 @@
     document.getElementById('carismaBase').value = carisBase;
     let carisBonus = parseInt(document.getElementById('carismaBonus').value) || 0;
     document.getElementById('carismaTotal').value = carisBase + carisBonus;
+
+    calcularReservas();
+    atualizarInformacoesCombate();
   }
 
   function atualizarInformacoesCombate() {
@@ -2048,60 +2288,64 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
 
   /* --------- RESERVAS ------------ */
   function calcularReservas() {
-    let vitalidade = parseInt(document.getElementById("vitalidadeTotal").value) || 0;
-    let resiliencia = parseInt(document.getElementById("resilienciaTotal").value) || 0;
-    let vontade = parseInt(document.getElementById("vontadeTotal").value) || 0;
-    let destino = parseInt(document.getElementById("destinoTotal").value) || 0;
-    let nivelClasse = parseInt(document.getElementById("nivel-classe").value) || 1;
+    const resistencia = parseInt(document.getElementById('resistenciaTotal').value) || 0;
+    const persistencia = parseInt(document.getElementById('persistenciaTotal').value) || 0;
 
-    let maxReservaVida = (vitalidade + resiliencia) * nivelClasse;
-    let maxReservaVigor = (vontade + destino) * nivelClasse;
+    // Obter valores salvos ou usar o nível como padrão
+    const nivelClasse = parseInt(document.getElementById('nivel-classe').value) || 1;
+    const nivelProfissao = parseInt(document.getElementById('nivel-profissao').value) || 1;
 
-    document.getElementById("reservaVidaMax").value = maxReservaVida;
-    document.getElementById("reservaVigorMax").value = maxReservaVigor;
+    // Carregar valores salvos ou usar os níveis como padrão
+    const data = carregarDoLocalStorage();
+    document.getElementById('reservaVidaQtd').value = data.reservaVidaQtd ?? nivelClasse;
+    document.getElementById('reservaVigorQtd').value = data.reservaVigorQtd ?? nivelProfissao;
 
-    atualizarBarrasReserva();
+    // Atualizar os dados baseados nos atributos
+    document.getElementById('reservaVidaDados').textContent = calcularDadosReserva(resistencia);
+    document.getElementById('reservaVigorDados').textContent = calcularDadosReserva(persistencia);
   }
 
-  function atualizarBarrasReserva() {
-    let atualReservaVida = parseInt(document.getElementById("reservaVidaAtual").value) || 0;
-    let maxReservaVida = parseInt(document.getElementById("reservaVidaMax").value) || 1;
-    let atualReservaVigor = parseInt(document.getElementById("reservaVigorAtual").value) || 0;
-    let maxReservaVigor = parseInt(document.getElementById("reservaVigorMax").value) || 1;
-
-    let barraVidaReserva = document.getElementById("reservaVidaBar");
-    let barraVigorReserva = document.getElementById("reservaVigorBar");
-
-    barraVidaReserva.style.width = (atualReservaVida / maxReservaVida * 100) + "%";
-    barraVigorReserva.style.width = (atualReservaVigor / maxReservaVigor * 100) + "%";
+  function calcularDadosReserva(pontos) {
+    if (pontos < 0) return "0";
+    if (pontos === 0) return "1";
+    if (pontos <= 2) return "1d2";
+    if (pontos <= 4) return "1d4";
+    if (pontos <= 6) return "1d6";
+    if (pontos <= 8) return "1d8";
+    if (pontos <= 10) return "1d10";
+    if (pontos <= 12) return "2d6";
+    if (pontos <= 14) return "1d8 + 1d6";
+    if (pontos <= 16) return "2d8";
+    if (pontos <= 18) return "1d10 + 1d8";
+    return "2d10";
   }
 
-  function resetarReservas() {
-    document.getElementById("reservaVidaAtual").value = document.getElementById("reservaVidaMax").value;
-    document.getElementById("reservaVigorAtual").value = document.getElementById("reservaVigorMax").value;
-    atualizarBarrasReserva();
-  }
+  // Atualiza ao digitar em total de resistência e persistência
+  ['resistenciaTotal', 'persistenciaTotal'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calcularReservas);
+  });
 
-  document.getElementById("vitalidadeBase").addEventListener("input", () => {
-    atualizarAtributos();
-    calcularReservas();
+  // Salvar mudanças manuais
+  ['reservaVidaQtd', 'reservaVigorQtd'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const data = carregarDoLocalStorage();
+      data.reservaVidaQtd = parseInt(document.getElementById('reservaVidaQtd').value) || 0;
+      data.reservaVigorQtd = parseInt(document.getElementById('reservaVigorQtd').value) || 0;
+      localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+    });
   });
-  document.getElementById("resilienciaBase").addEventListener("input", () => {
-    atualizarAtributos();
-    calcularReservas();
-  });
-  document.getElementById("vontadeBase").addEventListener("input", () => {
-    atualizarAtributos();
-    calcularReservas();
-  });
-  document.getElementById("destinoBase").addEventListener("input", () => {
-    atualizarAtributos();
-    calcularReservas();
-  });
-  document.getElementById("nivel-classe").addEventListener("input", calcularReservas);
-  document.getElementById("reservaVidaAtual").addEventListener("input", atualizarBarrasReserva);
-  document.getElementById("reservaVigorAtual").addEventListener("input", atualizarBarrasReserva);
 
+  // Supondo que você tenha já esses valores atualizados na ficha
+  const resistencia = obterValorAtributo("resistencia"); // derivado de Força + Resiliência
+  const persistencia = obterValorAtributo("persistencia"); // derivado de Conhecimento + Vitalidade
+
+  document.getElementById('reservaVidaDados').textContent = calcularDadosReserva(resistencia);
+  document.getElementById('reservaVigorDados').textContent = calcularDadosReserva(persistencia);
+
+  // Carregar quantidade salva (ou padrão)
+  const data = carregarDoLocalStorage();
+  document.getElementById('reservaVidaQtd').value = data.reservaVidaQtd ?? data.nivel ?? 1;
+  document.getElementById('reservaVigorQtd').value = data.reservaVigorQtd ?? data.nivel ?? 1;
 
   /* --------- ATAQUES ------------- */
   function adicionarAtaque() {
@@ -2176,13 +2420,17 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
 
   // Inicia as barras ao carregar
   window.onload = function(){
-    console.log("Iniciando carregamento da ficha...");
+    if (localStorage.getItem('temaRPG') === 'escuro') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('toggleThemeBtn').textContent = "Modo Claro";
+    }
     
     carregarFicha();  // Primeiro, carrega todos os dados da ficha
     carregarCompetenciasEAptidoes();  // Depois, garante que competências e aptidões são carregadas
     
     exibirFerimentosLesoes();  // Agora pode exibir ferimentos corretamente
     atualizarBarrasStatus();  // Atualiza os status corretamente após todos os dados carregarem
+    exibirItens(carregarDoLocalStorage().listaItens || []);
     calcularReservas();
 
     console.log("Ficha carregada com sucesso!");
@@ -2200,13 +2448,16 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
         return;
     }
 
-    let container = tipo === "competencia" ? document.getElementById('listaCompetencias') : document.getElementById('listaAptidoes');
+    let container;
+      if (tipo === "competencia") container = document.getElementById('listaCompetencias');
+      else if (tipo === "aptidao") container = document.getElementById('listaAptidoes');
+      else container = document.getElementById('listaTrunfos');
     let div = document.createElement('div');
     div.className = "list-item col-2"; // Ajustado para ocupar 1/5 da linha
     div.innerHTML = `
       <div class="list-item-header">
         <span class="list-item-title">${nome}</span>
-        <span class="list-item-subtitle">Nível: ${nivel}</span>
+        ${tipo !== "trunfo" ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ""}
       </div>
       <div class="list-item-content">${obs}</div>
       <div class="list-item-actions">
@@ -2224,6 +2475,12 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     document.getElementById('compObs').value = "";
   }
 
+  function toggleNivelInput() { // toogle de nível para trunfo
+    const tipo = document.getElementById('compTipo').value;
+    const nivelWrapper = document.getElementById('nivelWrapper');
+    nivelWrapper.style.display = (tipo === "trunfo") ? "none" : "block";
+  }
+
   function alterarNivel(button, delta, tipo) {
     let nivelSpan = button.parentElement.parentElement.querySelector(".list-item-subtitle");
     let nivel = parseInt(nivelSpan.innerText.replace("Nível: ", "")) || 0;
@@ -2234,7 +2491,11 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   }
 
   function removerItem(button, tipo) {
-    let container = tipo === "competencia" ? document.getElementById('listaCompetencias') : document.getElementById('listaAptidoes');
+    let container;
+      if (tipo === "competencia") container = document.getElementById('listaCompetencias');
+      else if (tipo === "aptidao") container = document.getElementById('listaAptidoes');
+      else container = document.getElementById('listaTrunfos');
+
     let nomeItem = button.parentElement.parentElement.querySelector(".list-item-title").innerText;
 
     button.parentElement.parentElement.remove();
@@ -2247,36 +2508,49 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   }
 
   function salvarNoLocalStorage(tipo) {
-    let container = tipo === "competencia" ? document.getElementById('listaCompetencias') : document.getElementById('listaAptidoes');
+      let container;
+        if (tipo === "competencia") container = document.getElementById('listaCompetencias');
+        else if (tipo === "aptidao") container = document.getElementById('listaAptidoes');
+        else container = document.getElementById('listaTrunfos');
 
-    let storedItems = JSON.parse(localStorage.getItem(tipo)) || [];
+      let storedItems = JSON.parse(localStorage.getItem(tipo)) || [];
 
-    let newItems = [];
-    container.querySelectorAll(".list-item").forEach(item => {
-        let nome = item.querySelector(".list-item-title").innerText.trim();
-        let nivel = parseInt(item.querySelector(".list-item-subtitle").innerText.replace("Nível: ", "")) || 0;
-        let obs = item.querySelector(".list-item-content").innerText.trim();
+      let newItems = [];
+       container.querySelectorAll(".list-item").forEach(item => {
+          let nome = item.querySelector(".list-item-title").innerText.trim();
+          let nivel = parseInt(item.querySelector(".list-item-subtitle").innerText.replace("Nível: ", "")) || 0;
+          let obs = item.querySelector(".list-item-content").innerText.trim();
 
-        // Verifica se já existe a competência com o mesmo nome
-        let existingItemIndex = storedItems.findIndex(existing => existing.nome === nome);
-        if (existingItemIndex !== -1) {
-            storedItems[existingItemIndex].nivel = nivel;
-            storedItems[existingItemIndex].obs = obs;
-        } else {
-            newItems.push({ nome, nivel, obs });
-        }
-    });
+          // Verifica se já existe a competência com o mesmo nome
+          let existingItemIndex = storedItems.findIndex(existing => existing.nome === nome);
+          if (existingItemIndex !== -1) {
+              storedItems[existingItemIndex].nivel = nivel;
+              storedItems[existingItemIndex].obs = obs;
+          } else {
+              newItems.push({ nome, nivel, obs });
+          }
+      });
 
-    // Substitui completamente o array salvo, garantindo que não haja dados corrompidos
-    let updatedItems = [...storedItems.filter(existing => !newItems.some(newItem => newItem.nome === existing.nome)), ...newItems];
+      // Substitui completamente o array salvo, garantindo que não haja dados corrompidos
+      let updatedItems = [...storedItems.filter(existing => !newItems.some(newItem => newItem.nome === existing.nome)), ...newItems];
 
-    console.log("Salvando no localStorage:", updatedItems);
-    localStorage.setItem(tipo, JSON.stringify(updatedItems));
-  }
+      // Salvar as reservas no localStorage
+      let data = carregarDoLocalStorage();
+      data.reservaVidaQtd = parseInt(document.getElementById('reservaVidaQtd').value) || 0;
+      data.reservaVigorQtd = parseInt(document.getElementById('reservaVigorQtd').value) || 0;
+      localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+
+      console.log("Salvando no localStorage:", updatedItems);
+      localStorage.setItem(tipo, JSON.stringify(updatedItems));
+    }
 
   function carregarCompetenciasEAptidoes() {
-    ["competencia", "aptidao"].forEach(tipo => {
-        let container = tipo === "competencia" ? document.getElementById('listaCompetencias') : document.getElementById('listaAptidoes');
+    ["competencia", "aptidao", "trunfo"].forEach(tipo => {
+        let container;
+          if (tipo === "competencia") container = document.getElementById('listaCompetencias');
+          else if (tipo === "aptidao") container = document.getElementById('listaAptidoes');
+          else container = document.getElementById('listaTrunfos');
+
         container.innerHTML = "";  // Limpa a lista antes de carregar
 
         let items = JSON.parse(localStorage.getItem(tipo)) || [];
@@ -2317,6 +2591,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     const nome = document.getElementById('habNome').value.trim();
     const custo = document.getElementById('habCusto').value.trim();
     const desc = document.getElementById('habDesc').value.trim();
+    const custoCompra = parseInt(document.getElementById('habCustoCompra').value.trim()) || 0;
+    const alcance = document.getElementById('habAlcance').value.trim();
 
     if (!nome && !custo && !desc) {
       alert("Preencha ao menos algum campo para a habilidade!");
@@ -2325,13 +2601,15 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     let data = carregarDoLocalStorage();
     if (!data.habilidades) data.habilidades = [];
 
-    data.habilidades.push({ nome, custo, desc });
+    data.habilidades.push({ nome, custo, custoCompra, alcance, desc });
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
 
     // limpa campos
     document.getElementById('habNome').value = "";
     document.getElementById('habCusto').value = "";
     document.getElementById('habDesc').value = "";
+    document.getElementById('habCustoCompra').value = "";
+    document.getElementById('habAlcance').value = "";
 
     carregarFicha();
   }
@@ -2344,6 +2622,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     document.getElementById('habNome').value = hab.nome;
     document.getElementById('habCusto').value = hab.custo;
     document.getElementById('habDesc').value = hab.desc;
+    document.getElementById('habCustoCompra').value = hab.custoCompra || 0;
+    document.getElementById('habAlcance').value = hab.alcance || "";
 
     editingHabilidadeIndex = index;
     document.getElementById('btnHabilidade').textContent = "Salvar Edição";
@@ -2353,6 +2633,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     const nome = document.getElementById('habNome').value.trim();
     const custo = document.getElementById('habCusto').value.trim();
     const desc = document.getElementById('habDesc').value.trim();
+    const custoCompra = parseInt(document.getElementById('habCustoCompra').value.trim()) || 0;
+    const alcance = document.getElementById('habAlcance').value.trim();
 
     if (!nome && !custo && !desc) {
       alert("Preencha ao menos algum campo para a habilidade!");
@@ -2361,13 +2643,15 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     let data = carregarDoLocalStorage();
     if (!data.habilidades) data.habilidades = [];
 
-    data.habilidades[editingHabilidadeIndex] = { nome, custo, desc };
+    data.habilidades[editingHabilidadeIndex] = { nome, custo, custoCompra, alcance, desc };
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
 
     // limpa
     document.getElementById('habNome').value = "";
     document.getElementById('habCusto').value = "";
     document.getElementById('habDesc').value = "";
+    document.getElementById('habCustoCompra').value = "";
+    document.getElementById('habAlcance').value = "";
 
     editingHabilidadeIndex = -1;
     document.getElementById('btnHabilidade').textContent = "Adicionar Habilidade";
@@ -2376,44 +2660,107 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   }
 
   /* -------------- ITENS -------------- */
+
   function adicionarItem() {
     const nome = document.getElementById('itemNome').value.trim();
     const desc = document.getElementById('itemDesc').value.trim();
+    const durabilidade = document.getElementById('itemDurabilidade').value;
 
     if (!nome && !desc) {
-      alert("Preencha ao menos algum campo para o Item!");
+      alert("Preencha ao menos o nome ou descrição!");
       return;
     }
+
     let data = carregarDoLocalStorage();
     if (!data.listaItens) data.listaItens = [];
 
-    data.listaItens.push({ nome, desc });
+    const novoItem = {
+      nome,
+      desc,
+      durabilidadeOriginal: durabilidade,
+      durabilidadeAtual: durabilidade
+    };
+
+    if (Number.isInteger(itemEditandoIndex) && itemEditandoIndex >= 0) {
+      data.listaItens[itemEditandoIndex] = novoItem;
+      itemEditandoIndex = null;
+      document.getElementById('btnAdicionarItem').textContent = "Adicionar Item";
+    } else {
+      data.listaItens.push(novoItem);
+    }
+
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
 
     document.getElementById('itemNome').value = "";
     document.getElementById('itemDesc').value = "";
+    document.getElementById('itemDurabilidade').value = "";
+    itemEditandoIndex = null;
+
     carregarFicha();
   }
 
   function exibirItens(lista) {
     const container = document.getElementById('listaItens');
     container.innerHTML = "";
+    
+    if (!lista || lista.length === 0) return;
+    
     lista.forEach((item, index) => {
       const div = document.createElement('div');
-      div.className = "list-item";
+      div.className = "list-item col-6";
+
+      const atual = item.durabilidadeAtual ?? item.durabilidadeOriginal ?? "-";
+      const original = item.durabilidadeOriginal ?? "-";
+
       div.innerHTML = `
         <div class="list-item-header">
-          <span class="list-item-title">${item.nome}</span>
+          <span class="list-item-title">${item.nome || "(sem nome)"}</span>
+          <span class="list-item-subtitle">Durabilidade ou Usos: ${atual} / ${original}</span>
         </div>
-        <div class="list-item-content">${item.desc}</div>
+        <div class="list-item-content">${item.desc || "(sem descrição)"}</div>
         <div class="list-item-actions">
-          <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(${index})">Remover</button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="alterarDurabilidade(${index}, 1)">+</button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="alterarDurabilidade(${index}, -1)">−</button>
+          <button type="button" class="btn btn-sm btn-primary" onclick="editarItem(${index})">Editar</button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="removerEquipamento(${index})">Remover</button>
         </div>
       `;
       container.appendChild(div);
     });
   }
 
+  function removerEquipamento(index) {
+    let data = carregarDoLocalStorage();
+    data.listaItens.splice(index, 1);
+    localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+    carregarFicha();
+  }
+
+  function alterarDurabilidade(index, delta) {
+    const data = carregarDoLocalStorage();
+    const item = data.listaItens[index];
+
+    if (item.durabilidadeAtual == null && item.durabilidadeOriginal != null) {
+      item.durabilidadeAtual = item.durabilidadeOriginal;
+    }
+
+    item.durabilidadeAtual = Math.max(0, parseInt(item.durabilidadeAtual) + delta);
+    localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+    exibirItens(data.listaItens);
+  }
+
+  function editarItem(index) {
+    const data = carregarDoLocalStorage();
+    const item = data.listaItens[index];
+
+    document.getElementById('itemNome').value = item.nome || "";
+    document.getElementById('itemDesc').value = item.desc || "";
+    document.getElementById('itemDurabilidade').value = item.durabilidadeOriginal || "";
+
+    itemEditandoIndex = index;
+
+    document.getElementById('btnAdicionarItem').textContent = "Salvar Alterações";
+  }
 
   /* -------------- FRUTA (COM EDIÇÃO) -------------- */
   function adicionarOuSalvarEdicaoFruta() {
@@ -2427,6 +2774,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   function adicionarFrutaHabilidade() {
     const nome = document.getElementById('frutaNome').value.trim();
     const custo = document.getElementById('frutaCusto').value.trim();
+    const custoCompra = parseInt(document.getElementById('frutaCustoCompra').value.trim()) || 0;
+    const alcance = document.getElementById('frutaAlcance').value.trim();
     const desc = document.getElementById('frutaDesc').value.trim();
 
     if (!nome && !custo && !desc) {
@@ -2436,12 +2785,14 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     let data = carregarDoLocalStorage();
     if (!data.frutaHabilidades) data.frutaHabilidades = [];
 
-    data.frutaHabilidades.push({ nome, custo, desc });
+    data.frutaHabilidades.push({ nome, custo, custoCompra, alcance, desc });
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
 
     document.getElementById('frutaNome').value = "";
     document.getElementById('frutaCusto').value = "";
     document.getElementById('frutaDesc').value = "";
+    document.getElementById('frutaCustoCompra').value = "";
+    document.getElementById('frutaAlcance').value = "";
 
     carregarFicha();
   }
@@ -2454,6 +2805,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     document.getElementById('frutaNome').value = hab.nome;
     document.getElementById('frutaCusto').value = hab.custo;
     document.getElementById('frutaDesc').value = hab.desc;
+    document.getElementById('frutaCustoCompra').value = hab.custoCompra || 0;
+    document.getElementById('frutaAlcance').value = hab.alcance || "";
 
     editingFrutaIndex = index;
     document.getElementById('btnFruta').textContent = "Salvar Edição";
@@ -2463,6 +2816,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     const nome = document.getElementById('frutaNome').value.trim();
     const custo = document.getElementById('frutaCusto').value.trim();
     const desc = document.getElementById('frutaDesc').value.trim();
+    const custoCompra = parseInt(document.getElementById('frutaCustoCompra').value.trim()) || 0;
+    const alcance = document.getElementById('frutaAlcance').value.trim();
 
     if (!nome && !custo && !desc) {
       alert("Preencha ao menos algum campo para a habilidade da fruta!");
@@ -2471,13 +2826,15 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     let data = carregarDoLocalStorage();
     if (!data.frutaHabilidades) data.frutaHabilidades = [];
 
-    data.frutaHabilidades[editingFrutaIndex] = { nome, custo, desc };
+    data.frutaHabilidades[editingFrutaIndex] = { nome, custo, custoCompra, alcance, desc };
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
 
     // limpa
     document.getElementById('frutaNome').value = "";
     document.getElementById('frutaCusto').value = "";
     document.getElementById('frutaDesc').value = "";
+    document.getElementById('frutaCustoCompra').value = "";
+    document.getElementById('frutaAlcance').value = "";
 
     editingFrutaIndex = -1;
     document.getElementById('btnFruta').textContent = "Adicionar Habilidade da Fruta";
@@ -2503,9 +2860,11 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
       div.innerHTML = `
         <div class="list-item-header">
           <span class="list-item-title">${hab.nome}</span>
-          ${hab.custo ? '<span class="list-item-subtitle">Custo de Uso: '+ hab.custo +'</span>' : ''}
+          <span class="list-item-subtitle">Custo de Compra: ${hab.custoCompra || 0} PH</span>
         </div>
-        <div class="list-item-content">${hab.desc}</div>
+        <div class="list-item-content"><em><strong>Custo de Uso:</strong> ${hab.custo || "-"}</em></div>
+        <div class="list-item-content"><strong>Alcance e Duração:</strong> ${hab.alcance || "-"}</div>
+        <div class="list-item-content">${hab.desc || ""}</div>
         <div class="list-item-actions">
           <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
           <button type="button" class="btn btn-sm btn-danger" onclick="${removerFunc}">Remover</button>
@@ -2727,8 +3086,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     exibirFerimentosLesoes(data.ferimentos, data.lesoes);
 
     // Reservas
-    document.getElementById("reservaVidaAtual").value = data.reservaVidaAtual || 0;
-    document.getElementById("reservaVigorAtual").value = data.reservaVigorAtual || 0;
+    document.getElementById('reservaVidaQtd').value = data.reservaVidaQtd ?? (data.nivel || 1);
+    document.getElementById('reservaVigorQtd').value = data.reservaVigorQtd ?? (data.nivel || 1);
 
     // Habilidades
     mostrarHabilidades(data.habilidades || [], 'listaHabilidades');
@@ -2892,8 +3251,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     data.lesoes = oldData.lesoes || [];
 
     // Reservas
-    data.reservaVidaAtual = document.getElementById("reservaVidaAtual").value;
-    data.reservaVigorAtual = document.getElementById("reservaVigorAtual").value;
+    data.reservaVidaQtd = document.getElementById("reservaVidaQtd").value;
+    data.reservaVigorQtd = document.getElementById("reservaVigorQtd").value;
 
     // Pontos de Habilidade
     data.habilidadePontos = document.getElementById("habilidade-pontos").value;
@@ -2982,11 +3341,81 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
 
   function limparFicha() {
     if (confirm("Tem certeza que deseja apagar TODOS os dados salvos?")) {
+      // Remover dados do localStorage
       localStorage.removeItem('fichaOnePiece');
       localStorage.removeItem('competencia');
       localStorage.removeItem('aptidao');
       localStorage.removeItem('ataques');
-      location.reload();
+      
+      // Resetar campos básicos
+      document.getElementById('nome').value = "";
+      document.getElementById('raca').value = "umano";
+      document.getElementById('classe').value = "Lutador";
+      document.getElementById('profissao').value = "Combatente";
+      document.getElementById('potencial').value = "Monstro";
+      document.getElementById('nivel-classe').value = "1";
+      document.getElementById('nivel-profissao').value = "1";
+      
+      // Resetar status
+      document.getElementById('vidaAtual').value = "10";
+      document.getElementById('vidaMax').value = "10";
+      document.getElementById('vigorAtual').value = "6";
+      document.getElementById('vigorMax').value = "6";
+      
+      // Resetar atributos principais
+      const atributosBase = ['forcaBase', 'destrezaBase', 'vitalidadeBase', 'aparenciaBase', 
+                            'conhecimentoBase', 'raciocinioBase', 'vontadeBase', 'destinoBase', 
+                            'velocidadeBase', 'resilienciaBase'];
+      
+      const atributosBonus = ['forcaBonus', 'destrezaBonus', 'vitalidadeBonus', 'aparenciaBonus', 
+                            'conhecimentoBonus', 'raciocinioBonus', 'vontadeBonus', 'destinoBonus', 
+                            'velocidadeBonus', 'resilienciaBonus'];
+      
+      // Resetar atributos derivados
+      const atributosDerivadosBonus = ['persistenciaBonus', 'disciplinaBonus', 'carismaBonus', 
+                                      'agilidadeBonus', 'resistenciaBonus'];
+      
+      // Limpar todos os atributos
+      [...atributosBase, ...atributosBonus, ...atributosDerivadosBonus].forEach(id => {
+        document.getElementById(id).value = "0";
+      });
+      
+      // Limpar listas dinâmicas
+      document.getElementById('listaAtaques').innerHTML = "";
+      document.getElementById('listaCompetencias').innerHTML = "";
+      document.getElementById('listaAptidoes').innerHTML = "";
+      document.getElementById('listaFerimentosLesoes').innerHTML = "";
+      document.getElementById('listaHabilidades').innerHTML = "";
+      document.getElementById('listaFruta').innerHTML = "";
+      document.getElementById('listaItens').innerHTML = "";
+      document.getElementById('listaSessoes').innerHTML = "";
+      
+      // Limpar campos de texto
+      document.getElementById('akumaNoMi').value = "";
+      document.getElementById('nivelFruta').value = "0";
+      document.getElementById('ilhaOrigem').value = "";
+      document.getElementById('historia').value = "";
+      document.getElementById('sonho').value = "";
+      document.getElementById('pessoaImportante').value = "";
+      document.getElementById('objetivos').value = "";
+      document.getElementById('qualidades').value = "";
+      document.getElementById('habilidadeInutil').value = "";
+      document.getElementById('defeitos').value = "";
+      document.getElementById('reputacao').value = "";
+      document.getElementById('moral').value = "";
+      document.getElementById('bounty').value = "";
+      document.getElementById('dinheiro').value = "";
+      document.getElementById('anotacoesGerais').value = "";
+      
+      // Resetar avatar
+      document.getElementById('avatarPreview').src = "/placeholder.svg";
+      
+      // Recalcular valores
+      atualizarAtributos();
+      atualizarBarrasStatus();
+      calcularReservas();
+      
+      alert("Ficha limpa com sucesso!");
     }
   }
 
@@ -3008,6 +3437,23 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     document.getElementById(id).addEventListener('change', () => {
       salvarFicha();
     });
+  });
+
+  // Modo Escuro DARKMODE
+  function alternarTema() {
+    const body = document.body;
+    const btn = document.getElementById('toggleThemeBtn');
+    const escuro = body.classList.toggle('dark-mode');
+    btn.textContent = escuro ? "Modo Claro" : "Modo Escuro";
+    localStorage.setItem('temaRPG', escuro ? 'escuro' : 'claro');
+  }
+
+  // Ao carregar, aplicar o tema salvo
+  window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('temaRPG') === 'escuro') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('toggleThemeBtn').textContent = "Modo Claro";
+    }
   });
 
   </script>
