@@ -9,6 +9,10 @@
   <style>
     /* AJUSTES PARA PDF E IMPRESSÃO */
     /* AJUSTES PARA PDF E IMPRESSÃO - VERSÃO ULTRA COMPACTA */
+    .list-item-content { /* ISSO AQUI É PRA CONSERVAR AS QUEBRAS DE LINHA */
+      white-space: pre-line;
+    }
+
 @media print {
   /* Configuração básica da página */
   @page {
@@ -3446,7 +3450,7 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
         </div>
         <div class="list-item-content"><em>Custo de Uso: ${hab.custo || "-"}</em></div>
         <div class="list-item-content"><strong>Alcance / Duração:</strong> ${hab.alcance || "-"}</div>
-        <div class="list-item-content">${hab.desc || ""}</div>
+        <div class="list-item-content">${(hab.desc || "").replace(/\n/g, "<br>")}</div>
         <div class="list-item-actions">
           <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
           <button type="button" class="btn btn-sm btn-danger" onclick="${removerFunc}">Remover</button>
