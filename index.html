@@ -1435,6 +1435,14 @@
       content: "▲";
     }
 
+    /* CHECKBOX */
+    input[type="checkbox"]:checked + span {
+      font-weight: bold;
+      color: var(--success);
+    }
+
+
+    
   </style>
 </head>
 <body> 
@@ -3466,18 +3474,31 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
       const removerFunc = `removerHabilidade('${targetId}', ${index})`;
 
       div.innerHTML = `
-        <div class="list-item-header">
-          <span class="list-item-title">${hab.nome}</span>
-          <span class="list-item-subtitle">Custo de Compra: ${hab.custoCompra || 0} PH</span>
-        </div>
-        <div class="list-item-content"><em>Custo de Uso: ${hab.custo || "-"}</em></div>
-        <div class="list-item-content"><strong>Alcance / Duração:</strong> ${hab.alcance || "-"}</div>
-        <div class="list-item-content">${(hab.desc || "").replace(/\n/g, "<br>")}</div>
-        <div class="list-item-actions">
-          <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
-          <button type="button" class="btn btn-sm btn-danger" onclick="${removerFunc}">Remover</button>
-        </div>
+        <details ${hab.expanded ? 'open' : ''} onchange="salvarEstadoAccordion('${targetId}', ${index}, this.open)">
+          <summary class="accordion-summary">
+            <strong>${hab.nome}</strong>
+          </summary>
+          <div class="accordion-body">
+            <div style="display: flex; justify-content: space-between;">
+              <em>Custo de Uso: ${hab.custo || "-"}</em>
+              <span style="font-size: 0.9em;">Custo de Compra: ${hab.custoCompra || 0} PH</span>
+            </div>
+            <p><strong>Alcance / Duração:</strong> ${hab.alcance || "-"}</p>
+            <p style="white-space: pre-line;">${hab.desc || ""}</p>
+            <div class="list-item-actions" style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="${removerFunc}">Remover</button>
+              </div>
+              <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" onchange="marcarHabilidadeComprada('${targetId}', ${index}, this.checked)" ${hab.comprada ? 'checked' : ''}>
+                <span style="color: ${hab.comprada ? 'var(--success)' : 'inherit'};">Comprada</span>
+              </label>
+            </div>
+          </div>
+        </details>
       `;
+
       container.appendChild(div);
     });
   }
@@ -3510,6 +3531,17 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     }
     localStorage.setItem('fichaOnePiece', JSON.stringify(data));
     carregarFicha();
+  }
+
+  function marcarHabilidadeComprada(section, index, isChecked) {
+    let data = carregarDoLocalStorage();
+    let lista = section === 'listaHabilidades' ? data.habilidades : data.frutaHabilidades;
+
+    if (lista && lista[index]) {
+      lista[index].comprada = isChecked;
+      localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+      carregarFicha();
+    }
   }
 
   /* -------------- SESSÕES -------------- */
@@ -4088,6 +4120,16 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
       localStorage.setItem(key, detalhe.open);
     });
   });
+  // Estado habilidades
+  function salvarEstadoAccordion(section, index, isOpen) {
+    const data = carregarDoLocalStorage();
+    let lista = section === 'listaHabilidades' ? data.habilidades : data.frutaHabilidades;
+
+    if (lista && lista[index]) {
+      lista[index].expanded = isOpen;
+      localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+    }
+  }
 
   </script>
 </body>
