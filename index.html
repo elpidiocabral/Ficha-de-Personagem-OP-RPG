@@ -1418,6 +1418,22 @@
       background-color: #dcdcdc;
     }
 
+    /* SUMMARY */
+    details summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    details summary::after {
+      content: "▼";
+      float: right;
+      margin-left: 10px;
+      color: var(--primary);
+    }
+
+    details[open] summary::after {
+      content: "▲";
+    }
 
   </style>
 </head>
@@ -2149,33 +2165,36 @@
             <h2>Habilidades / Técnicas</h2>
           </div>
           
-          <div class="form-group">
-            <label for="habNome">Nome da Habilidade</label>
-            <input type="text" id="habNome" class="form-control" placeholder="Digite o nome da sua habilidade">
-          </div>
-          
-          <div class="form-group">
-            <label for="habCustoCompra">Custo de Compra (PH)</label>
-            <input type="number" id="habCustoCompra" class="form-control" placeholder="Ex: 10 PH">
-          </div>
-          
-          <div class="form-group">
-            <label for="habCusto">Custo de Uso</label>
-            <input type="text" id="habCusto" class="form-control" placeholder="Ex: 2d6 de Vigor, Ação e Complemento">
-          </div>
-          
-          <div class="form-group">
-            <label for="habAlcance">Alcance e Duração</label>
-            <input type="text" id="habAlcance" class="form-control" placeholder="Ex: 10m, Instantâneo">
-          </div>
-          
-          <div class="form-group">
-            <label for="habDesc">Descrição e Efeito(s)</label>
-            <textarea id="habDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
-          </div>          
-          
-          <button type="button" id="btnHabilidade" class="btn btn-primary" onclick="adicionarOuSalvarEdicaoHabilidade()">Adicionar Habilidade</button>
-          
+          <details open class="card">
+            <summary class="card-header"> Adicionar Habilidade </summary>
+
+            <div class="form-group">
+              <label for="habNome">Nome da Habilidade</label>
+              <input type="text" id="habNome" class="form-control" placeholder="Digite o nome da sua habilidade">
+            </div>
+            
+            <div class="form-group">
+              <label for="habCustoCompra">Custo de Compra (PH)</label>
+              <input type="number" id="habCustoCompra" class="form-control" placeholder="Ex: 10 PH">
+            </div>
+            
+            <div class="form-group">
+              <label for="habCusto">Custo de Uso</label>
+              <input type="text" id="habCusto" class="form-control" placeholder="Ex: 2d6 de Vigor, Ação e Complemento">
+            </div>
+            
+            <div class="form-group">
+              <label for="habAlcance">Alcance e Duração</label>
+              <input type="text" id="habAlcance" class="form-control" placeholder="Ex: 10m, Instantâneo">
+            </div>
+            
+            <div class="form-group">
+              <label for="habDesc">Descrição e Efeito(s)</label>
+              <textarea id="habDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
+            </div>          
+            
+            <button type="button" id="btnHabilidade" class="btn btn-primary" onclick="adicionarOuSalvarEdicaoHabilidade()">Adicionar Habilidade</button>
+          </details>
           <div id="listaHabilidades" class="mt-2"></div>
         </div>
       </div>
@@ -2187,72 +2206,75 @@
             <h2>Akuma no Mi (Fruta do Diabo)</h2>
           </div>
           
-          <div class="form-group">
-            <label for="akumaNome">Nome da Fruta</label>
-            <input type="text" id="akumaNome" class="form-control" placeholder="Ex: Gomu Gomu no Mi">
-          </div>
-
-          <div class="form-row" style="display: flex; gap: 1rem;">
-            <div style="flex: 1;">
-              <label for="akumaTipo">Tipo da Fruta</label>
-              <select id="akumaTipo" class="form-control" onchange="atualizarSubtipos()">
-                <option value="Paramecia">Paramecia</option>
-                <option value="Zoan">Zoan</option>
-                <option value="Logia">Logia</option>
-              </select>
+          <details open class="card">
+            <summary class="card-header"> Descrição da Fruta </summary>
+            <div class="form-group">
+              <label for="akumaNome">Nome da Fruta</label>
+              <input type="text" id="akumaNome" class="form-control" placeholder="Ex: Gomu Gomu no Mi">
             </div>
-            <div style="flex: 1;">
-              <label for="akumaSubtipo">Subtipo</label>
-              <select id="akumaSubtipo" class="form-control"></select>
+
+            <div class="form-row" style="display: flex; gap: 1rem;">
+              <div style="flex: 1;">
+                <label for="akumaTipo">Tipo da Fruta</label>
+                <select id="akumaTipo" class="form-control" onchange="atualizarSubtipos()">
+                  <option value="Paramecia">Paramecia</option>
+                  <option value="Zoan">Zoan</option>
+                  <option value="Logia">Logia</option>
+                </select>
+              </div>
+              <div style="flex: 1;">
+                <label for="akumaSubtipo">Subtipo</label>
+                <select id="akumaSubtipo" class="form-control"></select>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="akumaTematica">Temática</label>
-            <input type="text" id="akumaTematica" class="form-control" placeholder="Ex: Borracha, Gravidade, Sombras...">
-          </div>
+            <div class="form-group">
+              <label for="akumaTematica">Temática</label>
+              <input type="text" id="akumaTematica" class="form-control" placeholder="Ex: Borracha, Gravidade, Sombras...">
+            </div>
 
-          <div class="form-group">
-            <label for="akumaDesejo">Desejo que a Criou</label>
-            <input type="text" id="akumaDesejo" class="form-control" placeholder="Ex: Superar limites, Controlar o destino...">
-          </div>
+            <div class="form-group">
+              <label for="akumaDesejo">Desejo que a Criou</label>
+              <input type="text" id="akumaDesejo" class="form-control" placeholder="Ex: Superar limites, Controlar o destino...">
+            </div>
 
-          <div class="form-group">
-            <label for="nivelFruta">Nível da Fruta</label>
-            <input type="number" id="nivelFruta" class="form-control" value="0">
-          </div>
-          
+            <div class="form-group">
+              <label for="nivelFruta">Nível da Fruta</label>
+              <input type="number" id="nivelFruta" class="form-control" value="0">
+            </div>
+          </details>
           <hr class="mb-2">
           
           <h3 class="mb-2">Habilidades da Fruta</h3>
-          
-          <div class="form-group">
-            <label for="frutaNome">Nome da Habilidade da Fruta</label>
-            <input type="text" id="frutaNome" class="form-control" placeholder="Digite o nome da sua habilidade">
-          </div>
-          
-          <div class="form-group">
-            <label for="frutaCustoCompra">Custo de Compra (PH)</label>
-            <input type="number" id="frutaCustoCompra" class="form-control" placeholder="Ex: 0">
-          </div>
-          
-          <div class="form-group">
-            <label for="frutaCusto">Custo de Uso</label>
-            <input type="text" id="frutaCusto" class="form-control" placeholder="2d6 de Vigor, Ação e Complemento">
-          </div>
-          
-          <div class="form-group">
-            <label for="frutaAlcance">Alcance e Duração</label>
-            <input type="text" id="frutaAlcance" class="form-control" placeholder="Ex: 6m, 1 turno">
-          </div>
-          
-          <div class="form-group">
-            <label for="frutaDesc">Descrição/Efeito</label>
-            <textarea id="frutaDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
-          </div>          
-          
-          <button type="button" id="btnFruta" class="btn btn-secondary" onclick="adicionarOuSalvarEdicaoFruta()">Adicionar Habilidade da Fruta</button>
-          
+          <details open class="card">
+            <summary class="card-header"> Adicionar Habilidade da Fruta </summary>
+            <div class="form-group">
+              <label for="frutaNome">Nome da Habilidade da Fruta</label>
+              <input type="text" id="frutaNome" class="form-control" placeholder="Digite o nome da sua habilidade">
+            </div>
+            
+            <div class="form-group">
+              <label for="frutaCustoCompra">Custo de Compra (PH)</label>
+              <input type="number" id="frutaCustoCompra" class="form-control" placeholder="Ex: 0">
+            </div>
+            
+            <div class="form-group">
+              <label for="frutaCusto">Custo de Uso</label>
+              <input type="text" id="frutaCusto" class="form-control" placeholder="2d6 de Vigor, Ação e Complemento">
+            </div>
+            
+            <div class="form-group">
+              <label for="frutaAlcance">Alcance e Duração</label>
+              <input type="text" id="frutaAlcance" class="form-control" placeholder="Ex: 6m, 1 turno">
+            </div>
+            
+            <div class="form-group">
+              <label for="frutaDesc">Descrição/Efeito</label>
+              <textarea id="frutaDesc" class="form-control" rows="3" placeholder="Descrição e efeito(s) da habilidade..."></textarea>
+            </div>          
+            
+            <button type="button" id="btnFruta" class="btn btn-secondary" onclick="adicionarOuSalvarEdicaoFruta()">Adicionar Habilidade da Fruta</button>
+          </details>
           <div id="listaFruta" class="mt-2"></div>
         </div>
       </div>
@@ -4050,6 +4072,21 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
       document.body.classList.add('dark-mode');
       document.getElementById('toggleThemeBtn').textContent = "Modo Claro";
     }
+  });
+
+  // Salva e restaura estado de <details>
+  document.querySelectorAll('details').forEach((detalhe, index) => {
+    const key = `detailsState-${index}`;
+    
+    // Restaurar estado salvo
+    const aberto = localStorage.getItem(key);
+    if (aberto === 'true') detalhe.setAttribute('open', true);
+    else detalhe.removeAttribute('open');
+
+    // Monitorar mudanças
+    detalhe.addEventListener('toggle', () => {
+      localStorage.setItem(key, detalhe.open);
+    });
   });
 
   </script>
