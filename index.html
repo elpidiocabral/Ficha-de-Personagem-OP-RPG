@@ -3490,7 +3490,7 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
                 <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
                 <button type="button" class="btn btn-sm btn-danger" onclick="${removerFunc}">Remover</button>
               </div>
-              <label style="display: flex; align-items: center; gap: 5px;">
+              <label style="display: flex; align-items: center; gap: 5px;" onclick="event.stopPropagation();">
                 <input type="checkbox" onchange="marcarHabilidadeComprada('${targetId}', ${index}, this.checked)" ${hab.comprada ? 'checked' : ''}>
                 <span style="color: ${hab.comprada ? 'var(--success)' : 'inherit'};">Comprada</span>
               </label>
