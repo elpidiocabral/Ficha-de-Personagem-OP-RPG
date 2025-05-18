@@ -2184,10 +2184,35 @@
           </div>
           
           <div class="form-group">
-            <label for="akumaNoMi">Descrição da Fruta</label>
-            <textarea id="akumaNoMi" class="form-control" rows="3" placeholder="Ex: Nome da Fruta, Efeitos gerais..."></textarea>
+            <label for="akumaNome">Nome da Fruta</label>
+            <input type="text" id="akumaNome" class="form-control" placeholder="Ex: Gomu Gomu no Mi">
           </div>
-          
+
+          <div class="form-row" style="display: flex; gap: 1rem;">
+            <div style="flex: 1;">
+              <label for="akumaTipo">Tipo da Fruta</label>
+              <select id="akumaTipo" class="form-control" onchange="atualizarSubtipos()">
+                <option value="Paramecia">Paramecia</option>
+                <option value="Zoan">Zoan</option>
+                <option value="Logia">Logia</option>
+              </select>
+            </div>
+            <div style="flex: 1;">
+              <label for="akumaSubtipo">Subtipo</label>
+              <select id="akumaSubtipo" class="form-control"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="akumaTematica">Temática</label>
+            <input type="text" id="akumaTematica" class="form-control" placeholder="Ex: Borracha, Gravidade, Sombras...">
+          </div>
+
+          <div class="form-group">
+            <label for="akumaDesejo">Desejo que a Criou</label>
+            <input type="text" id="akumaDesejo" class="form-control" placeholder="Ex: Superar limites, Controlar o destino...">
+          </div>
+
           <div class="form-group">
             <label for="nivelFruta">Nível da Fruta</label>
             <input type="number" id="nivelFruta" class="form-control" value="0">
@@ -3278,6 +3303,48 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   }
 
   /* -------------- FRUTA (COM EDIÇÃO) -------------- */
+  // Função dos subtipos da fruta
+  function atualizarSubtipos() {
+    const tipo = document.getElementById('akumaTipo').value;
+    const subtipo = document.getElementById('akumaSubtipo');
+    subtipo.innerHTML = ""; // limpa opções anteriores
+
+    const subtiposPorTipo = {
+      Paramecia: [
+        "Criação",
+        "Alteração Corporal — Eterna",
+        "Alteração Corporal — Momentânea",
+        "Controle de Ambiente",
+        "Manipulação de Conceito",
+        "Paramecia Especial"
+      ],
+      Zoan: [
+        "Normal",
+        "Ancestral",
+        "Mítica"
+      ],
+      Logia: [
+        "Elemental (Padrão)"
+      ]
+    };
+
+    subtiposPorTipo[tipo].forEach(opcao => {
+      const el = document.createElement("option");
+      el.value = opcao;
+      el.textContent = opcao;
+      subtipo.appendChild(el);
+    });
+
+    // manter subtipo anterior se possível
+    const saved = localStorage.getItem("fichaOnePiece");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.akumaSubtipo) {
+        subtipo.value = data.akumaSubtipo;
+      }
+    }
+  }
+
   function adicionarOuSalvarEdicaoFruta() {
     if (editingFrutaIndex !== -1) {
       salvarEdicaoFruta();
@@ -3618,7 +3685,13 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     carregarAtaques();
 
     // Fruta
-    document.getElementById('akumaNoMi').value = data.akumaNoMi || "";
+    document.getElementById('akumaNome').value = data.akumaNome || "";
+    document.getElementById('akumaTipo').value = data.akumaTipo || "Paramecia";
+    document.getElementById('akumaTematica').value = data.akumaTematica || "";
+    document.getElementById('akumaDesejo').value = data.akumaDesejo || "";
+    document.getElementById('akumaSubtipo').value = data.akumaSubtipo || "";
+    atualizarSubtipos();
+
     document.getElementById('nivelFruta').value = data.nivelFruta || 0;
     mostrarHabilidades(data.frutaHabilidades || [], 'listaFruta');
 
@@ -3792,7 +3865,11 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     data.anotacoesGerais = document.getElementById('anotacoesGerais').value;
 
     // Akuma no Mi
-    data.akumaNoMi = document.getElementById('akumaNoMi').value;
+    data.akumaNome = document.getElementById('akumaNome').value;
+    data.akumaTipo = document.getElementById('akumaTipo').value;
+    data.akumaSubtipo = document.getElementById('akumaSubtipo').value;
+    data.akumaTematica = document.getElementById('akumaTematica').value;
+    data.akumaDesejo = document.getElementById('akumaDesejo').value;
 
     // Listas Dinâmicas
     // Mantemos as que já existiam, para não perder
