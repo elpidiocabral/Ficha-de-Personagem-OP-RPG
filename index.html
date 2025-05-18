@@ -7,6 +7,521 @@
   <title>Ficha One Piece RPG - A Vontade Dos Mares</title>
   
   <style>
+    /* AJUSTES PARA PDF E IMPRESSÃO */
+    /* AJUSTES PARA PDF E IMPRESSÃO - VERSÃO ULTRA COMPACTA */
+@media print {
+  /* Configuração básica da página */
+  @page {
+    size: A4 landscape;
+    margin: 1cm;
+  }
+  
+  /* Forçar exibição de todas as abas */
+  .tab-content {
+    display: block !important;
+  }
+  
+  /* Esconder elementos desnecessários */
+  .header, .tabs, .tab-button, .theme-toggle-pill, 
+  .btn-group, .btn:not(.tab-button), .list-item-actions,
+  .avatar-label {
+    display: none !important;
+  }
+  
+  /* OCULTAR ELEMENTOS ESPECÍFICOS */
+  /* Ocultar controladores de dano e vigor */
+  #danoSofrido, #recuperar, 
+  button[onclick="sofrerDano()"], button[onclick="gastarVigor()"],
+  button[onclick="recuperarDano()"], button[onclick="recuperarVigor()"],
+  button[onclick="resetarStatus()"],
+  .form-group:has(#danoSofrido), .form-group:has(#recuperar) {
+    display: none !important;
+  }
+  
+  /* Ocultar controladores de ferimentos e lesões */
+  #localFerida, #danoFerida,
+  button[onclick="addFerimento()"], button[onclick="addLesao()"],
+  .form-group:has(#localFerida) {
+    display: none !important;
+  }
+  
+  /* Ocultar toda a parte de reservas */
+  .reserva-container, .reserva-header, .reserva-linha {
+    display: none !important;
+  }
+  
+  /* Ocultar campos e botões para adicionar competência/aptidão/trunfo */
+  #compNome, #compTipo, #compNivel, #compObs,
+  button[onclick="adicionarCompetencia()"],
+  .form-group:has(#compNome), .form-group:has(#compTipo),
+  .form-group:has(#compNivel), .form-group:has(#compObs) {
+    display: none !important;
+  }
+  
+  /* Ocultar inputs de adicionar habilidade e seus botões */
+  #habNome, #habCusto, #habDesc, #habCustoCompra, #habAlcance,
+  #frutaNome, #frutaCusto, #frutaDesc, #frutaCustoCompra, #frutaAlcance,
+  #btnHabilidade, #btnFruta,
+  .form-group:has(#habNome), .form-group:has(#habCusto),
+  .form-group:has(#habDesc), .form-group:has(#habCustoCompra),
+  .form-group:has(#habAlcance), .form-group:has(#frutaNome),
+  .form-group:has(#frutaCusto), .form-group:has(#frutaDesc),
+  .form-group:has(#frutaCustoCompra), .form-group:has(#frutaAlcance) {
+    display: none !important;
+  }
+  
+  /* Ocultar inputs para adicionar ataques */
+  #ataqueNome, #ataqueBonus, #ataqueDano,
+  button[onclick="adicionarAtaque()"],
+  .form-group:has(#ataqueNome), .form-group:has(#ataqueBonus),
+  .form-group:has(#ataqueDano) {
+    display: none !important;
+  }
+  
+  /* Ocultar inputs para adicionar itens */
+  #itemNome, #itemDesc, #itemDurabilidade,
+  #btnAdicionarItem,
+  .form-group:has(#itemNome), .form-group:has(#itemDesc),
+  .form-group:has(#itemDurabilidade) {
+    display: none !important;
+  }
+  
+  /* AJUSTES DE LAYOUT */
+  /* Ajustar layout para colocar informações e atributos lado a lado */
+  #tab-atributos .grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+  }
+  
+  #tab-atributos .col-4 {
+    width: 30% !important;
+    flex: 0 0 30% !important;
+  }
+  
+  #tab-atributos .col-8 {
+    width: 70% !important;
+    flex: 0 0 70% !important;
+  }
+  
+  /* Ajustar grid de atributos principais */
+  .grid-10 {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+  
+  /* Forçar col-2 a ter tamanho correto */
+  .grid-10 .col-2 {
+    grid-column: span 1 !important;
+    width: 100% !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Aplicar a mesma lógica aos atributos derivados */
+  #tab-atributos .card:nth-of-type(2) .grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+  
+  /* Forçar col-4 e col-6 nos atributos derivados */
+  #tab-atributos .card:nth-of-type(2) .col-4,
+  #tab-atributos .card:nth-of-type(2) .col-6 {
+    grid-column: span 1 !important;
+    width: 100% !important;
+  }
+  
+  /* Reduzir drasticamente a largura das caixas de atributos */
+  .attribute-box {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0.2rem !important;
+    margin: 0 !important;
+    border-width: 1px !important;
+  }
+  
+  /* Compactar o conteúdo das caixas de atributos */
+  .attribute-name {
+    font-size: 7pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  .attribute-value {
+    font-size: 10pt !important;
+    height: 1.2rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+  
+  /* Ajustar os inputs de base e bônus */
+  .attribute-inputs {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+  
+  .input-group {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 48% !important;
+  }
+  
+  .input-group small {
+    font-size: 6pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    display: block !important;
+  }
+  
+  .input-group input {
+    width: 100% !important;
+    height: 1rem !important;
+    padding: 0 !important;
+    font-size: 7pt !important;
+    text-align: center !important;
+  }
+  
+  /* Reduzir tamanho dos cards */
+  .card {
+    margin-bottom: 0.3rem !important;
+    padding: 0.3rem !important;
+    border: 1px solid #000 !important;
+  }
+  
+  .card-header {
+    padding: 0 !important;
+    margin-bottom: 0.2rem !important;
+    border-bottom-width: 1px !important;
+  }
+  
+  .card-header h2 {
+    font-size: 10pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Compactar informações do personagem */
+  .form-group {
+    margin-bottom: 0.1rem !important;
+  }
+  
+  .form-control {
+    height: 1.5rem !important;
+    padding: 0 0.2rem !important;
+    font-size: 8pt !important;
+  }
+  
+  /* Reduzir tamanho do avatar */
+  .avatar-container {
+    padding: 0.2rem !important;
+  }
+  
+  .avatar-preview {
+    width: 60px !important;
+    height: 60px !important;
+    margin-bottom: 0.2rem !important;
+  }
+  
+  /* Ajustar barras de status */
+  .status-bar {
+    margin-bottom: 0.2rem !important;
+  }
+  
+  .status-header {
+    margin-bottom: 0.1rem !important;
+  }
+  
+  .status-name {
+    font-size: 8pt !important;
+  }
+  
+  .status-value input {
+    width: 40px !important;
+    padding: 0 !important;
+    font-size: 8pt !important;
+  }
+  
+  .progress-container {
+    height: 8px !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Diminuir muito a fonte das informações em "Ataques" */
+  #listaAtaques {
+    font-size: 8pt !important;
+  }
+  
+  .ataque-item {
+    padding: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  
+  .ataque-nome, .ataque-bonus, .ataque-dano {
+    font-size: 8pt !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Diminuir o tamanho dos cards de competências/aptidões/trunfos */
+  #listaCompetencias .list-item,
+  #listaAptidoes .list-item,
+  #listaTrunfos .list-item {
+    padding: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+    font-size: 8pt !important;
+  }
+  
+  .list-item-title {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+  }
+  
+  .list-item-subtitle {
+    font-size: 7pt !important;
+  }
+  
+  .list-item-content {
+    font-size: 7pt !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Organizar habilidades para aparecer 3 por linha */
+  #listaHabilidades, #listaFruta {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+  
+  #listaHabilidades .list-item,
+  #listaFruta .list-item {
+    padding: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+    font-size: 7pt !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Fazer com que os grids da aba "pessoal" só ocupem metade da tela */
+  #tab-pessoal .grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  
+  #tab-pessoal .col-6 {
+    width: 48% !important;
+    flex: 0 0 48% !important;
+  }
+  
+  #tab-pessoal .col-12 {
+    width: 100% !important;
+  }
+  
+  /* Reduzir tamanho dos elementos na aba pessoal */
+  #tab-pessoal .card {
+    padding: 0.2rem !important;
+  }
+  
+  #tab-pessoal input, 
+  #tab-pessoal textarea {
+    font-size: 7pt !important;
+    padding: 0.1rem !important;
+  }
+  
+  /* AJUSTE CRÍTICO: Mesma coisa para equipamentos */
+  #tab-itens .grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  
+  #tab-itens .col-12 {
+    width: 100% !important;
+  }
+  
+  #listaItens {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.2rem !important;
+  }
+  
+  #listaItens .list-item {
+    padding: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+    font-size: 7pt !important;
+  }
+  
+  /* Forçar quebras de página entre abas */
+  #tab-habilidades, #tab-pessoal, #tab-itens {
+    page-break-before: always !important;
+    break-before: always !important;
+  }
+  
+  /* AJUSTES FINOS ADICIONAIS */
+  
+  /* Diminuir muito a fonte de "Lista de Ataques" */
+  .card-header h2:contains("Lista de Ataques"),
+  h2:contains("Lista de Ataques"),
+  #listaAtaques-header {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Diminuir a fonte da opção dos dropdowns de personagem */
+  select[id="raca"], select[id="classe"], 
+  select[id="potencial"], select[id="profissao"] {
+    font-size: 7pt !important;
+    height: 1.2rem !important;
+    padding: 0 !important;
+  }
+  
+  /* Diminuir muito a fonte de todos os títulos dos inputs em informações de combate */
+  #tab-combate label, #informacoes-combate label {
+    font-size: 6pt !important;
+    margin-bottom: 0 !important;
+    font-weight: normal !important;
+  }
+  
+  /* Diminuir a fonte de "Local do Golpe Dano" */
+  label[for="localFerida"], label[for="danoFerida"],
+  #ferimentos-lesoes-header, #ferimentos-lesoes-header h3 {
+    font-size: 6pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Ocultar as partes de Pontos de Competência Disponíveis e Pontos de Aptidão Disponíveis */
+  #pontosCompetencia, #pontosAptidao,
+  label[for="pontosCompetencia"], label[for="pontosAptidao"],
+  .pontos-disponiveis {
+    display: none !important;
+  }
+  
+  /* Diminuir muito a fonte do título da listagem de Competências, Aptidões e Trunfos */
+  #competencias-header, #aptidoes-header, #trunfos-header,
+  #competencias-header h3, #aptidoes-header h3, #trunfos-header h3,
+  h3:contains("Competências"), h3:contains("Aptidões"), h3:contains("Trunfos") {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Ocultar completamente "Pontos de Habilidade Disponíveis" e "Pontos de Habilidade p/ Fruta Disponíveis" */
+  #pontosHabilidade, #pontosFruta,
+  label[for="pontosHabilidade"], label[for="pontosFruta"],
+  .pontos-habilidade-container, .pontos-fruta-container {
+    display: none !important;
+  }
+  
+  /* Diminuir a fonte do título "Habilidades da Fruta" */
+  #habilidades-fruta-header, #habilidades-fruta-header h3,
+  h3:contains("Habilidades da Fruta") {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Seletores alternativos para garantir que os elementos sejam encontrados */
+  /* Para "Lista de Ataques" */
+  h2, h3, h4 {
+    font-size: 9pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Para os pontos disponíveis */
+  div:has(> span:contains("Pontos de")),
+  span:contains("Pontos de") {
+    display: none !important;
+  }
+  
+  /* Para os títulos de seções */
+  .section-title, .card-title {
+    font-size: 8pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Seletores mais genéricos para garantir que os elementos sejam encontrados */
+  /* Para os dropdowns */
+  select {
+    font-size: 7pt !important;
+    height: 1.2rem !important;
+    padding: 0 !important;
+  }
+  
+  /* Para os labels em geral */
+  label {
+    font-size: 6pt !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Ocultar as partes de Pontos de Competência Disponíveis e Pontos de Aptidão Disponíveis */
+  #pontosCompetencia, #pontosAptidao,
+  label[for="pontosCompetencia"], label[for="pontosAptidao"],
+  .pontos-disponiveis,
+  div:has(> span:contains("Pontos de Competência")),
+  div:has(> span:contains("Pontos de Aptidão")),
+  span:contains("Pontos de Competência"),
+  span:contains("Pontos de Aptidão"),
+  .form-group:has(input#pontosCompetencia),
+  .form-group:has(input#pontosAptidao),
+  div[class*="pontos-competencia"],
+  div[class*="pontos-aptidao"],
+  div:has(> label:contains("Pontos de Competência")),
+  div:has(> label:contains("Pontos de Aptidão")),
+  h3:contains("Pontos de Competência"),
+  h3:contains("Pontos de Aptidão"),
+  .card-header:has(> h3:contains("Pontos")),
+  .card-title:contains("Pontos de Competência"),
+  .card-title:contains("Pontos de Aptidão") {
+    display: none !important;
+  }
+
+  /* Ocultar completamente "Pontos de Habilidade Disponíveis" e "Pontos de Habilidade p/ Fruta Disponíveis" */
+  #pontosHabilidade, #pontosFruta,
+  label[for="pontosHabilidade"], label[for="pontosFruta"],
+  .pontos-habilidade-container, .pontos-fruta-container,
+  div:has(> span:contains("Pontos de Habilidade")),
+  span:contains("Pontos de Habilidade"),
+  .form-group:has(input#pontosHabilidade),
+  .form-group:has(input#pontosFruta),
+  div[class*="pontos-habilidade"],
+  div:has(> label:contains("Pontos de Habilidade")),
+  h3:contains("Pontos de Habilidade"),
+  .card-header:has(> h3:contains("Pontos de Habilidade")),
+  .card-title:contains("Pontos de Habilidade"),
+  /* Seletores específicos para pontos de fruta */
+  div:has(> span:contains("Pontos de Habilidade p/ Fruta")),
+  span:contains("Pontos de Habilidade p/ Fruta"),
+  div:has(> label:contains("Pontos de Habilidade p/ Fruta")),
+  h3:contains("Pontos de Habilidade p/ Fruta"),
+  .card-header:has(> h3:contains("Pontos de Habilidade p/ Fruta")),
+  .card-title:contains("Pontos de Habilidade p/ Fruta") {
+    display: none !important;
+  }
+
+  /* Seletores mais genéricos para garantir que todos os elementos relacionados a pontos sejam ocultados */
+  [id*="pontos"]:not([id*="pontos-competencia-gasta"]):not([id*="pontos-aptidao-gasta"]),
+  [class*="pontos-"]:not([class*="pontos-competencia-gasta"]):not([class*="pontos-aptidao-gasta"]),
+  div:has(> *:contains("Pontos de")):not(:has(> *:contains("Pontos de Competência Gastos"))):not(:has(> *:contains("Pontos de Aptidão Gastos"))),
+  *:contains("Pontos Disponíveis"),
+  *:contains("Pontos de Habilidade"),
+  *:contains("Pontos de Competência Disponíveis"),
+  *:contains("Pontos de Aptidão Disponíveis") {
+    display: none !important;
+  }
+}
+
+    /*Fim Ajustes PDF*/
+
     /* -- RESET E ESTILOS BASE -- */
     *,
     *::before,
@@ -2092,7 +2607,7 @@
     let classeDificuldade = bonusMaestria + maiorEntrePersDisciplina;
 
     // Calculando deslocamento
-    let deslocamento = (agilidade > 1) ? (5 * agilidade) + "m" : "5m";
+    let deslocamento = (agilidade > 1) ? (6 * agilidade) + "m" + " (" + ((6*agilidade)/1.5) + " quadrados)" : "1.5m";
 
     // Atualizando os valores nos inputs
     document.getElementById('classeAcerto').value = classeAcerto;
@@ -2862,8 +3377,8 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
           <span class="list-item-title">${hab.nome}</span>
           <span class="list-item-subtitle">Custo de Compra: ${hab.custoCompra || 0} PH</span>
         </div>
-        <div class="list-item-content"><em><strong>Custo de Uso:</strong> ${hab.custo || "-"}</em></div>
-        <div class="list-item-content"><strong>Alcance e Duração:</strong> ${hab.alcance || "-"}</div>
+        <div class="list-item-content"><em>Custo de Uso: ${hab.custo || "-"}</em></div>
+        <div class="list-item-content"><strong>Alcance / Duração:</strong> ${hab.alcance || "-"}</div>
         <div class="list-item-content">${hab.desc || ""}</div>
         <div class="list-item-actions">
           <button type="button" class="btn btn-sm btn-primary" onclick="${editarFunc}">Editar</button>
