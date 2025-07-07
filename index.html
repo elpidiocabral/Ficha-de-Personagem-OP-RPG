@@ -2669,7 +2669,7 @@
     let classeDificuldade = bonusMaestria + maiorEntrePersDisciplina;
 
     // Calculando deslocamento
-    let deslocamento = (agilidade > 1) ? (3 * agilidade) + "m" + " (" + ((3*agilidade)/1.5) + " quadrados)" : "1.5m";
+    let deslocamento = (agilidade >= 1) ? (3 * agilidade) + "m" + " (" + ((3*agilidade)/1.5) + " quadrados)" : "1.5m";
 
     // Atualizando os valores nos inputs
     document.getElementById('classeAcerto').value = classeAcerto;
