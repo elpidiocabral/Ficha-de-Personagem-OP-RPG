@@ -1287,7 +1287,8 @@
 
     /* Oculta as setinhas para inputs readonly no Firefox */
     input[readonly] {
-        -moz-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
     }
 
     /* DARKMODE */
@@ -1441,13 +1442,391 @@
       color: var(--success);
     }
 
+    /* === SISTEMA DE MÚLTIPLAS FICHAS === */
+    
+    /* Menu Inicial */
+    .menu-inicial {
+      min-height: 100vh;
+      background: 
+        linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="1" fill="%23ffffff" opacity="0.02"/><circle cx="10" cy="60" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="90" cy="40" r="1" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      background-attachment: fixed;
+      background-size: cover, 100px 100px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Adicionar um overlay sutil para dar profundidade */
+    .menu-inicial::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+
+    .menu-inicial > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .menu-header h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .menu-header p {
+      color: #e0e8ff;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .menu-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-large {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-large:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Grid de Personagens */
+    .personagens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 1rem;
+    }
+
+    .personagem-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .personagem-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-color: var(--primary);
+    }
+
+    .personagem-avatar {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .personagem-avatar img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .personagem-info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .personagem-info h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+    }
+
+    .personagem-info p {
+      margin: 0.25rem 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .personagem-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .personagem-actions .btn {
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .personagem-actions .btn:first-child {
+      grid-column: 1 / -1;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .sem-personagens {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.2rem;
+      border: 2px dashed rgba(255,255,255,0.3);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--primary-dark);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    /* Botão Voltar ao Menu */
+    .btn-voltar-menu {
+      background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 6px rgba(255, 107, 53, 0.3);
+      position: absolute;
+      left: 15px;
+      top: 18px;
+      z-index: 10;
+    }
+
+    .btn-voltar-menu:hover {
+      background: linear-gradient(135deg, #e55a2b 0%, #e8871a 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-voltar-menu:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+    }
+
+    /* Modo escuro para o botão voltar */
+    body.dark-mode .btn-voltar-menu {
+      background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+      box-shadow: 0 3px 6px rgba(211, 84, 0, 0.4);
+    }
+
+    body.dark-mode .btn-voltar-menu:hover {
+      background: linear-gradient(135deg, #c0392b 0%, #d35400 100%);
+      box-shadow: 0 4px 8px rgba(211, 84, 0, 0.5);
+    }
+
+    /* Responsividade do Menu */
+    @media (max-width: 768px) {
+      .menu-inicial {
+        padding: 1rem;
+      }
+      
+      .menu-header h1 {
+        font-size: 2rem;
+      }
+      
+      .personagens-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .menu-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn-large {
+        width: 100%;
+        margin: 0;
+      }
+      
+      /* Botão voltar em mobile */
+      .btn-voltar-menu {
+        left: 10px;
+        top: 15px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Modo Escuro para o Menu */
+    body.dark-mode .menu-inicial {
+      background: 
+        linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(26, 31, 46, 0.95) 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="grain-dark" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="50" cy="10" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="10" cy="60" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="90" cy="40" r="1" fill="%23ffffff" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain-dark)"/></svg>');
+      background-attachment: fixed;
+      background-size: cover, 100px 100px;
+    }
+
+    body.dark-mode .menu-inicial::before {
+      background: radial-gradient(circle at 50% 50%, rgba(100,150,255,0.1) 0%, rgba(0,0,0,0.5) 100%);
+    }
+
+    body.dark-mode .personagem-card {
+      background: #1e1e1e;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .personagem-card:hover {
+      border-color: var(--primary);
+    }
+
+    body.dark-mode .personagem-info h3 {
+      color: #f0f0f0;
+    }
+
+    body.dark-mode .modal-content {
+      background: #1e1e1e;
+    }
+
+    body.dark-mode .modal-header {
+      border-bottom-color: #333;
+    }
+
+    body.dark-mode .modal-header h3 {
+      color: #f0f0f0;
+    }
+
 
     
   </style>
 </head>
 <body> 
-  <div class="container">
+  <!-- Menu Inicial de Seleção de Personagens -->
+  <div id="menu-inicial" class="menu-inicial">
+    <div class="menu-header">
+      <h1>One Piece RPG - A Vontade Dos Mares</h1>
+      <p>Selecione um personagem ou crie um novo pirata!</p>
+      <button id="toggleThemeMenuBtn" class="theme-toggle-pill" onclick="alternarTema()">Modo Escuro</button>
+    </div>
+    
+    <div class="menu-actions">
+      <button class="btn btn-primary btn-large" onclick="criarNovoPersonagem()">
+        ⚓ Criar Novo Personagem
+      </button>
+      <button class="btn btn-secondary btn-large" onclick="mostrarImportExport()">
+        📁 Import/Export
+      </button>
+    </div>
+    
+    <div id="personagens-grid" class="personagens-grid">
+      <!-- Personagens serão carregados aqui -->
+    </div>
+    
+    <!-- Modal de Import/Export -->
+    <div id="modal-import-export" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Import/Export de Personagens</h3>
+          <button class="modal-close" onclick="fecharImportExport()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Importar Personagem:</label>
+            <input type="file" id="importPersonagem" accept=".json" onchange="importarPersonagem(this)">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-danger" onclick="limparTodosPersonagens()">
+              🗑️ Limpar Todos os Personagens
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ficha do Personagem (Oculta inicialmente) -->
+  <div id="ficha-container" class="container" style="display: none;">
     <div class="header">
+      <button class="btn btn-voltar-menu" onclick="voltarParaMenu()">
+        ← Voltar ao Menu
+      </button>
       <h1 style="margin-right: 40px;">Ficha One Piece RPG - A Vontade Dos Mares</h1>
       <button id="toggleThemeBtn" class="theme-toggle-pill" onclick="alternarTema()">Modo Escuro</button>
     </div>    
@@ -3620,21 +3999,44 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   }
 
   function carregarFicha() {
-    let data = carregarDoLocalStorage();
+    try {
+      // Verificar se estamos na ficha e não no menu
+      const fichaContainer = document.getElementById('ficha-container');
+      if (!fichaContainer || fichaContainer.style.display === 'none') {
+        return; // Não carregar se não estivermos na ficha
+      }
+      
+      let data = carregarDoLocalStorage();
 
-    // Avatar
-    if (data.avatarBase64) {
-      document.getElementById('avatarPreview').src = data.avatarBase64;
-    }
+      // Avatar
+      if (data.avatarBase64) {
+        const avatarPreview = document.getElementById('avatarPreview');
+        if (avatarPreview) {
+          avatarPreview.src = data.avatarBase64;
+        }
+      }
 
-    // Básico
-    document.getElementById('nome').value = data.nome || "";
-    document.getElementById('raca').value = data.raca || "Humano";
-    document.getElementById('classe').value = data.classe || "Lutador";
-    document.getElementById('profissao').value = data.profissao || "Combatente";
-    document.getElementById('potencial').value = data.potencial || "Monstro";
-    document.getElementById('nivel-classe').value = data.nivelClasse || 1;
-    document.getElementById('nivel-profissao').value = data.nivelProfissao || 1;
+      // Básico
+      const nomeEl = document.getElementById('nome');
+      if (nomeEl) nomeEl.value = data.nome || "";
+      
+      const racaEl = document.getElementById('raca');
+      if (racaEl) racaEl.value = data.raca || "Humano";
+      
+      const classeEl = document.getElementById('classe');
+      if (classeEl) classeEl.value = data.classe || "Lutador";
+      
+      const profissaoEl = document.getElementById('profissao');
+      if (profissaoEl) profissaoEl.value = data.profissao || "Combatente";
+      
+      const potencialEl = document.getElementById('potencial');
+      if (potencialEl) potencialEl.value = data.potencial || "Monstro";
+      
+      const nivelClasseEl = document.getElementById('nivel-classe');
+      if (nivelClasseEl) nivelClasseEl.value = data.nivelClasse || 1;
+      
+      const nivelProfissaoEl = document.getElementById('nivel-profissao');
+      if (nivelProfissaoEl) nivelProfissaoEl.value = data.nivelProfissao || 1;
 
     // Status
     document.getElementById('vidaAtual').value = data.vida || 10;
@@ -3782,6 +4184,10 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     // Recalcular
     atualizarAtributos();
     atualizarBarrasStatus();
+    } catch (error) {
+      console.warn('Erro ao carregar ficha:', error);
+      // Silenciosamente ignorar erros quando não estamos na ficha
+    }
   }
 
   function salvarFicha() {
@@ -4072,6 +4478,106 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
     }
   }
 
+  function limparInterfacePersonagem() {
+    // Função auxiliar para limpar a interface sem prompt
+    // Remover dados do localStorage
+    localStorage.removeItem('fichaOnePiece');
+    localStorage.removeItem('competencia');
+    localStorage.removeItem('aptidao');
+    localStorage.removeItem('ataques');
+    
+    // Resetar campos básicos
+    document.getElementById('nome').value = "";
+    document.getElementById('raca').value = "Humano";
+    document.getElementById('classe').value = "Lutador";
+    document.getElementById('profissao').value = "Combatente";
+    document.getElementById('potencial').value = "Monstro";
+    document.getElementById('nivel-classe').value = "1";
+    document.getElementById('nivel-profissao').value = "1";
+    
+    // Resetar status
+    document.getElementById('vidaAtual').value = "10";
+    document.getElementById('vidaMax').value = "10";
+    document.getElementById('vigorAtual').value = "6";
+    document.getElementById('vigorMax').value = "6";
+    document.getElementById('determinacao').value = "";
+    document.getElementById('bonusMaestria').value = "1";
+    document.getElementById('sorte').value = "";
+    document.getElementById('classeAcerto').value = "";
+    document.getElementById('classeDificuldade').value = "";
+    document.getElementById('deslocamento').value = "";
+    
+    // Resetar atributos principais
+    const atributosBase = ['forcaBase', 'destrezaBase', 'vitalidadeBase', 'aparenciaBase', 
+                          'conhecimentoBase', 'raciocinioBase', 'vontadeBase', 'destinoBase', 
+                          'velocidadeBase', 'resilienciaBase'];
+    
+    const atributosBonus = ['forcaBonus', 'destrezaBonus', 'vitalidadeBonus', 'aparenciaBonus', 
+                          'conhecimentoBonus', 'raciocinioBonus', 'vontadeBonus', 'destinoBonus', 
+                          'velocidadeBonus', 'resilienciaBonus'];
+    
+    // Resetar atributos derivados
+    const atributosDerivadosBonus = ['persistenciaBonus', 'disciplinaBonus', 'carismaBonus', 
+                                    'agilidadeBonus', 'resistenciaBonus'];
+    
+    // Limpar todos os atributos
+    [...atributosBase, ...atributosBonus, ...atributosDerivadosBonus].forEach(id => {
+      document.getElementById(id).value = "0";
+    });
+    
+    // Limpar listas dinâmicas
+    document.getElementById('listaAtaques').innerHTML = "";
+    document.getElementById('listaCompetencias').innerHTML = "";
+    document.getElementById('listaAptidoes').innerHTML = "";
+    document.getElementById('listaFerimentosLesoes').innerHTML = "";
+    document.getElementById('listaHabilidades').innerHTML = "";
+    document.getElementById('listaFruta').innerHTML = "";
+    document.getElementById('listaItens').innerHTML = "";
+    document.getElementById('listaSessoes').innerHTML = "";
+    
+    // Limpar pontos de habilidade
+    document.getElementById('habilidade-pontos').value = "0";
+    document.getElementById('habilidade-fruta-pontos').value = "0";
+    document.getElementById('competencia-pontos').value = "0";
+    document.getElementById('aptidao-pontos').value = "0";
+    
+    // Limpar Akuma no Mi
+    document.getElementById('akumaNome').value = "";
+    document.getElementById('akumaTipo').value = "";
+    document.getElementById('akumaSubtipo').value = "";
+    document.getElementById('akumaTematica').value = "";
+    document.getElementById('akumaDesejo').value = "";
+    document.getElementById('nivelFruta').value = "0";
+    
+    // Limpar campos de texto pessoais
+    document.getElementById('ilhaOrigem').value = "";
+    document.getElementById('historia').value = "";
+    document.getElementById('sonho').value = "";
+    document.getElementById('pessoaImportante').value = "";
+    document.getElementById('objetivos').value = "";
+    document.getElementById('qualidades').value = "";
+    document.getElementById('habilidadeInutil').value = "";
+    document.getElementById('defeitos').value = "";
+    document.getElementById('reputacao').value = "";
+    document.getElementById('moral').value = "";
+    document.getElementById('bounty').value = "";
+    document.getElementById('dinheiro').value = "";
+    document.getElementById('anotacoesGerais').value = "";
+    
+    // Limpar reservas
+    document.getElementById('reservaVidaQtd').value = "0";
+    document.getElementById('reservaVigorQtd').value = "0";
+    
+    // Resetar avatar para placeholder
+    document.getElementById('avatarPreview').src = "/placeholder.svg";
+    
+    // Recalcular valores
+    // Recalcular valores
+    atualizarAtributos();
+    atualizarBarrasStatus();
+    calcularReservas();
+  }
+
   // Salvar automaticamente mudanças no localStorage
   ['vidaAtual','vidaMax','vigorAtual','vigorMax', 'nivel-classe', 'nivel-profissao'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
@@ -4095,9 +4601,20 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   // Modo Escuro DARKMODE
   function alternarTema() {
     const body = document.body;
-    const btn = document.getElementById('toggleThemeBtn');
     const escuro = body.classList.toggle('dark-mode');
-    btn.textContent = escuro ? "Modo Claro" : "Modo Escuro";
+    
+    // Atualizar botão do tema se existir (na ficha)
+    const btn = document.getElementById('toggleThemeBtn');
+    if (btn) {
+      btn.textContent = escuro ? "Modo Claro" : "Modo Escuro";
+    }
+    
+    // Atualizar botão do tema se existir (no menu)
+    const menuBtn = document.getElementById('toggleThemeMenuBtn');
+    if (menuBtn) {
+      menuBtn.textContent = escuro ? "Modo Claro" : "Modo Escuro";
+    }
+    
     localStorage.setItem('temaRPG', escuro ? 'escuro' : 'claro');
   }
 
@@ -4105,7 +4622,18 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
   window.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('temaRPG') === 'escuro') {
       document.body.classList.add('dark-mode');
-      document.getElementById('toggleThemeBtn').textContent = "Modo Claro";
+      
+      // Atualizar botão do tema se existir (na ficha)
+      const toggleBtn = document.getElementById('toggleThemeBtn');
+      if (toggleBtn) {
+        toggleBtn.textContent = "Modo Claro";
+      }
+      
+      // Atualizar botão do tema se existir (no menu)
+      const toggleMenuBtn = document.getElementById('toggleThemeMenuBtn');
+      if (toggleMenuBtn) {
+        toggleMenuBtn.textContent = "Modo Claro";
+      }
     }
   });
 
@@ -4132,7 +4660,286 @@ window.addEventListener('DOMContentLoaded', atualizarInformacoesCombate);
       lista[index].expanded = isOpen;
       localStorage.setItem('fichaOnePiece', JSON.stringify(data));
     }
-  }
+    }
+    
+    // Função de debug para testar o sistema
+    window.testarSistema = function() {
+      console.log('=== TESTE DO SISTEMA ===');
+      console.log('personagemAtualId:', personagemAtualId);
+      console.log('Menu visível:', document.getElementById('menu-inicial').style.display);
+      console.log('Ficha visível:', document.getElementById('ficha-container').style.display);
+      console.log('Personagens salvos:', localStorage.getItem('personagensOnePiece'));
+      
+      console.log('Testando voltarParaMenu...');
+      voltarParaMenu();
+    };
+    
+    // Expor função para debug global
+    window.voltarParaMenu = voltarParaMenu;
+    window.mostrarMenu = mostrarMenu;
+    window.mostrarFicha = mostrarFicha;
+
+  </script>  </div> <!-- Fim do ficha-container -->
+
+  <script>
+    // === SISTEMA DE MÚLTIPLAS FICHAS ===
+    let personagemAtualId = null;
+    
+    // Funções para gerenciar múltiplas fichas
+    function carregarPersonagens() {
+      const personagens = JSON.parse(localStorage.getItem('personagensOnePiece')) || {};
+      return personagens;
+    }
+    
+    function salvarPersonagem(id, data) {
+      const personagens = carregarPersonagens();
+      personagens[id] = data;
+      localStorage.setItem('personagensOnePiece', JSON.stringify(personagens));
+    }
+    
+    function criarNovoPersonagem() {
+      const id = 'personagem_' + Date.now();
+      personagemAtualId = id;
+      
+      // Ir para a ficha primeiro
+      mostrarFicha();
+      
+      // Depois limpar todos os dados da interface
+      limparInterfacePersonagem();
+    }
+    
+    function carregarPersonagem(id) {
+      personagemAtualId = id;
+      const personagens = carregarPersonagens();
+      const data = personagens[id];
+      
+      if (data) {
+        localStorage.setItem('fichaOnePiece', JSON.stringify(data));
+        if (data.listaCompetencias) {
+          localStorage.setItem('competencia', JSON.stringify(data.listaCompetencias));
+        }
+        if (data.listaAptidoes) {
+          localStorage.setItem('aptidao', JSON.stringify(data.listaAptidoes));
+        }
+        if (data.listaAtaques) {
+          localStorage.setItem('ataques', JSON.stringify(data.listaAtaques));
+        }
+      }
+      
+      mostrarFicha();
+      carregarFicha();
+    }
+    
+    function mostrarMenu() {
+      try {
+        console.log('Mostrando menu...');
+        const menuInicial = document.getElementById('menu-inicial');
+        const fichaContainer = document.getElementById('ficha-container');
+        
+        if (menuInicial && fichaContainer) {
+          menuInicial.style.display = 'block';
+          fichaContainer.style.display = 'none';
+          carregarGridPersonagens();
+          console.log('Menu mostrado com sucesso!');
+        } else {
+          console.error('Elementos não encontrados:', { menuInicial, fichaContainer });
+        }
+      } catch (error) {
+        console.error('Erro ao mostrar menu:', error);
+      }
+    }
+    
+    function mostrarFicha() {
+      document.getElementById('menu-inicial').style.display = 'none';
+      document.getElementById('ficha-container').style.display = 'block';
+    }
+    
+    function voltarParaMenu() {
+      try {
+        // Salvar personagem atual antes de voltar
+        if (personagemAtualId) {
+          console.log('Salvando personagem:', personagemAtualId);
+          const data = coletarDados();
+          salvarPersonagem(personagemAtualId, data);
+        }
+        
+        console.log('Voltando para o menu...');
+        mostrarMenu();
+      } catch (error) {
+        console.error('Erro ao voltar para o menu:', error);
+        // Tentar voltar mesmo com erro
+        mostrarMenu();
+      }
+    }
+    
+    function carregarGridPersonagens() {
+      const personagens = carregarPersonagens();
+      const grid = document.getElementById('personagens-grid');
+      grid.innerHTML = '';
+      
+      if (Object.keys(personagens).length === 0) {
+        grid.innerHTML = '<div class="sem-personagens">Nenhum personagem criado ainda. Clique em "Criar Novo Personagem" para começar!</div>';
+        return;
+      }
+      
+      Object.entries(personagens).forEach(([id, data]) => {
+        const card = document.createElement('div');
+        card.className = 'personagem-card';
+        
+        const avatar = data.avatarBase64 || '/placeholder.svg';
+        const nome = data.nome || 'Sem nome';
+        const classe = data.classe || 'Sem classe';
+        const nivel = data.nivelClasse || 1;
+        
+        card.innerHTML = `
+          <div class="personagem-avatar">
+            <img src="${avatar}" alt="${nome}" onerror="this.src='/placeholder.svg'">
+          </div>
+          <div class="personagem-info">
+            <h3>${nome}</h3>
+            <p><strong>Classe:</strong> ${classe}</p>
+            <p><strong>Nível:</strong> ${nivel}</p>
+          </div>
+          <div class="personagem-actions">
+            <button class="btn btn-primary" onclick="carregarPersonagem('${id}')">
+              ⚓ Jogar
+            </button>
+            <button class="btn btn-secondary" onclick="duplicarPersonagem('${id}')">
+              📋 Duplicar
+            </button>
+            <button class="btn btn-success" onclick="exportarPersonagem('${id}')">
+              💾 Exportar
+            </button>
+            <button class="btn btn-danger" onclick="excluirPersonagem('${id}')">
+              🗑️ Excluir
+            </button>
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      });
+    }
+    
+    function duplicarPersonagem(id) {
+      const personagens = carregarPersonagens();
+      const original = personagens[id];
+      
+      if (original) {
+        const novoId = 'personagem_' + Date.now();
+        const copia = JSON.parse(JSON.stringify(original));
+        copia.nome = (copia.nome || 'Sem nome') + ' (Cópia)';
+        
+        salvarPersonagem(novoId, copia);
+        carregarGridPersonagens();
+      }
+    }
+    
+    function excluirPersonagem(id) {
+      const personagens = carregarPersonagens();
+      const nome = personagens[id]?.nome || 'este personagem';
+      
+      if (confirm(`Tem certeza que deseja excluir ${nome}?`)) {
+        delete personagens[id];
+        localStorage.setItem('personagensOnePiece', JSON.stringify(personagens));
+        carregarGridPersonagens();
+      }
+    }
+    
+    function exportarPersonagem(id) {
+      const personagens = carregarPersonagens();
+      const data = personagens[id];
+      
+      if (data) {
+        const nomePersonagem = (data.nome || 'Personagem').replace(/[^a-zA-Z0-9_-]+/g, '_');
+        const str = JSON.stringify(data, null, 2);
+        const blob = new Blob([str], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${nomePersonagem}.json`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+      }
+    }
+    
+    function importarPersonagem(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          const id = 'personagem_' + Date.now();
+          
+          salvarPersonagem(id, data);
+          carregarGridPersonagens();
+          fecharImportExport();
+          alert('Personagem importado com sucesso!');
+        } catch(err) {
+          alert('Erro ao importar personagem: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    function mostrarImportExport() {
+      document.getElementById('modal-import-export').style.display = 'flex';
+    }
+    
+    function fecharImportExport() {
+      document.getElementById('modal-import-export').style.display = 'none';
+      document.getElementById('importPersonagem').value = '';
+    }
+    
+    function limparTodosPersonagens() {
+      if (confirm('ATENÇÃO: Isso irá excluir TODOS os personagens salvos. Tem certeza?')) {
+        localStorage.removeItem('personagensOnePiece');
+        carregarGridPersonagens();
+        alert('Todos os personagens foram excluídos.');
+      }
+    }
+    
+    // Modificar a função salvarFicha original para salvar no sistema de múltiplas fichas
+    const salvarFichaOriginal = salvarFicha;
+    salvarFicha = function() {
+      salvarFichaOriginal(); // Manter compatibilidade
+      
+      if (personagemAtualId) {
+        const data = coletarDados();
+        salvarPersonagem(personagemAtualId, data);
+      }
+    };
+    
+    // Inicializar o sistema
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('Sistema de múltiplas fichas iniciando...');
+      
+      try {
+        // Verificar se existe um personagem no localStorage antigo
+        const fichaAntiga = localStorage.getItem('fichaOnePiece');
+        if (fichaAntiga) {
+          console.log('Migrando ficha antiga...');
+          // Migrar para o novo sistema
+          const data = JSON.parse(fichaAntiga);
+          const id = 'personagem_migrado_' + Date.now();
+          salvarPersonagem(id, data);
+          
+          // Limpar localStorage antigo após migração
+          localStorage.removeItem('fichaOnePiece');
+          console.log('Ficha migrada com sucesso!');
+        }
+        
+        console.log('Mostrando menu inicial...');
+        mostrarMenu();
+      } catch (error) {
+        console.error('Erro na inicialização:', error);
+        // Tentar mostrar menu mesmo com erro
+        mostrarMenu();
+      }
+    });
 
   </script>
 </body>
