@@ -13,7 +13,6 @@ Uma ficha digital de personagem para **One Piece RPG**, com **menu de múltiplas
 - [Como Usar](#como-usar)
 - [Impressão](#impressão)
 - [Estrutura do Projeto](#estrutura-do-projeto)
-- [Hospedar (GitHub Pages)](#hospedar-github-pages)
 - [Modelo de Dados (JSON)](#modelo-de-dados-json)
 - [Roadmap / TODO](#roadmap--todo)
 - [Contribuindo](#contribuindo)
