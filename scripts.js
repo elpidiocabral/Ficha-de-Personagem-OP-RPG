@@ -1987,7 +1987,7 @@ function carregarGridPersonagens() {
     // Gerenciar avatar de forma mais robusta
     let avatarHtml = ''
     if (data.avatarBase64 && data.avatarBase64.trim() !== '') {
-      avatarHtml = `<img src="${data.avatarBase64}" alt="${nome}" onerror="this.outerHTML='<div class=\\"placeholder\\"></div>`
+      avatarHtml = `<img src="${data.avatarBase64}" alt="${nome}" onerror="this.src='/placeholder.svg'">`
     } else {
       avatarHtml = `<div class="placeholder"></div>`
     }
