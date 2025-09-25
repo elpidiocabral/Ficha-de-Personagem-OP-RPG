@@ -1514,10 +1514,14 @@
     /* Grid de Personagens */
     .personagens-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      /* Keep the card size but let the number of columns scale with viewport.
+         Each column will be between 260px and 300px; auto-fit will create as
+         many columns as fit and center them. */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
+      justify-content: center;
       gap: 1.5rem;
       width: 100%;
-      max-width: 1200px;
+      max-width: none; /* allow more columns on wide screens */
       margin-top: 1rem;
     }
 
