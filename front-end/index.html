@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
   <title>Ficha One Piece RPG - A Vontade Dos Mares</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -672,9 +673,9 @@
                       <input type="text" id="ataqueDano" class="form-control" placeholder="Ex: 1d8+10 Perfurante">
                   </div>
               </div>
-              <div class="col-2">
-                  <button type="button" class="btn btn-primary mt-3" onclick="adicionarAtaque()">Adicionar</button>
-              </div>
+        <div class="col-2">
+          <button type="button" id="btnAddAtaque" class="btn btn-primary mt-3" onclick="adicionarAtaque()">Adicionar</button>
+        </div>
           </div>
           
           <!-- Lista de ataques -->
@@ -741,7 +742,7 @@
             </div>
           </div>
           
-          <button type="button" class="btn btn-primary" onclick="adicionarCompetencia()">Adicionar</button>
+          <button type="button" id="btnAddComp" class="btn btn-primary" onclick="adicionarCompetencia()">Adicionar</button>
           </details>
 
           <div class="mt-2">

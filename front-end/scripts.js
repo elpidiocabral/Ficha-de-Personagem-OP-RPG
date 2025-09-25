@@ -6,6 +6,11 @@ let itemEditandoIndex = null // variável
 /* ---------- VARIÁVEIS GLOBAIS PARA EDIÇÃO ---------- */
 let editingHabilidadeIndex = -1 // Para Habilidades comuns
 let editingFrutaIndex = -1 // Para Habilidades da Fruta
+// Estado de edição para Competências/Aptidões/Trunfos
+let editingCompetenciaIndex = -1
+let editingCompetenciaTipo = null
+// Estado de edição para Ataques
+let editingAtaqueIndex = -1
 
 /* Ao carregar a página */
 window.addEventListener("DOMContentLoaded", () => {
@@ -445,21 +450,32 @@ function adicionarAtaque() {
     alert("Preencha todos os campos para adicionar um ataque.")
     return
   }
-
   const container = document.getElementById("listaAtaques")
-  const div = document.createElement("div")
-  div.className = "ataque-item"
-  div.innerHTML = `
+
+  // If we're editing an existing attack, update storage
+  if (editingAtaqueIndex !== -1) {
+    const ataques = JSON.parse(localStorage.getItem("ataques")) || []
+    ataques[editingAtaqueIndex] = { nome, bonus, dano }
+    localStorage.setItem("ataques", JSON.stringify(ataques))
+    editingAtaqueIndex = -1
+    const btn = document.getElementById('btnAddAtaque')
+    if (btn) btn.textContent = 'Adicionar'
+    carregarAtaques()
+  } else {
+    const div = document.createElement("div")
+    div.className = "ataque-item"
+    div.innerHTML = `
       <span class="ataque-nome">${nome}</span>
-      <span class="ataque-bonus">+${bonus}</span>
+      <span class="ataque-bonus">Bônus: ${bonus}</span>
       <span class="ataque-dano">Dano: ${dano}</span>
       <div class="ataque-actions">
-          <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">Remover</button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">🗑️</button>
       </div>
-  `
-  container.appendChild(div)
+    `
+    container.appendChild(div)
 
-  salvarAtaquesLocal()
+    salvarAtaquesLocal()
+  }
 
   // Limpar os campos
   document.getElementById("ataqueNome").value = ""
@@ -488,7 +504,7 @@ function carregarAtaques() {
   const ataques = JSON.parse(localStorage.getItem("ataques")) || []
   const container = document.getElementById("listaAtaques")
   container.innerHTML = ""
-  ataques.forEach(({ nome, bonus, dano }) => {
+  ataques.forEach(({ nome, bonus, dano }, idx) => {
     const div = document.createElement("div")
     div.className = "ataque-item"
     div.innerHTML = `
@@ -496,11 +512,26 @@ function carregarAtaques() {
             <span class="ataque-bonus">Bônus: ${bonus}</span>
             <span class="ataque-dano">Dano: ${dano}</span>
             <div class="ataque-actions">
-                <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">Remover</button>
+                <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarAtaque(${idx})">✏️</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">🗑️</button>
             </div>
         `
     container.appendChild(div)
   })
+}
+
+function editarAtaque(index) {
+  const ataques = JSON.parse(localStorage.getItem("ataques")) || []
+  const at = ataques[index]
+  if (!at) return
+
+  document.getElementById('ataqueNome').value = at.nome || ''
+  document.getElementById('ataqueBonus').value = at.bonus || ''
+  document.getElementById('ataqueDano').value = at.dano || ''
+
+  editingAtaqueIndex = index
+  const btn = document.getElementById('btnAddAtaque')
+  if (btn) btn.textContent = 'Salvar Edição'
 }
 
 // Carregar ataques salvos ao abrir a ficha
@@ -540,23 +571,38 @@ function adicionarCompetencia() {
   if (tipo === "competencia") container = document.getElementById("listaCompetencias")
   else if (tipo === "aptidao") container = document.getElementById("listaAptidoes")
   else container = document.getElementById("listaTrunfos")
-  const div = document.createElement("div")
-  div.className = "list-item col-2" // Ajustado para ocupar 1/5 da linha
-  div.innerHTML = `
-    <div class="list-item-header">
-      <span class="list-item-title">${nome}</span>
-      ${tipo !== "trunfo" ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ""}
-    </div>
-    <div class="list-item-content">${obs}</div>
-    <div class="list-item-actions">
-      <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
-      <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(this, '${tipo}')">Remover</button>
-    </div>
-  `
-  container.appendChild(div)
+  // If editing an existing item, update it in storage
+  if (editingCompetenciaIndex !== -1 && editingCompetenciaTipo === tipo) {
+    const items = JSON.parse(localStorage.getItem(tipo)) || []
+    items[editingCompetenciaIndex] = { nome, nivel, obs }
+    localStorage.setItem(tipo, JSON.stringify(items))
+    // Reset editing state and button label
+    editingCompetenciaIndex = -1
+    editingCompetenciaTipo = null
+    const btn = document.getElementById('btnAddComp')
+    if (btn) btn.textContent = 'Adicionar'
+    carregarCompetenciasEAptidoes()
+    salvarFicha()
+  } else {
+    const div = document.createElement("div")
+    div.className = "list-item col-2" // Ajustado para ocupar 1/5 da linha
+    div.innerHTML = `
+      <div class="list-item-header">
+        <span class="list-item-title">${nome}</span>
+        ${tipo !== "trunfo" ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ""}
+      </div>
+      <div class="list-item-content">${obs}</div>
+      <div class="list-item-actions">
+        ${tipo !== 'trunfo' ? `<button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>` : ''}
+        <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarCompetenciaPorBotao(this, '${tipo}')">✏️</button>
+        <button type="button" class="btn btn-sm btn-danger" title="Remover" onclick="removerItem(this, '${tipo}')">🗑️</button>
+      </div>
+    `
+    container.appendChild(div)
 
-  salvarNoLocalStorage(tipo)
+    salvarNoLocalStorage(tipo)
+  }
 
   // Reset form to defaults
   document.getElementById("compNome").value = ""
@@ -576,6 +622,7 @@ function toggleNivelInput() {
 
 function alterarNivel(button, delta, tipo) {
   const nivelSpan = button.parentElement.parentElement.querySelector(".list-item-subtitle")
+  if (!nivelSpan) return // nada a alterar (ex: trunfo)
   let nivel = Number.parseInt(nivelSpan.innerText.replace("Nível: ", "")) || 0
   nivel = Math.max(0, nivel + delta)
   nivelSpan.innerText = "Nível: " + nivel
@@ -598,6 +645,28 @@ function removerItem(button, tipo) {
   localStorage.setItem(tipo, JSON.stringify(items))
 
   atualizarInformacoesCombate()
+}
+
+function editarCompetencia(index, tipo) {
+  const items = JSON.parse(localStorage.getItem(tipo)) || []
+  const item = items[index]
+  if (!item) return
+
+  // Preencher o formulário com os valores existentes
+  document.getElementById('compTipo').value = tipo
+  document.getElementById('compNome').value = item.nome || ''
+  document.getElementById('compNivel').value = item.nivel || 0
+  document.getElementById('compObs').value = item.obs || ''
+  // Mostrar/ocultar campo de nível
+  toggleNivelInput()
+
+  // Marcar estado de edição
+  editingCompetenciaIndex = index
+  editingCompetenciaTipo = tipo
+
+  // Atualizar botão para indicar edição
+  const btn = document.getElementById('btnAddComp')
+  if (btn) btn.textContent = 'Salvar Edição'
 }
 
 function salvarNoLocalStorage(tipo) {
@@ -639,6 +708,8 @@ function salvarNoLocalStorage(tipo) {
 
   console.log("Salvando no localStorage:", updatedItems)
   localStorage.setItem(tipo, JSON.stringify(updatedItems))
+  // Recarregar listas na UI
+  carregarCompetenciasEAptidoes()
 }
 
 function carregarCompetenciasEAptidoes() {
@@ -653,7 +724,8 @@ function carregarCompetenciasEAptidoes() {
     const items = JSON.parse(localStorage.getItem(tipo)) || []
     console.log(`Carregando do localStorage (${tipo}):`, items)
 
-    items.forEach(({ nome, nivel, obs }) => {
+    items.forEach((item, idx) => {
+      const { nome, nivel, obs } = item
       const div = document.createElement("div")
       div.className = "list-item col-2"
       // Trunfos não exibem Nível
@@ -666,7 +738,8 @@ function carregarCompetenciasEAptidoes() {
             <div class="list-item-actions">
               ${tipo !== 'trunfo' ? `<button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
               <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>` : ''}
-              <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(this, '${tipo}')">Remover</button>
+              <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarCompetencia(${idx}, '${tipo}')">✏️</button>
+              <button type="button" class="btn btn-sm btn-danger" title="Remover" onclick="removerItem(this, '${tipo}')">🗑️</button>
             </div>
           `
       container.appendChild(div)
@@ -674,6 +747,20 @@ function carregarCompetenciasEAptidoes() {
   })
 
   console.log("Competências e Aptidões carregadas corretamente.")
+}
+
+// Helper for the emoji edit button that receives the clicked button element
+function editarCompetenciaPorBotao(button, tipo) {
+  // Find the item title from the DOM
+  const itemDiv = button.parentElement.parentElement
+  const nome = itemDiv.querySelector('.list-item-title')?.innerText
+  if (!nome) return
+
+  const items = JSON.parse(localStorage.getItem(tipo)) || []
+  const idx = items.findIndex((it) => it.nome === nome)
+  if (idx === -1) return
+
+  editarCompetencia(idx, tipo)
 }
 
 /* -------------- HABILIDADES (COMUNS) - EDIÇÃO -------------- */
