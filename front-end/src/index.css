@@ -1,0 +1,473 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode - Ocean Blues & Warm Tones */
+    --background: #f8fafc;
+    --foreground: #1e293b;
+    --card: rgba(255, 255, 255, 0.92);
+    --card-foreground: #1e293b;
+    --card-hover: rgba(255, 255, 255, 0.98);
+    --popover: rgba(255, 255, 255, 0.95);
+    --popover-foreground: #1e293b;
+    --primary: #2563eb;
+    --primary-foreground: #ffffff;
+    --secondary: rgba(241, 245, 249, 0.8);
+    --secondary-foreground: #334155;
+    --muted: rgba(248, 250, 252, 0.6);
+    --muted-foreground: #64748b;
+    --accent: rgba(59, 130, 246, 0.1);
+    --accent-foreground: #1e40af;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --border: rgba(226, 232, 240, 0.8);
+    --input: rgba(248, 250, 252, 0.9);
+    --ring: #2563eb;
+    --radius: 0.75rem;
+    
+    /* One Piece RPG variables - Enhanced */
+    --text: #1e293b;
+    --text-light: #64748b;
+    --text-muted: #94a3b8;
+    --border-dark: #cbd5e1;
+    --shadow: rgba(15, 23, 42, 0.08);
+    --shadow-lg: rgba(15, 23, 42, 0.15);
+    --primary-dark: #1e40af;
+    --primary-light: #3b82f6;
+    --ocean-blue: #0ea5e9;
+    --treasure-gold: #f59e0b;
+    --card-glass: rgba(255, 255, 255, 0.85);
+    --surface-overlay: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark {
+    /* Dark mode - Deep Ocean & Moonlight */
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --card: rgba(30, 41, 59, 0.92);
+    --card-foreground: #f1f5f9;
+    --card-hover: rgba(30, 41, 59, 0.98);
+    --popover: rgba(30, 41, 59, 0.95);
+    --popover-foreground: #f1f5f9;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: rgba(51, 65, 85, 0.8);
+    --secondary-foreground: #cbd5e1;
+    --muted: rgba(15, 23, 42, 0.6);
+    --muted-foreground: #64748b;
+    --accent: rgba(59, 130, 246, 0.15);
+    --accent-foreground: #60a5fa;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: rgba(71, 85, 105, 0.6);
+    --input: rgba(30, 41, 59, 0.9);
+    --ring: #3b82f6;
+    
+    /* One Piece RPG dark variables - Enhanced */
+    --text: #f1f5f9;
+    --text-light: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border-dark: #475569;
+    --shadow: rgba(0, 0, 0, 0.25);
+    --shadow-lg: rgba(0, 0, 0, 0.4);
+    --primary-dark: #1e40af;
+    --primary-light: #60a5fa;
+    --ocean-blue: #0ea5e9;
+    --treasure-gold: #fbbf24;
+    --card-glass: rgba(30, 41, 59, 0.85);
+    --surface-overlay: rgba(15, 23, 42, 0.7);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  /* Única imagem de fundo global */
+  body::before {
+    content: '';    
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://cdn.artstation.com/p/thumbnails/001/253/239/thumb.jpg') no-repeat center center;
+    background-size: cover;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: -1;
+    animation: ocean-wave 90s linear infinite;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Ajuste da opacidade no modo escuro */
+  .dark body::before {
+    opacity: 0.10;
+  }
+}
+
+/* One Piece RPG specific styles - Enhanced UX */
+.one-piece-gradient {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--ocean-blue));
+  position: relative;
+  overflow: hidden;
+}
+
+.one-piece-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(14, 165, 233, 0.02) 50%,
+    rgba(245, 158, 11, 0.05) 100%);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: subtle-float 30s ease-in-out infinite;
+}
+
+@keyframes subtle-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.02); }
+}
+
+/* Enhanced Character Cards */
+.character-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.character-card-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(14, 165, 233, 0.02) 50%,
+    rgba(245, 158, 11, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.character-card-hover:hover::before {
+  opacity: 1;
+}
+
+.character-card-hover:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 
+    0 20px 25px rgba(0, 0, 0, 0.15),
+    0 10px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.dark .character-card-hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(71, 85, 105, 0.6);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .character-card-hover:hover {
+  background: rgba(30, 41, 59, 0.98);
+  box-shadow: 
+    0 20px 25px rgba(0, 0, 0, 0.4),
+    0 10px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(96, 165, 250, 0.6);
+}
+
+/* Menu styles with enhanced One Piece theme */
+.menu-inicial {
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    rgba(30, 64, 175, 0.7) 0%,
+    rgba(37, 99, 235, 0.6) 35%,
+    rgba(14, 165, 233, 0.5) 65%,
+    rgba(30, 64, 175, 0.7) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-inicial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+@keyframes ocean-wave {
+  0% { transform: translateX(0) translateY(0) scale(1); }
+  25% { transform: translateX(-5px) translateY(-2px) scale(1.005); }
+  50% { transform: translateX(-10px) translateY(0) scale(1.01); }
+  75% { transform: translateX(-5px) translateY(2px) scale(1.005); }
+  100% { transform: translateX(0) translateY(0) scale(1); }
+}
+
+/* Enhanced Button styles */
+.btn-one-piece {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 4px 6px var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-one-piece::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: left 0.6s ease;
+}
+
+.btn-one-piece:hover::before {
+  left: 100%;
+}
+
+.btn-one-piece:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 20px var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Theme toggle button */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 140px;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Posicionamento responsivo do botão de tema */
+@media (max-width: 768px) {
+  .theme-toggle {
+    position: static !important;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Enhanced Import/Export panel */
+.import-export-panel {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    0 20px 25px rgba(0, 0, 0, 0.15),
+    0 10px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: calc(0.75rem * 1.5);
+}
+
+.dark .import-export-panel {
+  background: rgba(30, 41, 59, 0.98);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  box-shadow: 
+    0 20px 25px rgba(0, 0, 0, 0.4),
+    0 10px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced Typography */
+.enhanced-text {
+  color: var(--text);
+  text-shadow: 0 1px 2px var(--shadow);
+}
+
+.enhanced-text-light {
+  color: var(--text-light);
+}
+
+.enhanced-text-muted {
+  color: var(--text-muted);
+}
+
+/* Enhanced Interactive Elements */
+.interactive-element {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.interactive-element:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+.interactive-element:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+/* Glass morphism effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-card {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.btn-one-piece:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 20px var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Theme toggle button */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Import/Export panel */
+.import-export-panel {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark .import-export-panel {
+  background: rgba(30, 30, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Print styles */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 1cm;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  body {
+    background: none !important;
+  }
+}
+
+/* Enhanced animations for improved UX */
+@keyframes heartbeat {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6), 0 0 30px rgba(99, 102, 241, 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background-size: 200px 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
