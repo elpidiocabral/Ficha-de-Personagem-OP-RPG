@@ -558,9 +558,13 @@ function adicionarCompetencia() {
 
   salvarNoLocalStorage(tipo)
 
+  // Reset form to defaults
   document.getElementById("compNome").value = ""
   document.getElementById("compNivel").value = 0
   document.getElementById("compObs").value = ""
+  document.getElementById("compTipo").value = "competencia"
+  // Ensure nivel input visibility is correct after reset
+  toggleNivelInput()
 }
 
 function toggleNivelInput() {
@@ -607,7 +611,8 @@ function salvarNoLocalStorage(tipo) {
   const newItems = []
   container.querySelectorAll(".list-item").forEach((item) => {
     const nome = item.querySelector(".list-item-title").innerText.trim()
-    const nivel = Number.parseInt(item.querySelector(".list-item-subtitle").innerText.replace("Nível: ", "")) || 0
+    const nivelEl = item.querySelector(".list-item-subtitle")
+    const nivel = nivelEl ? (Number.parseInt(nivelEl.innerText.replace("Nível: ", "")) || 0) : 0
     const obs = item.querySelector(".list-item-content").innerText.trim()
 
     // Verifica se já existe a competência com o mesmo nome
@@ -651,15 +656,16 @@ function carregarCompetenciasEAptidoes() {
     items.forEach(({ nome, nivel, obs }) => {
       const div = document.createElement("div")
       div.className = "list-item col-2"
+      // Trunfos não exibem Nível
       div.innerHTML = `
             <div class="list-item-header">
               <span class="list-item-title">${nome}</span>
-              <span class="list-item-subtitle">Nível: ${nivel}</span>
+              ${tipo !== 'trunfo' ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ''}
             </div>
             <div class="list-item-content">${obs}</div>
             <div class="list-item-actions">
-              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
-              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>
+              ${tipo !== 'trunfo' ? `<button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>` : ''}
               <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(this, '${tipo}')">Remover</button>
             </div>
           `
@@ -1248,6 +1254,10 @@ function carregarFicha() {
     if (data.listaAptidoes) {
       localStorage.setItem("aptidao", JSON.stringify(data.listaAptidoes))
     }
+    // Trunfos (listaTrunfos)
+    if (data.listaTrunfos) {
+      localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+    }
 
     // Competências
     carregarCompetenciasEAptidoes(data.listaCompetencias || [])
@@ -1325,6 +1335,7 @@ function salvarFicha() {
 
   data.listaCompetencias = JSON.parse(localStorage.getItem("competencia")) || []
   data.listaAptidoes = JSON.parse(localStorage.getItem("aptidao")) || []
+  data.listaTrunfos = JSON.parse(localStorage.getItem("trunfo")) || []
 
   localStorage.setItem("fichaOnePiece", JSON.stringify(data))
   //alert("Ficha salva no navegador (localStorage)!");
@@ -1474,6 +1485,7 @@ function coletarDados() {
   data.listaItens = oldData.listaItens || []
   data.habilidades = oldData.habilidades || []
   data.frutaHabilidades = oldData.frutaHabilidades || []
+  data.listaTrunfos = oldData.listaTrunfos || JSON.parse(localStorage.getItem('trunfo')) || []
   data.listaSessoes = oldData.listaSessoes || []
 
   return data
@@ -1517,6 +1529,12 @@ function importarJSON(input) {
       if (data.listaAtaques) {
         localStorage.setItem("ataques", JSON.stringify(data.listaAtaques))
       }
+      if (data.listaTrunfos) {
+        localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+      }
+      if (data.listaTrunfos) {
+        localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+      }
 
       carregarFicha()
       carregarCompetenciasEAptidoes()
@@ -1534,6 +1552,7 @@ function limparFicha() {
     localStorage.removeItem("fichaOnePiece")
     localStorage.removeItem("competencia")
     localStorage.removeItem("aptidao")
+  localStorage.removeItem("trunfo")
     localStorage.removeItem("ataques")
 
     // Resetar campos básicos
@@ -1634,6 +1653,7 @@ function limparInterfacePersonagem() {
   localStorage.removeItem("fichaOnePiece")
   localStorage.removeItem("competencia")
   localStorage.removeItem("aptidao")
+  localStorage.removeItem("trunfo")
   localStorage.removeItem("ataques")
 
   // Resetar campos básicos
@@ -1889,6 +1909,7 @@ function criarNovoPersonagem() {
     habilidades: [],
     frutaHabilidades: [],
     listaCompetencias: [],
+    listaTrunfos: [],
     listaItens: [],
     listaSessoes: []
   }
@@ -1916,6 +1937,9 @@ function carregarPersonagem(id) {
     }
     if (data.listaAtaques) {
       localStorage.setItem("ataques", JSON.stringify(data.listaAtaques))
+    }
+    if (data.listaTrunfos) {
+      localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
     }
   }
 
