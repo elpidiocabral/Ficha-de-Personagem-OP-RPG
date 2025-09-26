@@ -5,6 +5,8 @@ import { Character } from '../types';
 import { useCharacter } from '../contexts/CharacterContext';
 import AttributesTab from './tabs/AttributesTab';
 import SkillsTab from './tabs/SkillsTab';
+import PersonalTab from './tabs/PersonalTab';
+import ItemsTab from './tabs/ItemsTab';
 
 interface CharacterSheetProps {
   character: Character;
@@ -130,17 +132,17 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
         )}
         
         {activeTab === 'personal' && (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold mb-4">Informações Pessoais</h2>
-            <p className="text-muted-foreground">Em desenvolvimento...</p>
-          </div>
+          <PersonalTab 
+            character={currentCharacter} 
+            handleAttributeUpdate={handleAttributeUpdate}
+          />
         )}
         
         {activeTab === 'items' && (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold mb-4">Itens & Equipamentos</h2>
-            <p className="text-muted-foreground">Em desenvolvimento...</p>
-          </div>
+          <ItemsTab 
+            character={currentCharacter} 
+            handleAttributeUpdate={handleAttributeUpdate}
+          />
         )}
       </div>
     </div>

@@ -218,12 +218,13 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
                     
                     <Button
                       onClick={(e) => character.id && handleDelete(character.id, e)}
-                      variant="destructive"
+                      variant="outline"
                       size="sm"
-                      className="flex-1 interactive-element"
+                      className="flex-1 interactive-element text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
                       disabled={!character.id}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Excluir
                     </Button>
                   </div>
                 </div>

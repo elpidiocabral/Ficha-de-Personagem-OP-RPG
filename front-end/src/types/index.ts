@@ -146,8 +146,13 @@ export interface Character {
 }
 
 export interface Sessao {
+  id: string;
   titulo: string;
+  data: string;
   resumo: string;
+  experienciaGanha?: number;
+  dinheiroPerdidoGanho?: number;
+  observacoes?: string;
 }
 
 export interface Competencia {
@@ -168,9 +173,16 @@ export interface Habilidade {
 }
 
 export interface Ataque {
+  id?: string;
   nome: string;
-  bonus: string;
+  bonus?: string;
   dano: string;
+  categoria?: string; // Corpo a Corpo, À Distância, Área
+  tipo?: string; // Físico, Elemental, Especial
+  atributo?: string; // Força, Destreza, etc.
+  alcance?: string;
+  descricao?: string;
+  observacoes?: string;
 }
 
 export interface CompetenciaAptidaoTrunfo {
@@ -182,9 +194,15 @@ export interface CompetenciaAptidaoTrunfo {
 }
 
 export interface Item {
+  id?: string;
   nome: string;
   descricao: string;
+  categoria?: string; // Arma, Armadura, Equipamento, Item, Consumível, Tesouro
   durabilidade?: string;
+  usos?: number;
+  peso?: number;
+  valor?: number;
+  equipado?: boolean;
 }
 
 export interface Ferimento {
@@ -201,7 +219,8 @@ export interface CharacterContextType {
   characters: Character[];
   currentCharacter: Character | null;
   setCurrentCharacter: (character: Character | null) => void;
-  createCharacter: (character: Omit<Character, 'id' | 'criadoEm' | 'atualizadoEm'>) => void;
+  createCharacter: (character: Omit<Character, 'id' | 'criadoEm' | 'atualizadoEm'>) => Character;
+  createDefaultCharacter: () => Omit<Character, 'id' | 'criadoEm' | 'atualizadoEm'>;
   updateCharacter: (id: string, updates: Partial<Character>) => void;
   deleteCharacter: (id: string) => void;
   duplicateCharacter: (id: string) => void;

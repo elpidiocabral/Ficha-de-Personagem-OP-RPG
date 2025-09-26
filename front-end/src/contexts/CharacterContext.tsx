@@ -295,6 +295,7 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     currentCharacter,
     setCurrentCharacter,
     createCharacter,
+    createDefaultCharacter,
     updateCharacter,
     deleteCharacter,
     duplicateCharacter,
