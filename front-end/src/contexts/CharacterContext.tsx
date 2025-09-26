@@ -155,13 +155,23 @@ const createDefaultCharacter = (): Omit<Character, 'id' | 'criadoEm' | 'atualiza
 export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  // Default para 'dark' quando não há preferência salva
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
-  // Carregar tema do localStorage na inicialização
+  // Carregar tema do localStorage na inicialização (se existir)
   useEffect(() => {
-    const savedTheme = localStorage.getItem('onePieceTheme') as 'light' | 'dark';
+    const savedTheme = localStorage.getItem('onePieceTheme') as 'light' | 'dark' | null;
     if (savedTheme) {
       setTheme(savedTheme);
+    } else {
+      // Se não houver, garante persistência do padrão 'dark'
+      try {
+        localStorage.setItem('onePieceTheme', 'dark');
+        localStorage.setItem('temaRPG', 'escuro');
+      } catch (e) {
+        // não crítico
+        console.warn('CharacterContext: não foi possível salvar tema padrão no localStorage', e);
+      }
     }
   }, []);
 

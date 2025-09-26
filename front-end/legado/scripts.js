@@ -1,56 +1,36 @@
-// Função para aplicar o tema salvo (segura para rodar antes e depois do DOM)
-function applySavedTheme() {
-  try {
-    // Suporta duas chaves: `onePieceTheme` (React) e `temaRPG` (legacy)
-    const savedReactTheme = localStorage.getItem('onePieceTheme')
-    const savedLegacyTheme = localStorage.getItem('temaRPG')
-
-    // Default para modo escuro se não houver preferência salva
-    let isEscuro = true
-
-    if (savedReactTheme) {
-      isEscuro = savedReactTheme === 'dark'
-    } else if (savedLegacyTheme) {
-      isEscuro = savedLegacyTheme === 'escuro'
-    }
-
-    if (isEscuro) document.body.classList.add('dark-mode')
-    else document.body.classList.remove('dark-mode')
-
-    // Atualiza textos dos botões se existirem
-    const toggleBtn = document.getElementById('toggleThemeBtn')
-    if (toggleBtn) toggleBtn.textContent = isEscuro ? 'Modo Claro' : 'Modo Escuro'
-
-    const toggleMenuBtn = document.getElementById('toggleThemeMenuBtn')
-    if (toggleMenuBtn) toggleMenuBtn.textContent = isEscuro ? 'Modo Claro' : 'Modo Escuro'
-
-    // Sincroniza chaves para evitar divergência (escreve ambas)
-    try {
-      localStorage.setItem('onePieceTheme', isEscuro ? 'dark' : 'light')
-      localStorage.setItem('temaRPG', isEscuro ? 'escuro' : 'claro')
-    } catch (e) {
-      // não crítico: apenas logar
-      console.warn('applySavedTheme: não foi possível sincronizar chaves de tema:', e)
-    }
-  } catch (err) {
-    // Falha no localStorage (p.ex. modo de privacidade) não deve quebrar a página
-    console.warn('applySavedTheme: não foi possível acessar localStorage:', err)
-  }
+// Aplica o modo escuro imediatamente no <body> antes de qualquer renderização
+if (localStorage.getItem("temaRPG") === "escuro") {
+  document.body.classList.add("dark-mode")
 }
-
-// Tenta aplicar o tema o mais cedo possível
-applySavedTheme()
 let itemEditandoIndex = null // variável
 /* ---------- VARIÁVEIS GLOBAIS PARA EDIÇÃO ---------- */
 let editingHabilidadeIndex = -1 // Para Habilidades comuns
 let editingFrutaIndex = -1 // Para Habilidades da Fruta
+// Estado de edição para Competências/Aptidões/Trunfos
+let editingCompetenciaIndex = -1
+let editingCompetenciaTipo = null
+// Estado de edição para Ataques
+let editingAtaqueIndex = -1
 
 /* Ao carregar a página */
 window.addEventListener("DOMContentLoaded", () => {
   console.log("=== INICIANDO SISTEMA ===")
   
-  // Aplicar tema antes de tudo (atualiza botões quando possível)
-  applySavedTheme()
+  // Aplicar tema antes de tudo
+  if (localStorage.getItem("temaRPG") === "escuro") {
+    document.body.classList.add("dark-mode")
+    
+    // Atualizar botões do tema
+    const toggleBtn = document.getElementById("toggleThemeBtn")
+    if (toggleBtn) {
+      toggleBtn.textContent = "Modo Claro"
+    }
+    
+    const toggleMenuBtn = document.getElementById("toggleThemeMenuBtn")
+    if (toggleMenuBtn) {
+      toggleMenuBtn.textContent = "Modo Claro"
+    }
+  }
   
   // Limpar sessão anterior para sempre iniciar no menu
   personagemAtualId = null
@@ -361,8 +341,7 @@ function addLesao() {
   data.lesoes = data.lesoes || []
   data.lesoes.push({ local, dano })
 
-  // Corrige typo: usar JSON.stringify
-  localStorage.setItem("fichaOnePiece", JSON.stringify(data))
+  localStorage.setItem("fichaOnePiece", JSON.JSON.stringify(data))
   exibirFerimentosLesoes()
   atualizarBarrasStatus()
 }
@@ -471,21 +450,32 @@ function adicionarAtaque() {
     alert("Preencha todos os campos para adicionar um ataque.")
     return
   }
-
   const container = document.getElementById("listaAtaques")
-  const div = document.createElement("div")
-  div.className = "ataque-item"
-  div.innerHTML = `
+
+  // If we're editing an existing attack, update storage
+  if (editingAtaqueIndex !== -1) {
+    const ataques = JSON.parse(localStorage.getItem("ataques")) || []
+    ataques[editingAtaqueIndex] = { nome, bonus, dano }
+    localStorage.setItem("ataques", JSON.stringify(ataques))
+    editingAtaqueIndex = -1
+    const btn = document.getElementById('btnAddAtaque')
+    if (btn) btn.textContent = 'Adicionar'
+    carregarAtaques()
+  } else {
+    const div = document.createElement("div")
+    div.className = "ataque-item"
+    div.innerHTML = `
       <span class="ataque-nome">${nome}</span>
-      <span class="ataque-bonus">+${bonus}</span>
+      <span class="ataque-bonus">Bônus: ${bonus}</span>
       <span class="ataque-dano">Dano: ${dano}</span>
       <div class="ataque-actions">
-          <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">Remover</button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">🗑️</button>
       </div>
-  `
-  container.appendChild(div)
+    `
+    container.appendChild(div)
 
-  salvarAtaquesLocal()
+    salvarAtaquesLocal()
+  }
 
   // Limpar os campos
   document.getElementById("ataqueNome").value = ""
@@ -514,7 +504,7 @@ function carregarAtaques() {
   const ataques = JSON.parse(localStorage.getItem("ataques")) || []
   const container = document.getElementById("listaAtaques")
   container.innerHTML = ""
-  ataques.forEach(({ nome, bonus, dano }) => {
+  ataques.forEach(({ nome, bonus, dano }, idx) => {
     const div = document.createElement("div")
     div.className = "ataque-item"
     div.innerHTML = `
@@ -522,11 +512,26 @@ function carregarAtaques() {
             <span class="ataque-bonus">Bônus: ${bonus}</span>
             <span class="ataque-dano">Dano: ${dano}</span>
             <div class="ataque-actions">
-                <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">Remover</button>
+                <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarAtaque(${idx})">✏️</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removerAtaque(this)">🗑️</button>
             </div>
         `
     container.appendChild(div)
   })
+}
+
+function editarAtaque(index) {
+  const ataques = JSON.parse(localStorage.getItem("ataques")) || []
+  const at = ataques[index]
+  if (!at) return
+
+  document.getElementById('ataqueNome').value = at.nome || ''
+  document.getElementById('ataqueBonus').value = at.bonus || ''
+  document.getElementById('ataqueDano').value = at.dano || ''
+
+  editingAtaqueIndex = index
+  const btn = document.getElementById('btnAddAtaque')
+  if (btn) btn.textContent = 'Salvar Edição'
 }
 
 // Carregar ataques salvos ao abrir a ficha
@@ -534,8 +539,10 @@ window.addEventListener("DOMContentLoaded", carregarAtaques)
 
 // Inicia as barras ao carregar
 window.onload = () => {
-  // Aplica tema salvo, se houver
-  applySavedTheme()
+  if (localStorage.getItem("temaRPG") === "escuro") {
+    document.body.classList.add("dark-mode")
+    document.getElementById("toggleThemeBtn").textContent = "Modo Claro"
+  }
 
   carregarFicha() // Primeiro, carrega todos os dados da ficha
   carregarCompetenciasEAptidoes() // Depois, garante que competências e aptidões são carregadas
@@ -564,27 +571,46 @@ function adicionarCompetencia() {
   if (tipo === "competencia") container = document.getElementById("listaCompetencias")
   else if (tipo === "aptidao") container = document.getElementById("listaAptidoes")
   else container = document.getElementById("listaTrunfos")
-  const div = document.createElement("div")
-  div.className = "list-item col-2" // Ajustado para ocupar 1/5 da linha
-  div.innerHTML = `
-    <div class="list-item-header">
-      <span class="list-item-title">${nome}</span>
-      ${tipo !== "trunfo" ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ""}
-    </div>
-    <div class="list-item-content">${obs}</div>
-    <div class="list-item-actions">
-      <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
-      <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(this, '${tipo}')">Remover</button>
-    </div>
-  `
-  container.appendChild(div)
+  // If editing an existing item, update it in storage
+  if (editingCompetenciaIndex !== -1 && editingCompetenciaTipo === tipo) {
+    const items = JSON.parse(localStorage.getItem(tipo)) || []
+    items[editingCompetenciaIndex] = { nome, nivel, obs }
+    localStorage.setItem(tipo, JSON.stringify(items))
+    // Reset editing state and button label
+    editingCompetenciaIndex = -1
+    editingCompetenciaTipo = null
+    const btn = document.getElementById('btnAddComp')
+    if (btn) btn.textContent = 'Adicionar'
+    carregarCompetenciasEAptidoes()
+    salvarFicha()
+  } else {
+    const div = document.createElement("div")
+    div.className = "list-item col-2" // Ajustado para ocupar 1/5 da linha
+    div.innerHTML = `
+      <div class="list-item-header">
+        <span class="list-item-title">${nome}</span>
+        ${tipo !== "trunfo" ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ""}
+      </div>
+      <div class="list-item-content">${obs}</div>
+      <div class="list-item-actions">
+        ${tipo !== 'trunfo' ? `<button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>` : ''}
+        <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarCompetenciaPorBotao(this, '${tipo}')">✏️</button>
+        <button type="button" class="btn btn-sm btn-danger" title="Remover" onclick="removerItem(this, '${tipo}')">🗑️</button>
+      </div>
+    `
+    container.appendChild(div)
 
-  salvarNoLocalStorage(tipo)
+    salvarNoLocalStorage(tipo)
+  }
 
+  // Reset form to defaults
   document.getElementById("compNome").value = ""
   document.getElementById("compNivel").value = 0
   document.getElementById("compObs").value = ""
+  document.getElementById("compTipo").value = "competencia"
+  // Ensure nivel input visibility is correct after reset
+  toggleNivelInput()
 }
 
 function toggleNivelInput() {
@@ -596,6 +622,7 @@ function toggleNivelInput() {
 
 function alterarNivel(button, delta, tipo) {
   const nivelSpan = button.parentElement.parentElement.querySelector(".list-item-subtitle")
+  if (!nivelSpan) return // nada a alterar (ex: trunfo)
   let nivel = Number.parseInt(nivelSpan.innerText.replace("Nível: ", "")) || 0
   nivel = Math.max(0, nivel + delta)
   nivelSpan.innerText = "Nível: " + nivel
@@ -620,6 +647,28 @@ function removerItem(button, tipo) {
   atualizarInformacoesCombate()
 }
 
+function editarCompetencia(index, tipo) {
+  const items = JSON.parse(localStorage.getItem(tipo)) || []
+  const item = items[index]
+  if (!item) return
+
+  // Preencher o formulário com os valores existentes
+  document.getElementById('compTipo').value = tipo
+  document.getElementById('compNome').value = item.nome || ''
+  document.getElementById('compNivel').value = item.nivel || 0
+  document.getElementById('compObs').value = item.obs || ''
+  // Mostrar/ocultar campo de nível
+  toggleNivelInput()
+
+  // Marcar estado de edição
+  editingCompetenciaIndex = index
+  editingCompetenciaTipo = tipo
+
+  // Atualizar botão para indicar edição
+  const btn = document.getElementById('btnAddComp')
+  if (btn) btn.textContent = 'Salvar Edição'
+}
+
 function salvarNoLocalStorage(tipo) {
   let container
   if (tipo === "competencia") container = document.getElementById("listaCompetencias")
@@ -631,7 +680,8 @@ function salvarNoLocalStorage(tipo) {
   const newItems = []
   container.querySelectorAll(".list-item").forEach((item) => {
     const nome = item.querySelector(".list-item-title").innerText.trim()
-    const nivel = Number.parseInt(item.querySelector(".list-item-subtitle").innerText.replace("Nível: ", "")) || 0
+    const nivelEl = item.querySelector(".list-item-subtitle")
+    const nivel = nivelEl ? (Number.parseInt(nivelEl.innerText.replace("Nível: ", "")) || 0) : 0
     const obs = item.querySelector(".list-item-content").innerText.trim()
 
     // Verifica se já existe a competência com o mesmo nome
@@ -658,6 +708,8 @@ function salvarNoLocalStorage(tipo) {
 
   console.log("Salvando no localStorage:", updatedItems)
   localStorage.setItem(tipo, JSON.stringify(updatedItems))
+  // Recarregar listas na UI
+  carregarCompetenciasEAptidoes()
 }
 
 function carregarCompetenciasEAptidoes() {
@@ -672,19 +724,22 @@ function carregarCompetenciasEAptidoes() {
     const items = JSON.parse(localStorage.getItem(tipo)) || []
     console.log(`Carregando do localStorage (${tipo}):`, items)
 
-    items.forEach(({ nome, nivel, obs }) => {
+    items.forEach((item, idx) => {
+      const { nome, nivel, obs } = item
       const div = document.createElement("div")
       div.className = "list-item col-2"
+      // Trunfos não exibem Nível
       div.innerHTML = `
             <div class="list-item-header">
               <span class="list-item-title">${nome}</span>
-              <span class="list-item-subtitle">Nível: ${nivel}</span>
+              ${tipo !== 'trunfo' ? `<span class="list-item-subtitle">Nível: ${nivel}</span>` : ''}
             </div>
             <div class="list-item-content">${obs}</div>
             <div class="list-item-actions">
-              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
-              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>
-              <button type="button" class="btn btn-sm btn-danger" onclick="removerItem(this, '${tipo}')">Remover</button>
+              ${tipo !== 'trunfo' ? `<button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, 1, '${tipo}')">+</button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="alterarNivel(this, -1, '${tipo}')">-</button>` : ''}
+              <button type="button" class="btn btn-sm btn-primary" title="Editar" onclick="editarCompetencia(${idx}, '${tipo}')">✏️</button>
+              <button type="button" class="btn btn-sm btn-danger" title="Remover" onclick="removerItem(this, '${tipo}')">🗑️</button>
             </div>
           `
       container.appendChild(div)
@@ -692,6 +747,20 @@ function carregarCompetenciasEAptidoes() {
   })
 
   console.log("Competências e Aptidões carregadas corretamente.")
+}
+
+// Helper for the emoji edit button that receives the clicked button element
+function editarCompetenciaPorBotao(button, tipo) {
+  // Find the item title from the DOM
+  const itemDiv = button.parentElement.parentElement
+  const nome = itemDiv.querySelector('.list-item-title')?.innerText
+  if (!nome) return
+
+  const items = JSON.parse(localStorage.getItem(tipo)) || []
+  const idx = items.findIndex((it) => it.nome === nome)
+  if (idx === -1) return
+
+  editarCompetencia(idx, tipo)
 }
 
 /* -------------- HABILIDADES (COMUNS) - EDIÇÃO -------------- */
@@ -1272,6 +1341,10 @@ function carregarFicha() {
     if (data.listaAptidoes) {
       localStorage.setItem("aptidao", JSON.stringify(data.listaAptidoes))
     }
+    // Trunfos (listaTrunfos)
+    if (data.listaTrunfos) {
+      localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+    }
 
     // Competências
     carregarCompetenciasEAptidoes(data.listaCompetencias || [])
@@ -1349,6 +1422,7 @@ function salvarFicha() {
 
   data.listaCompetencias = JSON.parse(localStorage.getItem("competencia")) || []
   data.listaAptidoes = JSON.parse(localStorage.getItem("aptidao")) || []
+  data.listaTrunfos = JSON.parse(localStorage.getItem("trunfo")) || []
 
   localStorage.setItem("fichaOnePiece", JSON.stringify(data))
   //alert("Ficha salva no navegador (localStorage)!");
@@ -1498,6 +1572,7 @@ function coletarDados() {
   data.listaItens = oldData.listaItens || []
   data.habilidades = oldData.habilidades || []
   data.frutaHabilidades = oldData.frutaHabilidades || []
+  data.listaTrunfos = oldData.listaTrunfos || JSON.parse(localStorage.getItem('trunfo')) || []
   data.listaSessoes = oldData.listaSessoes || []
 
   return data
@@ -1541,6 +1616,12 @@ function importarJSON(input) {
       if (data.listaAtaques) {
         localStorage.setItem("ataques", JSON.stringify(data.listaAtaques))
       }
+      if (data.listaTrunfos) {
+        localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+      }
+      if (data.listaTrunfos) {
+        localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
+      }
 
       carregarFicha()
       carregarCompetenciasEAptidoes()
@@ -1558,6 +1639,7 @@ function limparFicha() {
     localStorage.removeItem("fichaOnePiece")
     localStorage.removeItem("competencia")
     localStorage.removeItem("aptidao")
+  localStorage.removeItem("trunfo")
     localStorage.removeItem("ataques")
 
     // Resetar campos básicos
@@ -1658,6 +1740,7 @@ function limparInterfacePersonagem() {
   localStorage.removeItem("fichaOnePiece")
   localStorage.removeItem("competencia")
   localStorage.removeItem("aptidao")
+  localStorage.removeItem("trunfo")
   localStorage.removeItem("ataques")
 
   // Resetar campos básicos
@@ -1795,25 +1878,22 @@ document.addEventListener("visibilitychange", () => {
 
 // Modo Escuro DARKMODE
 function alternarTema() {
-  try {
-    const body = document.body
-    const isNowDark = body.classList.toggle("dark-mode")
+  const body = document.body
+  const escuro = body.classList.toggle("dark-mode")
 
-    // Persistir escolha em ambas chaves (compatibilidade com React)
-    try {
-      localStorage.setItem('temaRPG', isNowDark ? 'escuro' : 'claro')
-      localStorage.setItem('onePieceTheme', isNowDark ? 'dark' : 'light')
-    } catch (e) {
-      console.warn('alternarTema: não foi possível salvar tema no localStorage:', e)
-    }
-
-    // Delega atualização visual/texte dos botões à função central
-    applySavedTheme()
-  } catch (err) {
-    console.warn("alternarTema: não foi possível acessar localStorage:", err)
-    // Ainda assim atualiza o estado visual localmente
-    document.body.classList.toggle("dark-mode")
+  // Atualizar botão do tema se existir (na ficha)
+  const btn = document.getElementById("toggleThemeBtn")
+  if (btn) {
+    btn.textContent = escuro ? "Modo Claro" : "Modo Escuro"
   }
+
+  // Atualizar botão do tema se existir (no menu)
+  const menuBtn = document.getElementById("toggleThemeMenuBtn")
+  if (menuBtn) {
+    menuBtn.textContent = escuro ? "Modo Claro" : "Modo Escuro"
+  }
+
+  localStorage.setItem("temaRPG", escuro ? "escuro" : "claro")
 }
 
 // Tema aplicado no evento principal DOMContentLoaded
@@ -1916,6 +1996,7 @@ function criarNovoPersonagem() {
     habilidades: [],
     frutaHabilidades: [],
     listaCompetencias: [],
+    listaTrunfos: [],
     listaItens: [],
     listaSessoes: []
   }
@@ -1943,6 +2024,9 @@ function carregarPersonagem(id) {
     }
     if (data.listaAtaques) {
       localStorage.setItem("ataques", JSON.stringify(data.listaAtaques))
+    }
+    if (data.listaTrunfos) {
+      localStorage.setItem("trunfo", JSON.stringify(data.listaTrunfos))
     }
   }
 
