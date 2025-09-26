@@ -107,7 +107,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8 max-w-screen-2xl">`
+      <div className="container mx-auto px-6 py-8 max-w-screen-2xl">
         {activeTab === 'attributes' && (
           <AttributesTab 
             character={character} 
