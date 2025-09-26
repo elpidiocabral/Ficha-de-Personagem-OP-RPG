@@ -679,6 +679,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                     value={character.nivelClasse}
                     onChange={(e) => handleAttributeUpdate('nivelClasse', parseInt(e.target.value) || 1)}
                     min="1"
+                    max="20"
                     className="h-8 text-sm"
                   />
                 </div>
@@ -686,9 +687,11 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                   <label className="block text-xs font-medium mb-1">Nível Profissão</label>
                   <Input
                     type="number"
-                    value={2}
+                    value={character.nivelProfissao}
+                    onChange={(e) => handleAttributeUpdate('nivelProfissao', parseInt(e.target.value) || 1)}
+                    min="1"
+                    max="5"
                     className="h-8 text-sm"
-                    readOnly
                   />
                 </div>
               </div>
