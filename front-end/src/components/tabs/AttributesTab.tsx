@@ -496,7 +496,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const racas = ['Humano', 'Humano-Peixe', 'Tritão', 'Mink', 'Povo do Céu', 'Anão Tontatta'];
   const potenciais = ['Desastre Sobrenatural', 'Monstro', 'Sobre-Humano', 'Humano', 'Ciborgue'];
   const classes = ['Lutador', 'Guerrilheiro', 'Artista Marcial', 'Espadachim', 'Atirador', 'Especialista', 'Assassino', 'Ladrão'];
-  const profissoes = ['Capitão', 'Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Outro'];
+  const profissoes = ['Capitão', 'Combatente','Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Outro'];
 
   return (
     <div className="space-y-6">
@@ -683,7 +683,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Nível</label>
+                  <label className="block text-xs font-medium mb-1">Nível Profissão</label>
                   <Input
                     type="number"
                     value={2}
