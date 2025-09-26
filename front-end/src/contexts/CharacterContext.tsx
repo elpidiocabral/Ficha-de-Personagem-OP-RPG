@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Character, CharacterContextType } from '../types';
+import { useJSONHandler } from '../hooks/useJSONHandler';
 
 export const CharacterContext = createContext<CharacterContextType | undefined>(undefined);
 
@@ -275,6 +276,9 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  // Use the JSON handler's sanitization to support legacy formats
+  const { importCharacterFromJSON } = useJSONHandler();
+
   const importCharacter = async (file: File): Promise<void> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -282,17 +286,18 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         try {
           const result = e.target?.result;
           if (typeof result === 'string') {
-            const characterData = JSON.parse(result);
-            
-            // Remover ID para gerar um novo
-            const { id: _, ...cleanData } = characterData;
-            
-            createCharacter({
-              ...createDefaultCharacter(),
-              ...cleanData,
+            // Delegate to the JSON handler which will normalize legacy structures
+            importCharacterFromJSON(result, (sanitizedData: Character) => {
+              // Ensure we don't keep the old id
+              const { id: _, ...cleanData } = sanitizedData as any;
+              createCharacter({
+                ...createDefaultCharacter(),
+                ...cleanData,
+              });
+              resolve();
             });
-            
-            resolve();
+          } else {
+            reject(new Error('Arquivo inválido ou corrompido'));
           }
         } catch (error) {
           reject(new Error('Arquivo inválido ou corrompido'));

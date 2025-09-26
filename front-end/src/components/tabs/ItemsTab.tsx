@@ -17,7 +17,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const [novoItem, setNovoItem] = useState<Omit<Item, 'id'>>({
     nome: '',
     categoria: 'Equipamento',
-    durabilidade: '100',
+    durabilidade: '',
     usos: 1,
     descricao: '',
     peso: 0,
