@@ -471,3 +471,51 @@
   background-size: 200px 100%;
   animation: shimmer 2s ease-in-out infinite;
 }
+
+/* Login Screen Animations */
+@keyframes floating-particle-1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+}
+
+@keyframes floating-particle-2 {
+  0%, 100% { transform: translateX(0px) rotate(0deg); opacity: 0.4; }
+  50% { transform: translateX(-15px) rotate(-90deg); opacity: 0.8; }
+}
+
+@keyframes floating-particle-3 {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.5; }
+  33% { transform: translateY(-15px) translateX(10px) rotate(120deg); opacity: 1; }
+  66% { transform: translateY(10px) translateX(-10px) rotate(240deg); opacity: 0.7; }
+}
+
+.floating-particle-1 {
+  animation: floating-particle-1 4s ease-in-out infinite;
+}
+
+.floating-particle-2 {
+  animation: floating-particle-2 3s ease-in-out infinite;
+}
+
+.floating-particle-3 {
+  animation: floating-particle-3 5s ease-in-out infinite;
+}
+
+.wave-animation {
+  animation: wave-flow 3s ease-in-out infinite;
+}
+
+@keyframes wave-flow {
+  0%, 100% { opacity: 0.1; transform: translateX(0px); }
+  50% { opacity: 0.3; transform: translateX(10px); }
+}
+
+.waves {
+  animation: wave-move 6s ease-in-out infinite;
+}
+
+@keyframes wave-move {
+  0% { transform: translateX(0px); }
+  50% { transform: translateX(-25px); }
+  100% { transform: translateX(0px); }
+}

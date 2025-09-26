@@ -4,14 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Character } from '../types';
-import { Anchor, Trash2, Play, Copy, Download, Sun, Moon, FolderOpen } from 'lucide-react';
+import { Anchor, Trash2, Play, Copy, Download, Sun, Moon, FolderOpen, LogOut } from 'lucide-react';
 
 interface CharacterMenuProps {
   onSelectCharacter: (character: Character) => void;
   onCreateNew: () => void;
+  onLogout?: () => void;
 }
 
-const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCreateNew }) => {
+const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCreateNew, onLogout }) => {
   const {
     characters,
     duplicateCharacter,
@@ -72,8 +73,19 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
       <div className="container mx-auto px-4 py-8">
         {/* Header com botão de tema no canto direito */}
         <div className="relative mb-8">
-          {/* Botão de tema no canto superior direito (desktop) */}
-          <div className="hidden md:block absolute top-0 right-0 z-20">
+          {/* Botões no canto superior direito (desktop) */}
+          <div className="hidden md:flex absolute top-0 right-0 z-20 gap-2">
+            {onLogout && (
+              <Button
+                onClick={onLogout}
+                variant="outline"
+                size="sm"
+                className="theme-toggle interactive-element text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair
+              </Button>
+            )}
             <Button
               onClick={toggleTheme}
               variant="outline"
@@ -103,8 +115,19 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
               Selecione um personagem ou crie um novo pirata!
             </p>
             
-            {/* Botão de tema centralizado (mobile) */}
-            <div className="md:hidden mb-6">
+            {/* Botões centralizados (mobile) */}
+            <div className="md:hidden mb-6 flex justify-center gap-2">
+              {onLogout && (
+                <Button
+                  onClick={onLogout}
+                  variant="outline"
+                  size="sm"
+                  className="theme-toggle interactive-element text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              )}
               <Button
                 onClick={toggleTheme}
                 variant="outline"
