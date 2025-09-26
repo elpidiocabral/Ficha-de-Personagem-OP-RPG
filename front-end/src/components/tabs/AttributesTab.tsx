@@ -68,7 +68,6 @@ const AttributeCard: React.FC<AttributeCardProps> = ({
                 onBaseChange(isNaN(val) ? 0 : val);
               }}
               className="text-center h-8 text-sm border border-blue-200 dark:border-blue-700 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-              min="0"
             />
           </div>
           <div>
