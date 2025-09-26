@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { ArrowLeft, Moon, Sun } from 'lucide-react';
 import { Character } from '../types';
@@ -18,18 +18,9 @@ type TabType = 'attributes' | 'skills' | 'personal' | 'items';
 const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) => {
   const [activeTab, setActiveTab] = useState<TabType>('attributes');
   const { updateCharacter, theme, toggleTheme } = useCharacter();
-  const [currentCharacter, setCurrentCharacter] = useState<Character>(character);
-
-  useEffect(() => {
-    console.log('CharacterSheet recebeu character:', character);
-    setCurrentCharacter(character);
-  }, [character]);
 
   const handleCharacterUpdate = (updates: Partial<Character>) => {
     console.log('handleCharacterUpdate chamado com:', updates);
-    const updatedCharacter = { ...currentCharacter, ...updates };
-    console.log('updatedCharacter:', updatedCharacter);
-    setCurrentCharacter(updatedCharacter);
     if (character.id) {
       updateCharacter(character.id, updates);
     }
@@ -50,7 +41,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       {/* Header */}
       <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white p-6">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -116,31 +107,31 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 max-w-screen-2xl">`
         {activeTab === 'attributes' && (
           <AttributesTab 
-            character={currentCharacter} 
+            character={character} 
             onUpdate={handleCharacterUpdate} 
           />
         )}
         
         {activeTab === 'skills' && (
           <SkillsTab 
-            character={currentCharacter} 
+            character={character} 
             handleAttributeUpdate={handleAttributeUpdate}
           />
         )}
         
         {activeTab === 'personal' && (
           <PersonalTab 
-            character={currentCharacter} 
+            character={character} 
             handleAttributeUpdate={handleAttributeUpdate}
           />
         )}
         
         {activeTab === 'items' && (
           <ItemsTab 
-            character={currentCharacter} 
+            character={character} 
             handleAttributeUpdate={handleAttributeUpdate}
           />
         )}

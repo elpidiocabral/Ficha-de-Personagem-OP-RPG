@@ -7,11 +7,16 @@ import './index.css';
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<'menu' | 'character'>('menu');
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const { createCharacter, createDefaultCharacter } = useCharacter();
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
+  const { createCharacter, createDefaultCharacter, characters } = useCharacter();
+
+  // Encontrar o personagem atual baseado no ID
+  const selectedCharacter = selectedCharacterId 
+    ? characters.find(char => char.id === selectedCharacterId) || null
+    : null;
 
   const handleSelectCharacter = (character: Character) => {
-    setSelectedCharacter(character);
+    setSelectedCharacterId(character.id || null);
     setCurrentView('character');
   };
 
@@ -19,13 +24,13 @@ const AppContent: React.FC = () => {
     // Criar um novo personagem vazio e abrir a ficha
     const defaultCharacterData = createDefaultCharacter();
     const newCharacter = createCharacter(defaultCharacterData);
-    setSelectedCharacter(newCharacter);
+    setSelectedCharacterId(newCharacter.id || null);
     setCurrentView('character');
   };
 
   const handleBackToMenu = () => {
     setCurrentView('menu');
-    setSelectedCharacter(null);
+    setSelectedCharacterId(null);
   };
 
   return (

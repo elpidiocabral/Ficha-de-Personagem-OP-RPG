@@ -165,6 +165,15 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, []);
 
+  // Aplicar tema ao documento
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   // Salvar tema no localStorage quando mudar
   useEffect(() => {
     localStorage.setItem('onePieceTheme', theme);

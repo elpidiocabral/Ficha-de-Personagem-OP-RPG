@@ -1653,48 +1653,80 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                       {/* Sistema de Especialização para Nível 4+ */}
                       {competencia.nivel >= 4 && (
                         <div className="px-3 pb-3">
-                          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded border border-yellow-200 dark:border-yellow-700">
-                            <label className="block text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-2">
-                              ⚡ Especialização Disponível (Nível {competencia.nivel}):
-                            </label>
-                            <Select 
-                              value={competencia.especializacao || ''} 
-                              onValueChange={(value) => {
-                                const novaLista = character.competenciasAptidoesTrunfos?.map((item) => 
-                                  item.tipo === 'Competência' && character.competenciasAptidoesTrunfos?.filter(c => c.tipo === 'Competência').indexOf(item) === index
-                                    ? { ...item, especializacao: value }
-                                    : item
-                                ) || [];
-                                handleAttributeUpdate('competenciasAptidoesTrunfos', novaLista);
-                              }}
-                            >
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue placeholder="Escolha uma especialização" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {especializacoes.map((esp) => (
-                                  <SelectItem key={esp.nome} value={esp.nome}>
-                                    <div>
-                                      <div className="font-medium">{esp.nome}</div>
-                                      <div className="text-xs text-gray-500 mt-1">{esp.descricao}</div>
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {competencia.especializacao && (
-                              <div className="mt-2 p-2 bg-white dark:bg-gray-800 rounded border border-yellow-300 dark:border-yellow-600">
-                                <div className="text-xs">
-                                  <div className="font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
-                                    🎯 {competencia.especializacao}
+                          {competencia.especializacao ? (
+                            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 p-3 rounded-lg border border-amber-300 dark:border-amber-600 shadow-inner">
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 bg-amber-500 dark:bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <span className="text-white text-sm font-bold">🎯</span>
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-bold text-amber-800 dark:text-amber-200 text-sm mb-1">
+                                    {competencia.especializacao}
                                   </div>
-                                  <div className="text-gray-700 dark:text-gray-300">
+                                  <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                                     {especializacoes.find(e => e.nome === competencia.especializacao)?.descricao}
                                   </div>
                                 </div>
+                                <Select 
+                                  value={competencia.especializacao || ''} 
+                                  onValueChange={(value) => {
+                                    const novaLista = character.competenciasAptidoesTrunfos?.map((item) => 
+                                      item.tipo === 'Competência' && character.competenciasAptidoesTrunfos?.filter(c => c.tipo === 'Competência').indexOf(item) === index
+                                        ? { ...item, especializacao: value === '__REMOVE__' ? undefined : value }
+                                        : item
+                                    ) || [];
+                                    handleAttributeUpdate('competenciasAptidoesTrunfos', novaLista);
+                                  }}
+                                >
+                                  <SelectTrigger className="h-8 w-8 p-0 border-amber-300 dark:border-amber-600">
+                                    <span className="text-amber-600 dark:text-amber-400">⚙️</span>
+                                  </SelectTrigger>
+                                  <SelectContent className="max-h-80 overflow-y-auto">
+                                    <SelectItem value="__REMOVE__">Remover especialização</SelectItem>
+                                    {especializacoes.map((esp) => (
+                                      <SelectItem key={esp.nome} value={esp.nome}>
+                                        <div className="py-1">
+                                          <div className="font-semibold text-amber-700 dark:text-amber-300">{esp.nome}</div>
+                                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{esp.descricao}</div>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          ) : (
+                            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 p-3 rounded-lg border-2 border-dashed border-amber-300 dark:border-amber-600">
+                              <div className="flex items-center justify-center gap-2 text-amber-700 dark:text-amber-300">
+                                <span className="text-lg">⚡</span>
+                                <Select 
+                                  value={competencia.especializacao || ''} 
+                                  onValueChange={(value) => {
+                                    const novaLista = character.competenciasAptidoesTrunfos?.map((item) => 
+                                      item.tipo === 'Competência' && character.competenciasAptidoesTrunfos?.filter(c => c.tipo === 'Competência').indexOf(item) === index
+                                        ? { ...item, especializacao: value }
+                                        : item
+                                    ) || [];
+                                    handleAttributeUpdate('competenciasAptidoesTrunfos', novaLista);
+                                  }}
+                                >
+                                  <SelectTrigger className="border-none bg-transparent text-amber-700 dark:text-amber-300 font-medium">
+                                    <SelectValue placeholder="Escolher Especialização (Nível 4+)" />
+                                  </SelectTrigger>
+                                  <SelectContent className="max-h-80 overflow-y-auto">
+                                    {especializacoes.map((esp) => (
+                                      <SelectItem key={esp.nome} value={esp.nome}>
+                                        <div className="py-2">
+                                          <div className="font-semibold text-amber-700 dark:text-amber-300">{esp.nome}</div>
+                                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{esp.descricao}</div>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
