@@ -398,6 +398,86 @@
     display: none !important;
   }
   
+  /* -------------------------------------------------- */
+  /* Melhorias específicas para dispositivos móveis - SÓ abaixo de 480px */
+  /* -------------------------------------------------- */
+  @media (max-width: 480px) {
+    /* Tornar a ficha vertical, uma coluna só */
+    #ficha-container, #tab-atributos, #tab-habilidades, #tab-pessoal, #tab-itens {
+      padding: 0.5rem !important;
+    }
+
+    /* Stacking: colunas viram 100% */
+    .grid, #tab-atributos .grid, #tab-pessoal .grid, #tab-itens .grid {
+      display: block !important;
+      width: 100% !important;
+    }
+
+    /* Cards: largura total, melhor espaçamento e toque maior */
+    .card {
+      width: 100% !important;
+      margin-bottom: 0.6rem !important;
+      padding: 0.6rem !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Colunas específicas se tornarem full width */
+    .col-12, .col-8, .col-6, .col-4, .col-2 {
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Aumentar tamanho de input / botões para touch */
+    .form-control, input[type="text"], input[type="number"], textarea, select {
+      font-size: 14px !important;
+      padding: 0.5rem !important;
+      height: auto !important;
+    }
+
+    .btn, .btn-one-piece, .theme-toggle, .btn-group .btn {
+      width: 100% !important;
+      padding: 0.7rem 0.6rem !important;
+      font-size: 15px !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    /* Avatar centralizado e compacto */
+    .avatar-container { text-align: center !important; }
+    .avatar-preview { width: 96px !important; height: 96px !important; margin: 0 auto 0.4rem auto !important; }
+
+    /* Tornar os blocos de atributos mais legíveis */
+    .attribute-box { display: block !important; width: 100% !important; padding: 0.5rem !important; }
+    .attribute-name { font-size: 12px !important; text-align: left !important; }
+    .attribute-value { font-size: 16px !important; text-align: left !important; }
+
+    /* Ajuste das barras de status para serem maiores e visíveis */
+    .progress-container { height: 12px !important; }
+
+    /* Simplificar listas: uma coluna, maior espaçamento */
+    #listaCompetencias, #listaAptidoes, #listaTrunfos, #listaHabilidades, #listaFruta, #listaItens {
+      display: block !important;
+      gap: 0.5rem !important;
+    }
+
+    /* Botões de ações inline devem quebrar e ficar empilhados */
+    .list-item-actions, .ataque-actions { display: flex !important; flex-direction: column !important; gap: 0.4rem !important; }
+
+    /* Tabs: aumentar alvo, empilhamento vertical se necessário */
+    .tabs { display: flex !important; flex-direction: row !important; gap: 0.25rem !important; overflow-x: auto !important; }
+    .tab-button { flex: 1 0 auto !important; min-width: 120px !important; padding: 0.6rem !important; }
+
+    /* Diminuir decorações pesadas que poluem na tela pequena */
+    body::before { opacity: 0.06 !important; }
+
+    /* Reajustar cabeçalho para caber em uma linha */
+    .header { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 0.4rem !important; }
+    .header h1 { font-size: 18px !important; margin: 0 !important; }
+
+    /* Correção: evitar deslocamento horizontal indesejado */
+    html, body { overflow-x: hidden !important; }
+  }
+  
   /* Diminuir muito a fonte do título da listagem de Competências, Aptidões e Trunfos */
   #competencias-header, #aptidoes-header, #trunfos-header,
   #competencias-header h3, #aptidoes-header h3, #trunfos-header h3,
@@ -1514,10 +1594,14 @@
     /* Grid de Personagens */
     .personagens-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      /* Keep the card size but let the number of columns scale with viewport.
+         Each column will be between 260px and 300px; auto-fit will create as
+         many columns as fit and center them. */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
+      justify-content: center;
       gap: 1.5rem;
       width: 100%;
-      max-width: 1200px;
+      max-width: none; /* allow more columns on wide screens */
       margin-top: 1rem;
     }
 

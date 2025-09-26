@@ -1,17 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="shortcut icon" href="src/img/logo.png" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>One Piece RPG - A Vontade Dos Mares</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+  <title>Ficha One Piece RPG - A Vontade Dos Mares</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body> 
+  <!-- Menu Inicial de Seleção de Personagens -->
+  <div id="menu-inicial" class="menu-inicial">
+    <div class="menu-header">
+      <h1>One Piece RPG - A Vontade Dos Mares</h1>
+      <p>Selecione um personagem ou crie um novo pirata!</p>
+      <button id="toggleThemeMenuBtn" class="theme-toggle-pill" onclick="alternarTema()">Modo Escuro</button>
+    </div>
+    
+    <div class="menu-actions">
+      <button class="btn btn-primary btn-large" onclick="criarNovoPersonagem()">
+        ⚓ Criar Novo Personagem
+      </button>
+      <button class="btn btn-secondary btn-large" onclick="mostrarImportExport()">
+        📁 Import/Export
+      </button>
+    </div>
+    
+    <div id="personagens-grid" class="personagens-grid">
+      <!-- Personagens serão carregados aqui -->
+    </div>
+    
+    <!-- Modal de Import/Export -->
+    <div id="modal-import-export" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Import/Export de Personagens</h3>
+          <button class="modal-close" onclick="fecharImportExport()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Importar Personagem:</label>
+            <input type="file" id="importPersonagem" accept=".json" onchange="importarPersonagem(this)">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-danger" onclick="limparTodosPersonagens()">
+              🗑️ Limpar Todos os Personagens
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Ficha do Personagem (Oculta inicialmente) -->
@@ -636,9 +673,9 @@
                       <input type="text" id="ataqueDano" class="form-control" placeholder="Ex: 1d8+10 Perfurante">
                   </div>
               </div>
-              <div class="col-2">
-                  <button type="button" class="btn btn-primary mt-3" onclick="adicionarAtaque()">Adicionar</button>
-              </div>
+        <div class="col-2">
+          <button type="button" id="btnAddAtaque" class="btn btn-primary mt-3" onclick="adicionarAtaque()">Adicionar</button>
+        </div>
           </div>
           
           <!-- Lista de ataques -->
@@ -705,7 +742,7 @@
             </div>
           </div>
           
-          <button type="button" class="btn btn-primary" onclick="adicionarCompetencia()">Adicionar</button>
+          <button type="button" id="btnAddComp" class="btn btn-primary" onclick="adicionarCompetencia()">Adicionar</button>
           </details>
 
           <div class="mt-2">
