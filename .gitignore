@@ -5,6 +5,7 @@ front-end/.vite/
 
 # important keys
 back-end/.env
+front-end/.env
 
 # Build outputs
 front-end/dist/

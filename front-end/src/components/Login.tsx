@@ -9,11 +9,8 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleDiscordLogin = () => {
-    // Simulação de login - em produção seria integração real com Discord
-    console.log('Simulando login com Discord...');
-    setTimeout(() => {
-      onLogin();
-    }, 1000);
+    const api = import.meta.env.VITE_API_URL;
+    window.location.href = `${api}/auth/discord`;
   };
 
   return (
