@@ -14,6 +14,12 @@ const AppContent: React.FC = () => {
     localStorage.getItem('auth_token') ? 'menu' : 'login'
   );
 
+  // garante redirecionamento após login
+  useAuthBootstrap(() => setCurrentView('menu'));
+  useEffect(() => {
+    if (localStorage.getItem('auth_token')) setCurrentView('menu');
+  }, []);
+
   // salva o token de login
   useEffect(() => {
     const onAuth = () => setCurrentView('menu');
