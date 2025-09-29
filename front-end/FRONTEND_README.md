@@ -59,6 +59,14 @@ python -m http.server 5173
 ```
 Acesse: http://localhost:5173 (ou porta exibida).
 
+### Opção 3 — Docker
+1. Abra o terminal do seu sistema.
+2. Use os seguintes comandos:
+```shell
+docker build -t op-rpg-front .
+docker run -it --rm -p 5173:5173 op-rpg-front
+```
+
 ---
 
 ## Funcionalidades
