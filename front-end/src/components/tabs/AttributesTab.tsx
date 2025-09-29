@@ -68,7 +68,6 @@ const AttributeCard: React.FC<AttributeCardProps> = ({
                 onBaseChange(isNaN(val) ? 0 : val);
               }}
               className="text-center h-8 text-sm border border-blue-200 dark:border-blue-700 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-              min="0"
             />
           </div>
           <div>
@@ -496,7 +495,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const racas = ['Humano', 'Humano-Peixe', 'Tritão', 'Mink', 'Povo do Céu', 'Anão Tontatta'];
   const potenciais = ['Desastre Sobrenatural', 'Monstro', 'Sobre-Humano', 'Humano', 'Ciborgue'];
   const classes = ['Lutador', 'Guerrilheiro', 'Artista Marcial', 'Espadachim', 'Atirador', 'Especialista', 'Assassino', 'Ladrão'];
-  const profissoes = ['Capitão', 'Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Outro'];
+  const profissoes = ['Capitão', 'Combatente','Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Outro'];
 
   return (
     <div className="space-y-6">
@@ -679,16 +678,19 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                     value={character.nivelClasse}
                     onChange={(e) => handleAttributeUpdate('nivelClasse', parseInt(e.target.value) || 1)}
                     min="1"
+                    max="20"
                     className="h-8 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1">Nível</label>
+                  <label className="block text-xs font-medium mb-1">Nível Profissão</label>
                   <Input
                     type="number"
-                    value={2}
+                    value={character.nivelProfissao}
+                    onChange={(e) => handleAttributeUpdate('nivelProfissao', parseInt(e.target.value) || 1)}
+                    min="1"
+                    max="5"
                     className="h-8 text-sm"
-                    readOnly
                   />
                 </div>
               </div>
