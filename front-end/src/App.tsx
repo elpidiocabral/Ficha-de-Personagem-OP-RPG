@@ -1,30 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CharacterProvider, useCharacter } from './contexts/CharacterContext';
 import CharacterMenu from './components/CharacterMenu';
 import CharacterSheet from './components/CharacterSheet';
 import Login from './components/Login';
 import { Character } from './types';
+import { useAuthBootstrap } from './hooks/useAuthBootstrap';
 import './index.css';
 
 const AppContent: React.FC = () => {
-  // Verificar se já fez login (persistir durante a sessão)
-  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>(() => {
-    const hasLoggedIn = sessionStorage.getItem('onePieceRPG-loggedIn');
-    return hasLoggedIn ? 'menu' : 'login';
-  });
+  useAuthBootstrap();
+
+  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>(() =>
+    localStorage.getItem('auth_token') ? 'menu' : 'login'
+  );
+
+  // garante redirecionamento após login
+  useAuthBootstrap(() => setCurrentView('menu'));
+  useEffect(() => {
+    if (localStorage.getItem('auth_token')) setCurrentView('menu');
+  }, []);
+
+  // salva o token de login
+  useEffect(() => {
+    const onAuth = () => setCurrentView('menu');
+    window.addEventListener('auth:changed', onAuth);
+    return () => window.removeEventListener('auth:changed', onAuth);
+  }, []);
+
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
   const { createCharacter, createDefaultCharacter, characters } = useCharacter();
 
-  // Encontrar o personagem atual baseado no ID
-  const selectedCharacter = selectedCharacterId 
-    ? characters.find(char => char.id === selectedCharacterId) || null
+  const selectedCharacter = selectedCharacterId
+    ? characters.find((char) => char.id === selectedCharacterId) || null
     : null;
 
-  const handleLogin = () => {
-    // Marcar como logado durante a sessão
-    sessionStorage.setItem('onePieceRPG-loggedIn', 'true');
-    setCurrentView('menu');
-  };
+  const handleLogin = () => setCurrentView('menu');
 
   const handleSelectCharacter = (character: Character) => {
     setSelectedCharacterId(character.id || null);
@@ -32,7 +42,6 @@ const AppContent: React.FC = () => {
   };
 
   const handleCreateNew = () => {
-    // Criar um novo personagem vazio e abrir a ficha
     const defaultCharacterData = createDefaultCharacter();
     const newCharacter = createCharacter(defaultCharacterData);
     setSelectedCharacterId(newCharacter.id || null);
@@ -45,18 +54,16 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Remover marcação de login
-    sessionStorage.removeItem('onePieceRPG-loggedIn');
+    // limpa autenticação real
+    localStorage.removeItem('auth_token');
     setCurrentView('login');
     setSelectedCharacterId(null);
   };
 
   return (
     <div className="App">
-      {currentView === 'login' && (
-        <Login onLogin={handleLogin} />
-      )}
-      
+      {currentView === 'login' && <Login onLogin={handleLogin} />}
+
       {currentView === 'menu' && (
         <CharacterMenu
           onSelectCharacter={handleSelectCharacter}
@@ -64,12 +71,9 @@ const AppContent: React.FC = () => {
           onLogout={handleLogout}
         />
       )}
-      
+
       {currentView === 'character' && selectedCharacter && (
-        <CharacterSheet
-          character={selectedCharacter}
-          onBack={handleBackToMenu}
-        />
+        <CharacterSheet character={selectedCharacter} onBack={handleBackToMenu} />
       )}
     </div>
   );

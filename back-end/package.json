@@ -4,24 +4,33 @@
   "description": "readme back-end.",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
-    "nodemon": "^3.1.10"
+    "@types/passport": "^1.0.17",
+    "@types/passport-discord": "^0.1.14",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   },
-  "type": "module"
+  "type": "commonjs"
 }
