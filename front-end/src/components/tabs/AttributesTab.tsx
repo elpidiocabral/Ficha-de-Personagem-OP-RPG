@@ -154,7 +154,7 @@ const DerivedAttributeCard: React.FC<DerivedAttributeCardProps> = ({
 
 const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) => {
   // Use hooks for data management and calculations
-  const { calculateAttributes, calculateCombatInfo } = useCalculations();
+  const { calculateAttributes, calculateCombatInfo, calculateReserves } = useCalculations();
   const { exportCharacterAsFile, importCharacterFromFile } = useJSONHandler();
   
   // State for file upload
@@ -381,10 +381,16 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const destinoTotal = (Number(character.destinoBase) || 0) + (Number(character.destinoBonus) || 0);
   const velocidadeTotal = (Number(character.velocidadeBase) || 0) + (Number(character.velocidadeBonus) || 0);
   const resilienciaTotal = (Number(character.resilienciaBase) || 0) + (Number(character.resilienciaBonus) || 0);
+
+  // Primeiro calcular derivados base para depois somar bônus (já existia mais abaixo)
+  const resistenciaBase = forcaTotal + resilienciaTotal; // Resistência = Força + Resiliência
+  const persistenciaBase = conhecimentoTotal + vitalidadeTotal; // Persistência = Conhecimento + Vitalidade
+  // Máximo de quantidade (ambas as reservas usam o nível de Classe)
+  const maxQuantidadeClasse = character.nivelClasse || 1;
   
   const agilidade = destrezaTotal + velocidadeTotal;
-  const resistencia = forcaTotal + resilienciaTotal;
-  const persistencia = conhecimentoTotal + vitalidadeTotal;
+  const resistencia = resistenciaBase;
+  const persistencia = persistenciaBase;
   const disciplina = raciocinioTotal + vontadeTotal;
   const carisma = aparenciaTotal + destinoTotal;
 
@@ -392,6 +398,9 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const resistenciaTotal = resistencia + (Number(character.resistenciaBonus) || 0);
   const persistenciaTotal = persistencia + (Number(character.persistenciaBonus) || 0);
   const disciplinaTotal = disciplina + (Number(character.disciplinaBonus) || 0);
+
+  // Calcular dados de reservas usando os totais (incluindo bônus) para refletir buffs
+  const { reservaVidaDados, reservaVigorDados } = calculateReserves(resistenciaTotal, persistenciaTotal);
 
   // Cálculo dos dados de vida e vigor
   const dadosVida = calcularDadosVitalidade(vitalidadeTotal);
@@ -1011,18 +1020,21 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                     <div className="flex items-center justify-center gap-2">
                       <div className="text-center">
                         <div className="text-xs text-gray-500 mb-1">Quantidade</div>
-                        <Input
-                          type="number"
-                          value={character.reservaVidaQtd || 0}
-                          onChange={(e) => handleAttributeUpdate('reservaVidaQtd', parseInt(e.target.value) || 0)}
-                          className="text-center h-8 w-12 text-sm"
-                          min="0"
-                        />
+                        <div className="flex flex-col items-center">
+                          <Input
+                            type="number"
+                            value={character.reservaVidaQtd || 0}
+                            onChange={(e) => handleAttributeUpdate('reservaVidaQtd', parseInt(e.target.value) || 0)}
+                            className={`text-center h-8 w-12 text-sm ${ (character.reservaVidaQtd||0) > maxQuantidadeClasse ? 'border-red-400 dark:border-red-500' : ''}`}
+                            min="0"
+                          />
+                          <span className="text-[10px] text-gray-500 mt-1">máx {maxQuantidadeClasse}</span>
+                        </div>
                       </div>
                       <div className="text-center">
                         <div className="text-xs text-gray-500 mb-1">Dados</div>
-                        <div className="bg-blue-500 text-white rounded px-3 py-1 text-sm font-bold">
-                          1d6
+                        <div className="bg-blue-500 text-white rounded px-3 py-1 text-sm font-bold min-w-[60px] text-center">
+                          {reservaVidaDados}
                         </div>
                       </div>
                     </div>
@@ -1039,18 +1051,21 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                     <div className="flex items-center justify-center gap-2">
                       <div className="text-center">
                         <div className="text-xs text-gray-500 mb-1">Quantidade</div>
-                        <Input
-                          type="number"
-                          value={character.reservaVigorQtd || 0}
-                          onChange={(e) => handleAttributeUpdate('reservaVigorQtd', parseInt(e.target.value) || 0)}
-                          className="text-center h-8 w-12 text-sm"
-                          min="0"
-                        />
+                        <div className="flex flex-col items-center">
+                          <Input
+                            type="number"
+                            value={character.reservaVigorQtd || 0}
+                            onChange={(e) => handleAttributeUpdate('reservaVigorQtd', parseInt(e.target.value) || 0)}
+                            className={`text-center h-8 w-12 text-sm ${ (character.reservaVigorQtd||0) > maxQuantidadeClasse ? 'border-red-400 dark:border-red-500' : ''}`}
+                            min="0"
+                          />
+                          <span className="text-[10px] text-gray-500 mt-1">máx {maxQuantidadeClasse}</span>
+                        </div>
                       </div>
                       <div className="text-center">
                         <div className="text-xs text-gray-500 mb-1">Dados</div>
-                        <div className="bg-blue-500 text-white rounded px-3 py-1 text-sm font-bold">
-                          1d6
+                        <div className="bg-blue-500 text-white rounded px-3 py-1 text-sm font-bold min-w-[60px] text-center">
+                          {reservaVigorDados}
                         </div>
                       </div>
                     </div>

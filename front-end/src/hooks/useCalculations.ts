@@ -122,6 +122,10 @@ export const useCalculations = (): UseCalculationsReturn => {
   // Calculate reserve dice based on attribute points
   const calculateReserves = useCallback((resistencia: number, persistencia: number) => {
     const calculateDiceForPoints = (points: number): string => {
+      // Escala oficial (Resistência / Persistência) conforme tabela fornecida:
+      // <0 => 0 | 0 => 1 | 1-2 => 1d2 | 3-4 => 1d4 | 5-6 => 1d6 | 7-8 => 1d8
+      // 9-10 => 1d10 | 11-12 => 2d6 | 13-14 => 1d8 + 1d6 | 15-16 => 2d8
+      // 17-18 => 1d10 + 1d8 | 19-20 => 2d10 | >20 (clamp) => 2d10
       if (points < 0) return '0';
       if (points === 0) return '1';
       if (points <= 2) return '1d2';
@@ -133,6 +137,7 @@ export const useCalculations = (): UseCalculationsReturn => {
       if (points <= 14) return '1d8 + 1d6';
       if (points <= 16) return '2d8';
       if (points <= 18) return '1d10 + 1d8';
+      // 19-20 e acima
       return '2d10';
     };
 

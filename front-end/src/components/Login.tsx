@@ -109,10 +109,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           {/* Footer */}
           <div className="mt-8 text-center">
             <p className="text-gray-500 text-xs">
-              Sistema de Fichas One Piece RPG
+              Sistema de Fichas - A Vontade dos Mares RPG
             </p>
             <p className="text-gray-600 text-xs mt-1">
-              v2.0 - React Transfer
+              v3.0
             </p>
           </div>
         </CardContent>
