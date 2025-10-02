@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Character } from '../types';
-import { Anchor, Trash2, Play, Copy, Download, Sun, Moon, FolderOpen, LogOut } from 'lucide-react';
+import { Anchor, Trash2, Play, Copy, Download, FolderOpen } from 'lucide-react';
+import UserDropdown from './UserDropdown';
 
 interface CharacterMenuProps {
   onSelectCharacter: (character: Character) => void;
   onCreateNew: () => void;
-  onLogout?: () => void;
+  onLogout: () => void; // Tornado obrigatório
 }
 
 const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCreateNew, onLogout }) => {
@@ -19,13 +20,10 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
     deleteCharacter,
     exportCharacter,
     importCharacter,
-    clearAllCharacters,
-    theme,
-    toggleTheme
+    clearAllCharacters
   } = useCharacter();
   
   const [showImportExport, setShowImportExport] = useState(false);
-  const isDarkMode = theme === 'dark';
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -58,52 +56,14 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
     }
   };
 
-  React.useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      document.body.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.body.classList.remove('dark-mode');
-    }
-  }, [isDarkMode]);
-
   return (
     <div className="menu-inicial">
       <div className="container mx-auto px-4 py-8">
-        {/* Header com botão de tema no canto direito */}
+        {/* Header com UserDropdown no canto direito */}
         <div className="relative mb-8">
-          {/* Botões no canto superior direito (desktop) */}
-          <div className="hidden md:flex absolute top-0 right-0 z-20 gap-2">
-            {onLogout && (
-              <Button
-                onClick={onLogout}
-                variant="outline"
-                size="sm"
-                className="theme-toggle interactive-element text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair
-              </Button>
-            )}
-            <Button
-              onClick={toggleTheme}
-              variant="outline"
-              size="sm"
-              className="theme-toggle interactive-element"
-            >
-              {isDarkMode ? (
-                <>
-                  <Sun className="w-4 h-4 mr-2" />
-                  Modo Claro
-                </>
-              ) : (
-                <>
-                  <Moon className="w-4 h-4 mr-2" />
-                  Modo Escuro
-                </>
-              )}
-            </Button>
+          {/* UserDropdown no canto superior direito */}
+          <div className="absolute top-0 right-0 z-20">
+            <UserDropdown onLogout={onLogout} />
           </div>
 
           {/* Título centralizado */}
@@ -114,39 +74,6 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
             <p className="text-xl mb-6 enhanced-text-light drop-shadow">
               Selecione um personagem ou crie um novo pirata!
             </p>
-            
-            {/* Botões centralizados (mobile) */}
-            <div className="md:hidden mb-6 flex justify-center gap-2">
-              {onLogout && (
-                <Button
-                  onClick={onLogout}
-                  variant="outline"
-                  size="sm"
-                  className="theme-toggle interactive-element text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700 hover:border-red-400 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-900/20"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </Button>
-              )}
-              <Button
-                onClick={toggleTheme}
-                variant="outline"
-                size="sm"
-                className="theme-toggle interactive-element"
-              >
-                {isDarkMode ? (
-                  <>
-                    <Sun className="w-4 h-4 mr-2" />
-                    Modo Claro
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-4 h-4 mr-2" />
-                    Modo Escuro
-                  </>
-                )}
-              </Button>
-            </div>
           </div>
         </div>
 
