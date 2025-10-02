@@ -3,6 +3,7 @@ import { CharacterProvider, useCharacter } from './contexts/CharacterContext';
 import CharacterMenu from './components/CharacterMenu';
 import CharacterSheet from './components/CharacterSheet';
 import Login from './components/Login';
+import AuthSuccess from './pages/AuthSuccess';
 import { Character } from './types';
 import { useAuthBootstrap } from './hooks/useAuthBootstrap';
 import './index.css';
@@ -10,9 +11,38 @@ import './index.css';
 const AppContent: React.FC = () => {
   useAuthBootstrap();
 
-  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>(() =>
-    localStorage.getItem('auth_token') ? 'menu' : 'login'
-  );
+  // Verificar se está na página de callback do Discord
+  const isAuthSuccessPage = window.location.pathname === '/auth/success';
+
+  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character' | 'auth-success'>(() => {
+    if (isAuthSuccessPage) return 'auth-success';
+    return localStorage.getItem('auth_token') ? 'menu' : 'login';
+  });
+
+  // Verificar se há token no hash da URL
+  useEffect(() => {
+    const processTokenFromHash = () => {
+      const hash = window.location.hash;
+      if (hash.includes('token=')) {
+        const token = hash.split('token=')[1]?.split('&')[0];
+        if (token && token !== 'undefined') {
+          console.log('🔑 Token encontrado no hash, salvando...');
+          localStorage.setItem('auth_token', token);
+          
+          // Limpar o hash da URL
+          window.history.replaceState(null, '', window.location.pathname);
+          
+          // Disparar evento para atualizar a UI
+          window.dispatchEvent(new Event('auth:changed'));
+          
+          // Atualizar o view para mostrar o menu
+          setCurrentView('menu');
+        }
+      }
+    };
+
+    processTokenFromHash();
+  }, []);
 
   // garante redirecionamento após login
   useAuthBootstrap(() => setCurrentView('menu'));
@@ -62,6 +92,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="App">
+      {currentView === 'auth-success' && <AuthSuccess />}
+      
       {currentView === 'login' && <Login onLogin={handleLogin} />}
 
       {currentView === 'menu' && (

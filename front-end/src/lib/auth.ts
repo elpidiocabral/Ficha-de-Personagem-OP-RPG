@@ -8,6 +8,8 @@ export interface AuthUser {
   avatar: string | null;
   global_name: string | null;
   display_name?: string;
+  avatarUrl?: string;
+  displayName?: string;
 }
 
 export const AuthUtils = {
@@ -45,7 +47,7 @@ export const AuthUtils = {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/auth/me`, {
+      const response = await fetch(`${apiUrl}/api/user/me`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -54,9 +56,24 @@ export const AuthUtils = {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Dados do usuário obtidos via AuthUtils:', data);
-        return data;
+        const responseData = await response.json();
+        console.log('✅ Dados do usuário obtidos via AuthUtils:', responseData);
+        
+        // Usar estrutura da nova API
+        if (responseData.success && responseData.user) {
+          const user = responseData.user;
+          return {
+            id: user.id,
+            username: user.username,
+            discriminator: user.discriminator || '0000',
+            avatar: user.avatar,
+            global_name: user.displayName || user.username,
+            display_name: user.displayName,
+            avatarUrl: user.avatarUrl,
+            displayName: user.displayName
+          };
+        }
+        return null;
       } else {
         console.error('❌ Erro ao buscar dados do usuário:', response.status);
         return null;

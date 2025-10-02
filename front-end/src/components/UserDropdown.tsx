@@ -9,6 +9,7 @@ interface UserData {
   discriminator: string;
   avatar: string | null;
   global_name: string | null;
+  avatarUrl?: string; // Adicionada para compatibilidade com nova API
 }
 
 interface UserDropdownProps {
@@ -59,9 +60,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
 
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        console.log('🌐 Fazendo requisição para:', `${apiUrl}/auth/me`);
+        console.log('🌐 Fazendo requisição para:', `${apiUrl}/api/user/me`);
         
-        const response = await fetch(`${apiUrl}/auth/me`, {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -76,14 +77,16 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
           const data = await response.json();
           console.log('✅ Dados reais do usuário recebidos:', data);
           
-          // Validar se os dados têm a estrutura esperada do Discord
-          if (data.id && data.username) {
+          // Usar a estrutura da nova API (/api/user/me)
+          if (data.success && data.user) {
+            const user = data.user;
             setUserData({
-              id: data.id,
-              username: data.username,
-              discriminator: data.discriminator || '0000',
-              avatar: data.avatar,
-              global_name: data.global_name || data.display_name
+              id: user.id,
+              username: user.username,
+              discriminator: user.discriminator || '0000',
+              avatar: user.avatar,
+              global_name: user.displayName || user.username,
+              avatarUrl: user.avatarUrl // Nova API já retorna avatarUrl formatada
             });
           } else {
             console.log('⚠️ Dados do usuário incompletos, usando mock');
@@ -164,6 +167,12 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
   }, [onLogout]);
 
   const getAvatarUrl = (userData: UserData) => {
+    // Usar avatarUrl da nova API se disponível
+    if (userData.avatarUrl) {
+      return userData.avatarUrl;
+    }
+    
+    // Fallback para o formato antigo
     if (userData.avatar) {
       return `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=128`;
     }
