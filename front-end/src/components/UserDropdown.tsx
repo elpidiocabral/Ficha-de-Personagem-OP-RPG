@@ -198,7 +198,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
+        <div className="w-12 h-12 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
       </div>
     );
   }
@@ -232,13 +232,13 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
       {/* Avatar e botão */}
       <Button
         variant="ghost"
-        className="relative h-10 w-10 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="relative h-14 w-14 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
         onClick={() => setIsOpen(!isOpen)}
       >
         <img
           src={getAvatarUrl(userData)}
           alt={`Avatar de ${getDisplayName(userData)}`}
-          className="h-8 w-8 rounded-full object-cover"
+          className="h-12 w-12 rounded-full object-cover"
           onError={(e) => {
             // Fallback para avatar padrão se a imagem falhar
             const defaultAvatar = (parseInt(userData.discriminator) || 0) % 5;
@@ -246,7 +246,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
           }}
         />
         {/* Indicador online */}
-        <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+        <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
       </Button>
 
       {/* Dropdown Menu */}
