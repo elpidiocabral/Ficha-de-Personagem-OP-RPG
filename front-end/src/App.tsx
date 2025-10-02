@@ -73,7 +73,7 @@ const AppContent: React.FC = () => {
       )}
 
       {currentView === 'character' && selectedCharacter && (
-        <CharacterSheet character={selectedCharacter} onBack={handleBackToMenu} />
+        <CharacterSheet character={selectedCharacter} onBack={handleBackToMenu} onLogout={handleLogout} />
       )}
     </div>
   );

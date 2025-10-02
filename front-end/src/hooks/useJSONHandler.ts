@@ -117,22 +117,24 @@ export const useJSONHandler = (): UseJSONHandlerReturn => {
       
       const mapProfissao = (profissao: string): string => {
         const profissaoMap: { [key: string]: string } = {
-          'Capitao': 'Capitão',
-          'Capitão': 'Capitão',
+          'Capitao': 'Capitão', 'Capitão': 'Capitão',
           'Imediato': 'Imediato',
           'Navegador': 'Navegador',
-          'Cozinheiro': 'Cozinheiro',
-          'Medico': 'Médico',
-          'Médico': 'Médico',
-          'Arqueologo': 'Arqueólogo',
-          'Arqueólogo': 'Arqueólogo',
+            'Cozinheiro': 'Cozinheiro',
+          'Medico': 'Médico', 'Médico': 'Médico',
+          'Arqueologo': 'Arqueólogo', 'Arqueólogo': 'Arqueólogo',
           'Carpinteiro': 'Carpinteiro',
-          'Musico': 'Músico',
-          'Músico': 'Músico',
+          'Musico': 'Músico', 'Músico': 'Músico',
           'Atirador': 'Atirador',
+          // Novas profissões adicionadas
+          'Marinheiro': 'Marinheiro',
+          'Cacador de Recompensas': 'Caçador de Recompensas', 'Caçador de Recompensas': 'Caçador de Recompensas', 'Cacador': 'Caçador de Recompensas',
+          'Revolucionario': 'Revolucionário', 'Revolucionário': 'Revolucionário',
+          'Combatente': 'Combatente', // já usada como default inicial em contexto
           'Outro': 'Outro'
         };
-        return profissaoMap[profissao] || 'Outro';
+        // Se já estiver em lista retorna normalizado; caso contrário retorna original (em vez de forçar Outro)
+        return profissaoMap[profissao] || profissaoMap[profissao.trim()] || profissao;
       };
       
       const mapPotencial = (potencial: string): string => {

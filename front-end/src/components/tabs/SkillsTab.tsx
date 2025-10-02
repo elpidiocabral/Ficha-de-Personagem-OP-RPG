@@ -388,7 +388,7 @@ const SkillsTab: React.FC<SkillsTabProps> = ({
                             <div>
                               <strong>Descrição:</strong> 
                               <div className="mt-1 whitespace-pre-wrap">
-                                {habilidade.desc || habilidade.descricao || 'Sem descrição'}
+                                {habilidade.descricao || 'Sem descrição'}
                               </div>
                             </div>
                           </div>
@@ -447,10 +447,15 @@ const SkillsTab: React.FC<SkillsTabProps> = ({
                     onChange={(e) => handleAttributeUpdate('akumaNome', e.target.value)}
                     className="border-red-300 dark:border-red-600"
                   />
+                  {/* Tipo e Subtipo (todas as frutas possuem subtipo) */}
                   <div className="grid grid-cols-2 gap-2">
-                    <Select 
-                      value={character.akumaTipo || ''} 
-                      onValueChange={(value) => handleAttributeUpdate('akumaTipo', value)}
+                    <Select
+                      value={character.akumaTipo || ''}
+                      onValueChange={(value) => {
+                        handleAttributeUpdate('akumaTipo', value)
+                        // Resetar subtipo ao trocar tipo para evitar subtipo inválido
+                        handleAttributeUpdate('akumaSubtipo', '')
+                      }}
                     >
                       <SelectTrigger className="border-red-300 dark:border-red-600">
                         <SelectValue placeholder="Tipo da Fruta" />
@@ -461,37 +466,67 @@ const SkillsTab: React.FC<SkillsTabProps> = ({
                         <SelectItem value="Zoan">Zoan</SelectItem>
                       </SelectContent>
                     </Select>
-                    {character.akumaTipo === 'Zoan' ? (
-                      <Select 
-                        value={character.akumaSubtipo || ''} 
-                        onValueChange={(value) => handleAttributeUpdate('akumaSubtipo', value)}
-                      >
-                        <SelectTrigger className="border-red-300 dark:border-red-600">
-                          <SelectValue placeholder="Subtipo Zoan" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Normal">Normal</SelectItem>
-                          <SelectItem value="Ancestral">Ancestral</SelectItem>
-                          <SelectItem value="Mitica">Mítica</SelectItem>
-                          <SelectItem value="Carnivora">Carnívora</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <Input
-                        placeholder="Temática"
-                        value={character.akumaTematica || ''}
-                        onChange={(e) => handleAttributeUpdate('akumaTematica', e.target.value)}
-                        className="border-red-300 dark:border-red-600"
-                      />
-                    )}
+                    <Select
+                      value={character.akumaSubtipo || ''}
+                      onValueChange={(value) => handleAttributeUpdate('akumaSubtipo', value)}
+                    >
+                      <SelectTrigger className="border-red-300 dark:border-red-600">
+                        <SelectValue placeholder="Subtipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {/* Opções dinâmicas baseadas no tipo */}
+                        {(!character.akumaTipo || character.akumaTipo === 'Paramecia') && (
+                          <>
+                            <SelectItem value="Criação">Criação</SelectItem>
+                            <SelectItem value="Alteração Corporal — Eterna">Alteração Corporal — Eterna</SelectItem>
+                            <SelectItem value="Alteração Corporal — Momentânea">Alteração Corporal — Momentânea</SelectItem>
+                            <SelectItem value="Controle de Ambiente">Controle de Ambiente</SelectItem>
+                            <SelectItem value="Manipulação de Conceito">Manipulação de Conceito</SelectItem>
+                            <SelectItem value="Paramecia Especial">Paramecia Especial</SelectItem>
+                          </>
+                        )}
+                        {character.akumaTipo === 'Zoan' && (
+                          <>
+                            <SelectItem value="Normal">Normal</SelectItem>
+                            <SelectItem value="Ancestral">Ancestral</SelectItem>
+                            <SelectItem value="Mítica">Mítica</SelectItem>
+                          </>
+                        )}
+                        {character.akumaTipo === 'Logia' && (
+                          <>
+                            <SelectItem value="Elemental (Padrão)">Elemental (Padrão)</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <textarea
-                    placeholder="Desejo que a Criou"
-                    value={character.akumaDesejo || ''}
-                    onChange={(e) => handleAttributeUpdate('akumaDesejo', e.target.value)}
-                    className="p-2 border border-red-300 dark:border-red-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none w-full"
+                    placeholder="Temática"
+                    value={character.akumaTematica || ''}
+                    onChange={(e) => {
+                      handleAttributeUpdate('akumaTematica', e.target.value)
+                      // auto-resize
+                      e.target.style.height = 'auto'
+                      e.target.style.height = e.target.scrollHeight + 'px'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.height = 'auto'
+                      e.target.style.height = e.target.scrollHeight + 'px'
+                    }}
                     rows={2}
+                    className="w-full p-2 border border-red-300 dark:border-red-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none overflow-hidden"
+                    style={{ minHeight: 56 }}
                   />
+                  <div className="flex items-center gap-2">
+                    <textarea
+                      placeholder="Desejo que a Criou"
+                      value={character.akumaDesejo || ''}
+                      onChange={(e) => handleAttributeUpdate('akumaDesejo', e.target.value)}
+                      className="p-2 border border-red-300 dark:border-red-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none w-2/3"
+                      rows={1}
+                      style={{ minHeight: 34 }}
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Nível da Fruta</label>
                     <Input
@@ -649,7 +684,7 @@ const SkillsTab: React.FC<SkillsTabProps> = ({
                             <div>
                               <strong>Descrição:</strong> 
                               <div className="mt-1 whitespace-pre-wrap">
-                                {habilidade.desc || habilidade.descricao || 'Sem descrição'}
+                                {habilidade.descricao || 'Sem descrição'}
                               </div>
                             </div>
                           </div>

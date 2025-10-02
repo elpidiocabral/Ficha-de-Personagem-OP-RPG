@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Moon, Sun } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Character } from '../types';
 import { useCharacter } from '../contexts/CharacterContext';
 import AttributesTab from './tabs/AttributesTab';
 import SkillsTab from './tabs/SkillsTab';
 import PersonalTab from './tabs/PersonalTab';
 import ItemsTab from './tabs/ItemsTab';
+import UserDropdown from './UserDropdown';
 
 interface CharacterSheetProps {
   character: Character;
   onBack: () => void;
+  onLogout: () => void; // Adicionar prop para logout
 }
 
 type TabType = 'attributes' | 'skills' | 'personal' | 'items';
 
-const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) => {
+const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLogout }) => {
   const [activeTab, setActiveTab] = useState<TabType>('attributes');
-  const { updateCharacter, theme, toggleTheme } = useCharacter();
+  const { updateCharacter } = useCharacter();
 
   const handleCharacterUpdate = (updates: Partial<Character>) => {
     console.log('handleCharacterUpdate chamado com:', updates);
@@ -30,8 +32,6 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
   const handleAttributeUpdate = (field: keyof Character, value: any) => {
     handleCharacterUpdate({ [field]: value });
   };
-
-  const isDarkMode = theme === 'dark';
 
   const tabs = [
     { id: 'attributes' as const, label: 'Atributos' },
@@ -61,24 +61,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack }) =>
             </div>
           </div>
           
-          <Button
-            onClick={toggleTheme}
-            variant="outline"
-            size="sm"
-            className="theme-toggle"
-          >
-            {isDarkMode ? (
-              <>
-                <Sun className="h-4 w-4 mr-2" />
-                Modo Claro
-              </>
-            ) : (
-              <>
-                <Moon className="h-4 w-4 mr-2" />
-                Modo Escuro
-              </>
-            )}
-          </Button>
+          <UserDropdown onLogout={onLogout} />
         </div>
       </div>
 
