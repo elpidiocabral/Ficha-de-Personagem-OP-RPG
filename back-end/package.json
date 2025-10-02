@@ -17,6 +17,8 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.19.0",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4"
   },
@@ -25,6 +27,8 @@
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongodb": "^4.0.6",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^24.5.2",
     "@types/passport": "^1.0.17",
     "@types/passport-discord": "^0.1.14",
