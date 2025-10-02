@@ -5,6 +5,8 @@ import passport from 'passport';
 import { Strategy as DiscordStrategy, type Profile as DiscordProfile } from 'passport-discord';
 import jwt from 'jsonwebtoken';
 
+import router from './routes';
+
 type JwtUser = {
   id: string;
   username: string;
@@ -29,7 +31,7 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_CALLBACK_URL || !SE
 
 const app = express();
 
-// Sessão (necessária para Passport quando usamos "authorization_code")
+// Sessão(necessária para Passport quando usamos "authorization_code")
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
@@ -138,6 +140,10 @@ app.get('/me', requireAuth, (req, res) => {
   res.json({ user: (req as any).user });
 });
 
-app.listen(Number(PORT), () => {
-  console.log(`Auth server on http://localhost:${PORT}`);
+app.use(express.json());
+
+app.use(router)
+
+app.listen(Number(3000), () => {
+  console.log(`Auth server on http://localhost:${3000}`);
 });
