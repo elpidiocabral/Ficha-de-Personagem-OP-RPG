@@ -1546,7 +1546,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
               Competências
             </h3>
-            <div className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-2">
               {character.competenciasAptidoesTrunfos?.filter(item => item.tipo === 'Competência').length > 0 ? (
                 character.competenciasAptidoesTrunfos
                   .filter(item => item.tipo === 'Competência')
@@ -1756,7 +1756,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
               <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
               Aptidões
             </h3>
-            <div className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-2">
               {character.competenciasAptidoesTrunfos?.filter(item => item.tipo === 'Aptidão').length > 0 ? (
                 character.competenciasAptidoesTrunfos
                   .filter(item => item.tipo === 'Aptidão')
@@ -1886,7 +1886,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
               <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
               Trunfos
             </h3>
-            <div className="space-y-2">
+            <div className="grid gap-2 md:grid-cols-3">
               {character.competenciasAptidoesTrunfos?.filter(item => item.tipo === 'Trunfo').length > 0 ? (
                 character.competenciasAptidoesTrunfos
                   .filter(item => item.tipo === 'Trunfo')
