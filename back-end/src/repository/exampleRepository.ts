@@ -1,5 +1,5 @@
 import { IExampleRepository } from "../interfaces/IExample";
-import { getDatabase } from "../db/database"
+import { getDatabase } from "../config/database"
 
 export class exampleRepository implements IExampleRepository {
     private collectionName: string = "examples";

@@ -1,23 +1,19 @@
 import express from 'express';
+import { ensureAuthenticated } from '../middleware/auth';
 
 import exampleRoutes from './exampleRoutes';
-import userRoutes from './user';
+import authRoutes from './authRoutes'
+import userRoutes from './userRoutes';
 
 const router = express.Router();
 
-// Rotas existentes
-router.use('/examples', exampleRoutes);
+router.use((req, res, next) => {
+    if (req.path.startsWith('/auth')) return next();
+    return ensureAuthenticated(req, res, next);
+})
 
-// Novas rotas de usuário
-router.use('/api/user', userRoutes);
-
-// Rota de health check
-router.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'API funcionando',
-    timestamp: new Date().toISOString()
-  });
-});
+router.use('/example', exampleRoutes);
+router.use('/profile', userRoutes);
+router.use('/auth', authRoutes);
 
 export default router;
