@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
 export function authCallback(req: Request, res: Response) {
-    res.redirect('http://localhost:5173');
+    const redirect = FRONTEND_URL;
+    res.redirect(redirect!);
 }
 
 export function authFailure(req: Request, res: Response) {
