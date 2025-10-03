@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as DiscordStrategy, type Profile as DiscordProfile } from 'passport-discord';
@@ -30,6 +31,17 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_CALLBACK_URL || !SE
 }
 
 const app = express();
+
+// Configurar CORS
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Middleware para parsing JSON
+app.use(express.json());
 
 // Sessão(necessária para Passport quando usamos "authorization_code")
 app.use(session({
@@ -93,56 +105,85 @@ app.get(
   '/auth/discord/callback',
   passport.authenticate('discord', { failureRedirect: '/auth/failure' }),
   (req, res) => {
-    const user = req.user as JwtUser;
-    const token = jwt.sign(
-      {
-        sub: user.id,
-        username: user.username,
-        discriminator: user.discriminator,
-        avatar: user.avatar,
-        email: user.email,
-        provider: 'discord',
-      },
-      JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
+    try {
+      console.log('✅ Callback do Discord executado com sucesso');
+      console.log('👤 User recebido:', req.user);
+      
+      const user = req.user as JwtUser;
+      
+      if (!user) {
+        console.error('❌ Usuário não encontrado no callback');
+        return res.redirect('/auth/failure');
+      }
 
-    // Se tiver FRONTEND_URL, redireciona passando o token por query/hash:
-    const redirect = FRONTEND_URL ? `${FRONTEND_URL}/auth/success#token=${token}` : `/auth/success?token=${token}`;
-    res.redirect(redirect);
+      const token = jwt.sign(
+        {
+          sub: user.id,
+          username: user.username,
+          discriminator: user.discriminator,
+          avatar: user.avatar,
+          email: user.email,
+          provider: 'discord',
+        },
+        JWT_SECRET!,
+        { expiresIn: '7d' }
+      );
+
+      console.log('🔑 Token JWT criado:', token.substring(0, 20) + '...');
+      console.log('🌐 FRONTEND_URL:', FRONTEND_URL);
+
+      // Redirecionar direto para a página principal com token no hash
+      const redirect = FRONTEND_URL ? `${FRONTEND_URL}/#token=${token}` : `/auth/success?token=${token}`;
+      console.log('🔄 Redirecionando para:', redirect);
+      
+      res.redirect(redirect);
+    } catch (error) {
+      console.error('🚨 Erro no callback do Discord:', error);
+      res.redirect('/auth/failure');
+    }
   }
 );
 
 // Rotinhas auxiliares
-app.get('/auth/failure', (_req, res) => res.status(401).send('Falha na autenticação com o Discord.'));
+app.get('/auth/failure', (req, res) => {
+  console.error('❌ Falha na autenticação com Discord');
+  res.status(401).send(`
+    <h1>Falha na Autenticação</h1>
+    <p>Não foi possível autenticar com o Discord.</p>
+    <p><a href="/auth/discord">Tentar novamente</a></p>
+    <p><a href="${FRONTEND_URL || 'http://localhost:5173'}">Voltar ao site</a></p>
+  `);
+});
+
 app.get('/auth/success', (req, res) => {
   // Apenas pra testes via backend puro (sem front): mostra o token retornado via query
   const token = req.query.token;
-  res.send(`Login OK. Token JWT: ${token}`);
+  console.log('✅ Página de sucesso acessada com token:', token ? 'presente' : 'ausente');
+  
+  res.send(`
+    <h1>Login Realizado com Sucesso!</h1>
+    <p>Token JWT: <code>${token ? token.toString().substring(0, 50) + '...' : 'Não encontrado'}</code></p>
+    <p>Esta página só aparece quando FRONTEND_URL não está configurado.</p>
+    <p><a href="${FRONTEND_URL || 'http://localhost:5173'}">Ir para o site</a></p>
+    <script>
+      // Se há token, salvar no localStorage e redirecionar
+      if ('${token}' && '${token}' !== 'undefined') {
+        localStorage.setItem('auth_token', '${token}');
+        window.location.href = '${FRONTEND_URL || 'http://localhost:5173'}';
+      }
+    </script>
+  `);
 });
 
-// Exemplo de rota protegida por JWT (Bearer)
-import type { Request, Response, NextFunction } from 'express';
-function requireAuth(req: Request, res: Response, next: NextFunction) {
-  const auth = req.headers.authorization;
-  if (!auth?.startsWith('Bearer ')) return res.status(401).json({ error: 'Missing Bearer token' });
-  const token = auth.slice('Bearer '.length);
-  try {
-    const payload = jwt.verify(token, JWT_SECRET!) as any;
-    (req as any).user = payload;
-    return next();
-  } catch {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-}
+// Importar middleware de autenticação do arquivo separado
+import { requireAuth } from './middleware/auth';
 
 app.get('/me', requireAuth, (req, res) => {
   res.json({ user: (req as any).user });
 });
 
-app.use(express.json());
-
-app.use(router)
+// Montar todas as rotas da API
+app.use(router);
 
 app.listen(Number(3000), () => {
   console.log(`Auth server on http://localhost:${3000}`);

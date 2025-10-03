@@ -9,6 +9,7 @@ interface UserData {
   discriminator: string;
   avatar: string | null;
   global_name: string | null;
+  avatarUrl?: string; // Adicionada para compatibilidade com nova API
 }
 
 interface UserDropdownProps {
@@ -59,9 +60,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
 
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        console.log('🌐 Fazendo requisição para:', `${apiUrl}/auth/me`);
+        console.log('🌐 Fazendo requisição para:', `${apiUrl}/api/user/me`);
         
-        const response = await fetch(`${apiUrl}/auth/me`, {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -76,14 +77,16 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
           const data = await response.json();
           console.log('✅ Dados reais do usuário recebidos:', data);
           
-          // Validar se os dados têm a estrutura esperada do Discord
-          if (data.id && data.username) {
+          // Usar a estrutura da nova API (/api/user/me)
+          if (data.success && data.user) {
+            const user = data.user;
             setUserData({
-              id: data.id,
-              username: data.username,
-              discriminator: data.discriminator || '0000',
-              avatar: data.avatar,
-              global_name: data.global_name || data.display_name
+              id: user.id,
+              username: user.username,
+              discriminator: user.discriminator || '0000',
+              avatar: user.avatar,
+              global_name: user.displayName || user.username,
+              avatarUrl: user.avatarUrl // Nova API já retorna avatarUrl formatada
             });
           } else {
             console.log('⚠️ Dados do usuário incompletos, usando mock');
@@ -164,6 +167,12 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
   }, [onLogout]);
 
   const getAvatarUrl = (userData: UserData) => {
+    // Usar avatarUrl da nova API se disponível
+    if (userData.avatarUrl) {
+      return userData.avatarUrl;
+    }
+    
+    // Fallback para o formato antigo
     if (userData.avatar) {
       return `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=128`;
     }
@@ -189,7 +198,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
+        <div className="w-12 h-12 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
       </div>
     );
   }
@@ -223,13 +232,13 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
       {/* Avatar e botão */}
       <Button
         variant="ghost"
-        className="relative h-10 w-10 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="relative h-14 w-14 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
         onClick={() => setIsOpen(!isOpen)}
       >
         <img
           src={getAvatarUrl(userData)}
           alt={`Avatar de ${getDisplayName(userData)}`}
-          className="h-8 w-8 rounded-full object-cover"
+          className="h-12 w-12 rounded-full object-cover"
           onError={(e) => {
             // Fallback para avatar padrão se a imagem falhar
             const defaultAvatar = (parseInt(userData.discriminator) || 0) % 5;
@@ -237,7 +246,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
           }}
         />
         {/* Indicador online */}
-        <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+        <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
       </Button>
 
       {/* Dropdown Menu */}
