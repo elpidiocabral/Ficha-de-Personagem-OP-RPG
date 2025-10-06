@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { exampleRepository } from "../repository/exampleRepository";
-import { exampleService } from "../services/exampleService";
+import { ExampleService } from "../services/exampleService";
 
 const repository = new exampleRepository();
-const service = new exampleService(repository);
+const service = new ExampleService(repository);
 
 async function getAllExamples(req: Request, res: Response) {
     const resposta = await service.getAllExamples();
