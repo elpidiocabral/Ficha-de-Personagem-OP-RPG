@@ -1,6 +1,6 @@
 import { IExampleRepository } from "../interfaces/IExample";
 
-export class exampleService {
+export class ExampleService {
     constructor(private repository: IExampleRepository) { }
     async getAllExamples(): Promise<any[]> {
         return await this.repository.findAllCollections();
