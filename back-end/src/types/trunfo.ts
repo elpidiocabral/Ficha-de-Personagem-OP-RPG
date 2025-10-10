@@ -1,10 +1,14 @@
 import { ObjectId } from "mongodb";
+import z from "zod";
 
-type Trunfo = {
-    _id: ObjectId,
-    nome: string,
-    nivel: Number,
-    createdAt: Date,
-    obs?: string,
-    tags?: string
-};
+
+const trunfo = {
+    _id: z.string(),
+    nome: z.string(),
+    nivel: z.number(),
+    createdAt: z.coerce.date(),
+    obs: z.string().optional(),
+    tags: z.string().optional()
+}
+
+type Trunfo = z.infer<typeof trunfo>;

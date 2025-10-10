@@ -1,7 +1,11 @@
+import z from "zod";
 
-type Item = {
-    nome: string,
-    descricao: string,
-    durabilidadeOriginal?: Number,
-    durabilidadeAtual?: Number
-};
+
+const itemSchema = {
+    nome: z.string(),
+    descricao: z.string(),
+    durabilidadeOriginal: z.number(),
+    durabilidadeAtual: z.number()
+}
+
+type Item = z.infer<typeof itemSchema>;

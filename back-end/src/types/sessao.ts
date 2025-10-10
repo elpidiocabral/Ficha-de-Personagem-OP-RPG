@@ -1,14 +1,18 @@
 import { ObjectId } from "mongodb"
+import z from "zod";
 
-type Sessao = {
-    _id: ObjectId,
-    personagemId: ObjectId,
-    numero: Number,
-    data: Date,
-    createdAt: Date,
-    titulo?: string,
-    resumo?: string,
-    xpGanho?: number,
-    recompensas?: string,
-    anotacoes?: string,
-};
+
+const sessaosSchema = {
+     _id: z.string(),
+    personagemId: z.string(),
+    numero: z.number(),
+    data: z.coerce.date(),
+    createdAt: z.coerce.date(),
+    titulo: z.string().optional(),
+    resumo: z.string().optional(),
+    xpGanho: z.number(),
+    recompensas: z.string().optional(),
+    anotacoes: z.string().optional(),
+}
+
+type Sessao = z.infer<typeof sessaosSchema>;
