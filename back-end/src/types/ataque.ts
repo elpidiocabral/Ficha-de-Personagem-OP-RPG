@@ -1,4 +1,4 @@
-type ataque = {
+type Ataque = {
     nome: string,
     bonus: string,
     dano: string

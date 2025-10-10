@@ -1,5 +1,7 @@
-type akumaNoMi = {
-    _id: Number,
+import { ObjectId } from "mongodb"
+
+type AkumaNoMi = {
+    _id: ObjectId,
     nome: string,
     tipo: string,
     createdAt: Date,

@@ -1,5 +1,5 @@
 
-type item = {
+type Item = {
     nome: string,
     descricao: string,
     durabilidadeOriginal?: Number,

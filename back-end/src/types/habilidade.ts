@@ -1,4 +1,4 @@
-type habilidade = {
+type Habilidade = {
     nome : string,
     descricao: string,
     custo? : string,
