@@ -8,4 +8,4 @@ const itemSchema = {
     durabilidadeAtual: z.number()
 }
 
-type Item = z.infer<typeof itemSchema>;
+export type Item = z.infer<typeof itemSchema>;

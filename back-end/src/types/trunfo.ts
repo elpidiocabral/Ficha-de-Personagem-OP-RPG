@@ -11,4 +11,4 @@ const trunfo = {
     tags: z.string().optional()
 }
 
-type Trunfo = z.infer<typeof trunfo>;
+export type Trunfo = z.infer<typeof trunfo>;

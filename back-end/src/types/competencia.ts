@@ -6,4 +6,4 @@ const competenciaSchema = {
     obs: z.string().optional()
 }
 
-type Competencia = z.infer<typeof competenciaSchema>;
+export type Competencia = z.infer<typeof competenciaSchema>;

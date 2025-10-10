@@ -15,4 +15,4 @@ const sessaosSchema = {
     anotacoes: z.string().optional(),
 }
 
-type Sessao = z.infer<typeof sessaosSchema>;
+export type Sessao = z.infer<typeof sessaosSchema>;

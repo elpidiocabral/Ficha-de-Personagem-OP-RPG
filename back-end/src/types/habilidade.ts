@@ -9,5 +9,5 @@ const habilidadeSchema = {
     expanded: z.boolean()
 }
 
-type Habilidade = z.infer<typeof habilidadeSchema>;
+export type Habilidade = z.infer<typeof habilidadeSchema>;
 
