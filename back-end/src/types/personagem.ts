@@ -5,6 +5,7 @@ import { ItemSchema } from "./item";
 import { CompetenciaSchema } from "./competencia";
 import { AtaqueSchema } from "./ataque";
 import { TrunfoSchema } from "./trunfo";
+import { AptidaoSchema } from "./aptidao";
 
 
 export const PersonagemSchema = z.object({
@@ -42,7 +43,7 @@ export const PersonagemSchema = z.object({
     habilidades: z.array(HabilidadeSchema),
     items: z.array(ItemSchema),
     competencias: z.array(CompetenciaSchema),
-    // aptidoes: z.array(AptidaoSchema),
+    aptidoes: z.array(AptidaoSchema),
     ataques: z.array(AtaqueSchema),
     frutaId: z.string().optional(),
     trunfos: z.array(TrunfoSchema),
