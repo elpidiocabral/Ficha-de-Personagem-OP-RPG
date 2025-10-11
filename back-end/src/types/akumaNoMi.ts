@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb"
 import { z } from "zod";
 
 
-const akumanoMiSchema = {
+export const AkumanoMiSchema = z.object({
     _id: z.string(),
      nome: z.string(),
     tipo: z.string(),
@@ -11,6 +11,6 @@ const akumanoMiSchema = {
     tematica: z.string().optional(),
     desejo: z.string().optional(),
     habilidadesBase: z.string().optional()
-}
+})
 
-export type AkumaNoMi = z.infer<typeof akumanoMiSchema>;
+export type AkumaNoMi = z.infer<typeof AkumanoMiSchema>;

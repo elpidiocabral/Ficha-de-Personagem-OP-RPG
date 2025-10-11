@@ -1,9 +1,9 @@
 import z from "zod"
 
-const competenciaSchema = {
+export const CompetenciaSchema = z.object({
     nome: z.string(),
     nivel: z.number(),
     obs: z.string().optional()
-}
+})
 
-export type Competencia = z.infer<typeof competenciaSchema>;
+export type Competencia = z.infer<typeof CompetenciaSchema>;

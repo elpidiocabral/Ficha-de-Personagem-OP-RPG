@@ -1,28 +1,28 @@
 import z from "zod";
 
 
-const AtributosSchema = z.object({
+const AtributoSchema = z.object({
   Base: z.number(),
   Bonus: z.number(), 
 });
 
-const nomesAtributos = [
-  "forca",
-  "agilidade",
-  "destreza",
-  "velocidade",
-  "conhecimento",
-  "raciocinio",
-  "disciplina",
-  "persistencia",
-  "vontade",
-  "carisma",
-  "aparencia",
-  "destino",
-  "resiliencia",
-  "resistencia",
-  "vitalidade",
-] as const;
+export const AtributosSchema = z.object({
+  forca: AtributoSchema,
+  agilidade: AtributoSchema,
+  destreza: AtributoSchema,
+  velocidade: AtributoSchema,
+  conhecimento: AtributoSchema,
+  raciocinio: AtributoSchema,
+  disciplina: AtributoSchema,
+  persistencia: AtributoSchema,
+  vontade: AtributoSchema,
+  carisma: AtributoSchema,
+  aparencia: AtributoSchema,
+  destino: AtributoSchema,
+  resiliencia: AtributoSchema,
+  resistencia: AtributoSchema,
+  vitalidade: AtributoSchema
+});
 
 
 export type Atributos = z.infer<typeof AtributosSchema>;

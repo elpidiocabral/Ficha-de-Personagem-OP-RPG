@@ -1,13 +1,13 @@
 import z from "zod"
 
 
-const habilidadeSchema = {
-    nome : z.string(),
-    descricao: z.string(),
-    custo : z.string().optional(),
-    comprada : z.boolean(),
-    expanded: z.boolean()
-}
+export const HabilidadeSchema = z.object({
+  nome: z.string(),
+  descricao: z.string(),
+  custo: z.string().optional(),
+  comprada: z.boolean(),
+  expanded: z.boolean(),
+});
 
-export type Habilidade = z.infer<typeof habilidadeSchema>;
+export type Habilidade = z.infer<typeof HabilidadeSchema>;
 

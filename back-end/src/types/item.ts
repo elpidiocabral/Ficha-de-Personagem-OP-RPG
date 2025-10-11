@@ -1,11 +1,11 @@
 import z from "zod";
 
 
-const itemSchema = {
+export const ItemSchema = z.object({
     nome: z.string(),
     descricao: z.string(),
     durabilidadeOriginal: z.number(),
     durabilidadeAtual: z.number()
-}
+})
 
-export type Item = z.infer<typeof itemSchema>;
+export type Item = z.infer<typeof ItemSchema>;

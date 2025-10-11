@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb"
 import z from "zod";
 
 
-const sessaosSchema = {
+export const SessaosSchema = z.object({
      _id: z.string(),
     personagemId: z.string(),
     numero: z.number(),
@@ -13,6 +13,6 @@ const sessaosSchema = {
     xpGanho: z.number(),
     recompensas: z.string().optional(),
     anotacoes: z.string().optional(),
-}
+})
 
-export type Sessao = z.infer<typeof sessaosSchema>;
+export type Sessao = z.infer<typeof SessaosSchema>;
