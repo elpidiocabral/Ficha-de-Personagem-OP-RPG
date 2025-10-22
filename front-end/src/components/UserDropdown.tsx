@@ -42,10 +42,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
       if (!token) {
         const mockData = {
           id: '123456789',
-          username: 'dev_user',
+          username: 'visitante',
           discriminator: '0001',
           avatar: null,
-          global_name: 'Usuário de Desenvolvimento'
+          global_name: 'Visitante'
         };
         setUserData(mockData);
         setLoading(false);

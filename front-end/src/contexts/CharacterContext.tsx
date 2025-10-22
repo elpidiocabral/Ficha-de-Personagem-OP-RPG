@@ -32,9 +32,9 @@ const createDefaultCharacter = (): Omit<Character, 'id' | 'criadoEm' | 'atualiza
   vigorMax: 6,
   classeAcerto: 1,
   classeDificuldade: 1,
-  determinacao: 0,
+  determinacao: '',
   bonusMaestria: 1,
-  sorte: 0,
+  sorte: '',
   deslocamento: '3m',
   
   // Atributos principais - Base
