@@ -87,7 +87,7 @@
   }
   body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    background: var(--background);
+    background: url('https://cdn.artstation.com/p/thumbnails/001/253/239/thumb.jpg') repeat;
     color: var(--text);
     margin: 0;
     padding: 0;
@@ -95,7 +95,7 @@
     position: relative;
   }
 
-  /* Única imagem de fundo global */
+  /* Comentado - usando background direto no body
   body::before {
     content: '';    
     position: fixed;
@@ -112,10 +112,10 @@
     transition: opacity 0.3s ease;
   }
 
-  /* Ajuste da opacidade no modo escuro */
   .dark body::before {
     opacity: 0.10;
   }
+  */
 }
 
 /* One Piece RPG specific styles - Enhanced UX */

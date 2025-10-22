@@ -41,7 +41,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300">
       {/* Header */}
       <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white p-6">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -66,7 +66,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
       </div>
 
       {/* Tabs */}
-      <div className="bg-white dark:bg-gray-900 shadow-2xl border-b-4 border-blue-300 dark:border-blue-700">
+      <div className="shadow-2xl border-b-4 border-blue-300 dark:border-blue-700">
         <div className="w-full px-1">
           <div className="flex">
             {tabs.map((tab) => (
@@ -81,7 +81,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
               >
                 {tab.label}
                 {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-white dark:bg-gray-900"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1"></div>
                 )}
               </button>
             ))}
@@ -90,34 +90,36 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8 max-w-screen-2xl">
-        {activeTab === 'attributes' && (
-          <AttributesTab 
-            character={character} 
-            onUpdate={handleCharacterUpdate} 
-          />
-        )}
+      <div className="container mx-auto px-2 py-4 max-w-screen-2xl">
+        <div className="bg-white/20 dark:bg-black/50 backdrop-blur-sm rounded-xl p-6 shadow-2xl border border-white/20">
+          {activeTab === 'attributes' && (
+            <AttributesTab 
+              character={character} 
+              onUpdate={handleCharacterUpdate} 
+            />
+          )}
         
-        {activeTab === 'skills' && (
-          <SkillsTab 
-            character={character} 
-            handleAttributeUpdate={handleAttributeUpdate}
-          />
-        )}
-        
-        {activeTab === 'personal' && (
-          <PersonalTab 
-            character={character} 
-            handleAttributeUpdate={handleAttributeUpdate}
-          />
-        )}
-        
-        {activeTab === 'items' && (
-          <ItemsTab 
-            character={character} 
-            handleAttributeUpdate={handleAttributeUpdate}
-          />
-        )}
+          {activeTab === 'skills' && (
+            <SkillsTab 
+              character={character} 
+              handleAttributeUpdate={handleAttributeUpdate}
+            />
+          )}
+          
+          {activeTab === 'personal' && (
+            <PersonalTab 
+              character={character} 
+              handleAttributeUpdate={handleAttributeUpdate}
+            />
+          )}
+          
+          {activeTab === 'items' && (
+            <ItemsTab 
+              character={character} 
+              handleAttributeUpdate={handleAttributeUpdate}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
