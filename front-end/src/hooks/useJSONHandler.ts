@@ -26,10 +26,7 @@ export const useJSONHandler = (): UseJSONHandlerReturn => {
       document.body.removeChild(link);
       
       URL.revokeObjectURL(url);
-      
-      console.log('Character exported successfully');
     } catch (error) {
-      console.error('Error exporting character:', error);
       alert('Erro ao exportar personagem: ' + (error as Error).message);
     }
   }, []);
@@ -50,7 +47,6 @@ export const useJSONHandler = (): UseJSONHandlerReturn => {
           const jsonString = event.target?.result as string;
           importCharacterFromJSON(jsonString, onImport);
         } catch (error) {
-          console.error('Error reading file:', error);
           alert('Erro ao ler arquivo: ' + (error as Error).message);
         }
       };
@@ -68,15 +64,6 @@ export const useJSONHandler = (): UseJSONHandlerReturn => {
   ) => {
     try {
       const data = JSON.parse(jsonString);
-      
-      console.log('🔍 Dados brutos do JSON:', data);
-      console.log('🔍 Habilidades brutas:', data.habilidades);
-      if (data.habilidades && data.habilidades[0]) {
-        console.log('🔍 Primeira habilidade COMPLETA:', data.habilidades[0]);
-        console.log('🔍 Campo desc da primeira habilidade:', data.habilidades[0].desc);
-        console.log('🔍 Campo descricao da primeira habilidade:', data.habilidades[0].descricao);
-        console.log('🔍 Todos os campos da primeira habilidade:', Object.keys(data.habilidades[0]));
-      }
       
       if (!validateCharacterData(data)) {
         throw new Error('Dados do personagem inválidos ou incompletos');
@@ -338,16 +325,10 @@ export const useJSONHandler = (): UseJSONHandlerReturn => {
         avatarBase64: data.avatarBase64 || ''
       };
       
-      console.log('✅ Dados sanitizados:', sanitizedData);
-      console.log('✅ Raça mapeada:', data.raca, '->', sanitizedData.raca);
-      console.log('✅ Classe mapeada:', data.classe, '->', sanitizedData.classe);
-      console.log('✅ Profissão mapeada:', data.profissao, '->', sanitizedData.profissao);
-      
       onImport(sanitizedData);
       alert('Personagem importado com sucesso!');
       
     } catch (error) {
-      console.error('Error importing character:', error);
       alert('Erro ao importar personagem: ' + (error as Error).message);
     }
   }, []);

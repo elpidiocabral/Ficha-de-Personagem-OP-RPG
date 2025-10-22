@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -251,17 +251,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
     }
   ];
 
-  // Debug log para ver os dados recebidos
-  console.log('AttributesTab recebeu character:', character);
-  console.log('Character raca:', character.raca);
-  console.log('Character classe:', character.classe);
-  console.log('Character potencial:', character.potencial);
-  console.log('Character profissao:', character.profissao);
 
-  // Monitor character changes
-  useEffect(() => {
-    console.log('Character changed in AttributesTab:', character);
-  }, [character]);
 
   // Função para calcular os dados de vida e vigor baseado na tabela
   const calcularDadosVitalidade = (pontos: number): string => {
@@ -284,7 +274,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const handleImportJSON = () => {
     setIsImporting(true);
     importCharacterFromFile((importedData) => {
-      console.log('Dados importados no handleImportJSON:', importedData);
+
       onUpdate(importedData);
       setIsImporting(false);
     });
@@ -297,7 +287,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
 
   // Update attribute handler
   const handleAttributeUpdate = (field: keyof Character, value: any) => {
-    console.log(`🔄 handleAttributeUpdate chamado - Campo: ${field}, Valor:`, value);
+
     
     // Garantir que valores numéricos sejam convertidos corretamente
     const numericFields = [
@@ -351,12 +341,6 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
       };
       
       // Atualizar tudo de uma vez
-      console.log('📊 Atualizando atributos calculados:', {
-        ...updateData,
-        ...updatedTotals,
-        ...calculatedAttributes,
-        ...combatInfo,
-      });
       onUpdate({
         ...updateData,
         ...updatedTotals,
@@ -365,7 +349,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
       });
     } else {
       // Para campos não relacionados a atributos, apenas atualizar o campo
-      console.log('🔧 Atualizando campo não-atributo:', updateData);
+
       onUpdate(updateData);
     }
   };
@@ -1343,7 +1327,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                       bonusInput.value = '';
                       danoInput.value = '';
                       
-                      console.log('Ataque adicionado:', novosAtaques);
+
                     } else {
                       alert('Preencha todos os campos do ataque!');
                     }

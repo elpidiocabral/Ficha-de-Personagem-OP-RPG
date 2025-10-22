@@ -11,54 +11,41 @@ import './index.css';
 const AppContent: React.FC = () => {
   useAuthBootstrap();
 
-  // Verificar se está na página de callback do Discord
   const isAuthSuccessPage = window.location.pathname === '/auth/success';
+  const hasToken = localStorage.getItem('auth_token');
 
   const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character' | 'auth-success'>(() => {
     if (isAuthSuccessPage) return 'auth-success';
-    return localStorage.getItem('auth_token') ? 'menu' : 'login';
+    return hasToken ? 'menu' : 'login';
   });
 
-  // Verificar se há token no hash da URL
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
+  const { createCharacter, createDefaultCharacter, characters } = useCharacter();
+
   useEffect(() => {
     const processTokenFromHash = () => {
       const hash = window.location.hash;
       if (hash.includes('token=')) {
         const token = hash.split('token=')[1]?.split('&')[0];
         if (token && token !== 'undefined') {
-          console.log('🔑 Token encontrado no hash, salvando...');
           localStorage.setItem('auth_token', token);
-          
-          // Limpar o hash da URL
           window.history.replaceState(null, '', window.location.pathname);
-          
-          // Disparar evento para atualizar a UI
           window.dispatchEvent(new Event('auth:changed'));
-          
-          // Atualizar o view para mostrar o menu
           setCurrentView('menu');
         }
       }
     };
 
+    const handleAuthChange = () => {
+      if (localStorage.getItem('auth_token')) {
+        setCurrentView('menu');
+      }
+    };
+
     processTokenFromHash();
+    window.addEventListener('auth:changed', handleAuthChange);
+    return () => window.removeEventListener('auth:changed', handleAuthChange);
   }, []);
-
-  // garante redirecionamento após login
-  useAuthBootstrap(() => setCurrentView('menu'));
-  useEffect(() => {
-    if (localStorage.getItem('auth_token')) setCurrentView('menu');
-  }, []);
-
-  // salva o token de login
-  useEffect(() => {
-    const onAuth = () => setCurrentView('menu');
-    window.addEventListener('auth:changed', onAuth);
-    return () => window.removeEventListener('auth:changed', onAuth);
-  }, []);
-
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
-  const { createCharacter, createDefaultCharacter, characters } = useCharacter();
 
   const selectedCharacter = selectedCharacterId
     ? characters.find((char) => char.id === selectedCharacterId) || null
@@ -84,7 +71,6 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // limpa autenticação real
     localStorage.removeItem('auth_token');
     setCurrentView('login');
     setSelectedCharacterId(null);
@@ -93,9 +79,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="App">
       {currentView === 'auth-success' && <AuthSuccess />}
-      
       {currentView === 'login' && <Login onLogin={handleLogin} />}
-
       {currentView === 'menu' && (
         <CharacterMenu
           onSelectCharacter={handleSelectCharacter}
@@ -103,9 +87,12 @@ const AppContent: React.FC = () => {
           onLogout={handleLogout}
         />
       )}
-
       {currentView === 'character' && selectedCharacter && (
-        <CharacterSheet character={selectedCharacter} onBack={handleBackToMenu} onLogout={handleLogout} />
+        <CharacterSheet 
+          character={selectedCharacter} 
+          onBack={handleBackToMenu} 
+          onLogout={handleLogout} 
+        />
       )}
     </div>
   );

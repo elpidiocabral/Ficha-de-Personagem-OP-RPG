@@ -22,7 +22,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
   const { updateCharacter } = useCharacter();
 
   const handleCharacterUpdate = (updates: Partial<Character>) => {
-    console.log('handleCharacterUpdate chamado com:', updates);
+
     if (character.id) {
       updateCharacter(character.id, updates);
     }
