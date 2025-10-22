@@ -22,6 +22,29 @@ const AppContent: React.FC = () => {
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
   const { createCharacter, createDefaultCharacter, characters } = useCharacter();
 
+  // Aplicar configurações salvas na inicialização
+  useEffect(() => {
+    // Aplicar tema salvo
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Aplicar imagem de fundo salva
+    const savedBackgroundUrl = localStorage.getItem('background-url');
+    if (savedBackgroundUrl) {
+      document.body.style.backgroundImage = `url('${savedBackgroundUrl}')`;
+      document.body.style.backgroundRepeat = 'repeat';
+    } else {
+      // Aplicar fundo padrão se não houver um salvo
+      const defaultUrl = 'https://cdn.artstation.com/p/thumbnails/001/253/239/thumb.jpg';
+      document.body.style.backgroundImage = `url('${defaultUrl}')`;
+      document.body.style.backgroundRepeat = 'repeat';
+    }
+  }, []);
+
   useEffect(() => {
     const processTokenFromHash = () => {
       const hash = window.location.hash;

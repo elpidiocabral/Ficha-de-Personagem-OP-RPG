@@ -13,9 +13,10 @@ interface UserData {
 
 interface UserDropdownProps {
   onLogout: () => void;
+  onSettings?: () => void;
 }
 
-const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -243,7 +244,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
 
           {/* Menu Items */}
           <div className="py-2">
-            {/* Perfil (placeholder para futura implementação) */}
+            
+            {/* Perfil (placeholder para futura implementação) 
             <Button
               variant="ghost"
               className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -255,22 +257,23 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
               <User className="w-4 h-4 mr-3" />
               Perfil
             </Button>
-
-            {/* Configurações (placeholder para futura implementação) */}
+            */}
+            {/* Configurações (placeholder para futura implementação) 
             <Button
               variant="ghost"
               className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               onClick={() => {
+                onSettings();
                 setIsOpen(false);
-                // TODO: Implementar configurações
               }}
             >
               <Settings className="w-4 h-4 mr-3" />
               Configurações
             </Button>
-
-            {/* Divider */}
+            */}
+            {/* Divider 
             <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+            */}
 
             {/* Toggle Theme */}
             <Button
@@ -293,6 +296,21 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
 
             {/* Divider */}
             <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+
+            {/* Settings */}
+            {onSettings && (
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                onClick={() => {
+                  onSettings();
+                  setIsOpen(false);
+                }}
+              >
+                <Settings className="w-4 h-4 mr-3" />
+                Configurações
+              </Button>
+            )}
 
             {/* Logout */}
             <Button

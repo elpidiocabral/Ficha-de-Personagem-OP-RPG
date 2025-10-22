@@ -8,6 +8,7 @@ import SkillsTab from './tabs/SkillsTab';
 import PersonalTab from './tabs/PersonalTab';
 import ItemsTab from './tabs/ItemsTab';
 import UserDropdown from './UserDropdown';
+import Settings from './Settings';
 
 interface CharacterSheetProps {
   character: Character;
@@ -20,6 +21,7 @@ type TabType = 'attributes' | 'skills' | 'personal' | 'items';
 const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLogout }) => {
   const [activeTab, setActiveTab] = useState<TabType>('attributes');
   const [isHakiModalOpen, setIsHakiModalOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const { updateCharacter } = useCharacter();
 
   const handleCharacterUpdate = (updates: Partial<Character>) => {
@@ -56,6 +58,16 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
     { id: 'personal' as const, label: 'Pessoal' },
     { id: 'items' as const, label: 'Itens & Equipamentos' },
   ];
+
+  // Se estiver na página de configurações, mostrar apenas ela
+  if (showSettings) {
+    return (
+      <Settings 
+        onBack={() => setShowSettings(false)}
+        onLogout={onLogout}
+      />
+    );
+  }
 
   return (
     <>
@@ -179,7 +191,10 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
             </div>
           </div>
           
-          <UserDropdown onLogout={onLogout} />
+          <UserDropdown 
+            onLogout={onLogout}
+            onSettings={() => setShowSettings(true)}
+          />
         </div>
       </div>
 
