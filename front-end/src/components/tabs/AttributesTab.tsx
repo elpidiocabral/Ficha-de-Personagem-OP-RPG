@@ -490,9 +490,9 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const profissoes = ['Capitão', 'Combatente','Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Marinheiro', 'Caçador de Recompensas', 'Revolucionário', 'Outro'];
 
   return (
-    <div className="space-y-6">
-      {/* Layout com informações compactas à esquerda e atributos à direita */}
-      <div className="grid grid-cols-12 gap-6">
+    <div className="space-y-6 relative">
+        {/* Layout com informações compactas à esquerda e atributos à direita */}
+        <div className="grid grid-cols-12 gap-6">
         {/* Coluna da esquerda - Informações + Vida e Vigor */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
           {/* Informações do Personagem */}

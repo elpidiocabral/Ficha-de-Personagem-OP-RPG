@@ -22,6 +22,9 @@ export interface Character {
   sorte: string;
   deslocamento: string;
   
+  // Haki
+  hakiAtual?: number;
+  
   // Atributos principais - Base
   forcaBase: number;
   destrezaBase: number;
