@@ -17,10 +17,13 @@ export interface Character {
   vigorMax: number;
   classeAcerto: number;
   classeDificuldade: number;
-  determinacao: number;
+  determinacao: string;
   bonusMaestria: number;
-  sorte: number;
+  sorte: string;
   deslocamento: string;
+  
+  // Haki
+  hakiAtual?: number;
   
   // Atributos principais - Base
   forcaBase: number;

@@ -9,8 +9,8 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleDiscordLogin = () => {
-    const api = import.meta.env.VITE_API_URL;
-    window.location.href = `${api}/auth/discord`;
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    window.location.href = `${apiUrl}/auth/discord`;
   };
 
   return (

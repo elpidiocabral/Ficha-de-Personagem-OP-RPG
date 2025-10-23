@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacter } from '../contexts/CharacterContext';
 import { Button } from './ui/button';
-import { LogOut, Sun, Moon, Settings } from 'lucide-react';
+import { LogOut, Sun, Moon, User, Settings } from 'lucide-react';
 
 interface UserData {
   id: string;
@@ -9,15 +9,14 @@ interface UserData {
   discriminator: string;
   avatar: string | null;
   global_name: string | null;
-  avatarUrl?: string;
+  avatarUrl?: string; // Adicionada para compatibilidade com nova API
 }
 
 interface UserDropdownProps {
   onLogout: () => void;
-  onSettings?: () => void;
 }
 
-const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,30 +35,55 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Buscar dados do usuário
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = localStorage.getItem('auth_token');
+      
+      if (!token) {
+        const mockData = {
+          id: '123456789',
+          username: 'visitante',
+          discriminator: '0001',
+          avatar: null,
+          global_name: 'Visitante'
+        };
+        setUserData(mockData);
+        setLoading(false);
+        return;
+      }
+
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        console.log('🌐 Fazendo requisição para:', `${apiUrl}/api/user/me`);
         
-        const response = await fetch(`${apiUrl}/profile`, {
+        const response = await fetch(`${apiUrl}/api/user/me`, {
           method: 'GET',
-          credentials: 'include'
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
+
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
 
         if (response.ok) {
           const data = await response.json();
+          console.log('✅ Dados reais do usuário recebidos:', data);
           
-          if (data.id && data.name) {
+          // Usar a estrutura da nova API (/api/user/me)
+          if (data.success && data.user) {
+            const user = data.user;
             setUserData({
-              id: data.id,
-              username: data.name,
-              discriminator: '0000',
-              avatar: data.avatar ? data.avatar.split('/').pop()?.split('.')[0] : null,
-              global_name: data.name,
-              avatarUrl: data.avatar
+              id: user.id,
+              username: user.username,
+              discriminator: user.discriminator || '0000',
+              avatar: user.avatar,
+              global_name: user.displayName || user.username,
+              avatarUrl: user.avatarUrl // Nova API já retorna avatarUrl formatada
             });
           } else {
+            console.log('⚠️ Dados do usuário incompletos, usando mock');
             setUserData({
               id: '123456789',
               username: 'usuario_incompleto',
@@ -68,34 +92,83 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
               global_name: 'Dados Incompletos'
             });
           }
-        } else {
+        } else if (response.status === 401) {
+          console.log('❌ Token inválido (401) - usando mock para desenvolvimento');
           setUserData({
-            id: '123456789',
-            username: 'visitante',
-            discriminator: '0001',
+            id: '876543212789454321',
+            username: 'token_invalido',
+            discriminator: '0401',
             avatar: null,
-            global_name: 'Visitante'
+            global_name: 'Token Inválido (Mock)'
+          });
+        } else if (response.status === 404) {
+          console.log('❌ Endpoint não encontrado (404) - usando mock');
+          setUserData({
+            id: '876543212789454321',
+            username: 'endpoint_404',
+            discriminator: '0404',
+            avatar: null,
+            global_name: 'Endpoint Não Encontrado'
+          });
+        } else {
+          console.log('⚠️ Erro na resposta:', response.status);
+          setUserData({
+            id: '876543212789454321',
+            username: 'erro_api',
+            discriminator: '0500',
+            avatar: null,
+            global_name: `Erro API (${response.status})`
           });
         }
       } catch (error) {
-        setUserData({
-          id: '123456789',
-          username: 'erro_conexao',
-          discriminator: '0001',
-          avatar: null,
-          global_name: 'Erro de Conexão'
-        });
+        console.error('🚨 Erro de rede ao buscar dados do usuário:', error);
+        
+        // Verificar diferentes tipos de erro
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          console.log('🌐 Erro de CORS/Conectividade - usando mock');
+          setUserData({
+            id: '876543212789454321',
+            username: 'CapitaoLoffy',
+            discriminator: '1234',
+            avatar: 'a_1234567890abcdef1234567890abcdef',
+            global_name: 'Monkey D. Luffy (CORS Error)'
+          });
+        } else if (error instanceof Error && error.message.includes('CORS')) {
+          console.log('🚫 Erro de CORS - servidor precisa configurar CORS');
+          setUserData({
+            id: '876543212789454321',
+            username: 'cors_error',
+            discriminator: '0999',
+            avatar: null,
+            global_name: 'Erro CORS - Configure Backend'
+          });
+        } else {
+          console.log('🎭 Erro de rede geral, usando mock de desenvolvimento');
+          setUserData({
+            id: '876543212789454321',
+            username: 'dev_offline',
+            discriminator: '0000',
+            avatar: null,
+            global_name: 'Modo Desenvolvimento (Offline)'
+          });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [onLogout]);
 
   const getAvatarUrl = (userData: UserData) => {
+    // Usar avatarUrl da nova API se disponível
     if (userData.avatarUrl) {
       return userData.avatarUrl;
+    }
+    
+    // Fallback para o formato antigo
+    if (userData.avatar) {
+      return `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=128`;
     }
     // Avatar padrão do Discord
     const defaultAvatar = (parseInt(userData.discriminator) || 0) % 5;
@@ -119,7 +192,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-14 h-14 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
+        <div className="w-12 h-12 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
       </div>
     );
   }
@@ -166,6 +239,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
             (e.target as HTMLImageElement).src = `https://cdn.discordapp.com/embed/avatars/${defaultAvatar}.png`;
           }}
         />
+        {/* Indicador online */}
+        <div className="absolute bottom-0 right-0 h-4 w-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
       </Button>
 
       {/* Dropdown Menu */}
@@ -192,8 +267,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
 
           {/* Menu Items */}
           <div className="py-2">
-            
-            {/* Perfil (placeholder para futura implementação) 
+            {/* Perfil (placeholder para futura implementação) */}
             <Button
               variant="ghost"
               className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -205,23 +279,22 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
               <User className="w-4 h-4 mr-3" />
               Perfil
             </Button>
-            */}
-            {/* Configurações (placeholder para futura implementação) 
+
+            {/* Configurações (placeholder para futura implementação) */}
             <Button
               variant="ghost"
               className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
               onClick={() => {
-                onSettings();
                 setIsOpen(false);
+                // TODO: Implementar configurações
               }}
             >
               <Settings className="w-4 h-4 mr-3" />
               Configurações
             </Button>
-            */}
-            {/* Divider 
+
+            {/* Divider */}
             <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-            */}
 
             {/* Toggle Theme */}
             <Button
@@ -244,21 +317,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
 
             {/* Divider */}
             <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-
-            {/* Settings */}
-            {onSettings && (
-              <Button
-                variant="ghost"
-                className="w-full justify-start px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                onClick={() => {
-                  onSettings();
-                  setIsOpen(false);
-                }}
-              >
-                <Settings className="w-4 h-4 mr-3" />
-                Configurações
-              </Button>
-            )}
 
             {/* Logout */}
             <Button

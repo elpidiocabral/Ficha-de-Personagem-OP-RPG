@@ -3,7 +3,6 @@ import { CharacterProvider, useCharacter } from './contexts/CharacterContext';
 import CharacterMenu from './components/CharacterMenu';
 import CharacterSheet from './components/CharacterSheet';
 import Login from './components/Login';
-import AuthSuccess from './pages/AuthSuccess';
 import { Character } from './types';
 import { useAuthBootstrap } from './hooks/useAuthBootstrap';
 import './index.css';
@@ -11,60 +10,67 @@ import './index.css';
 const AppContent: React.FC = () => {
   useAuthBootstrap();
 
-  // Verificar se está na página de callback do Discord
-  const isAuthSuccessPage = window.location.pathname === '/auth/success';
-
-  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character' | 'auth-success'>(() => {
-    if (isAuthSuccessPage) return 'auth-success';
-    return localStorage.getItem('auth_token') ? 'menu' : 'login';
-  });
-
-  // Verificar se há token no hash da URL
-  useEffect(() => {
-    const processTokenFromHash = () => {
-      const hash = window.location.hash;
-      if (hash.includes('token=')) {
-        const token = hash.split('token=')[1]?.split('&')[0];
-        if (token && token !== 'undefined') {
-          console.log('🔑 Token encontrado no hash, salvando...');
-          localStorage.setItem('auth_token', token);
-          
-          // Limpar o hash da URL
-          window.history.replaceState(null, '', window.location.pathname);
-          
-          // Disparar evento para atualizar a UI
-          window.dispatchEvent(new Event('auth:changed'));
-          
-          // Atualizar o view para mostrar o menu
-          setCurrentView('menu');
-        }
-      }
-    };
-
-    processTokenFromHash();
-  }, []);
-
-  // garante redirecionamento após login
-  useAuthBootstrap(() => setCurrentView('menu'));
-  useEffect(() => {
-    if (localStorage.getItem('auth_token')) setCurrentView('menu');
-  }, []);
-
-  // salva o token de login
-  useEffect(() => {
-    const onAuth = () => setCurrentView('menu');
-    window.addEventListener('auth:changed', onAuth);
-    return () => window.removeEventListener('auth:changed', onAuth);
-  }, []);
+  const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>('login');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
 
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
   const { createCharacter, createDefaultCharacter, characters } = useCharacter();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    const savedBackgroundUrl = localStorage.getItem('background-url');
+    if (savedBackgroundUrl) {
+      document.body.style.backgroundImage = `url('${savedBackgroundUrl}')`;
+      document.body.style.backgroundRepeat = 'repeat';
+    } else {
+      const defaultUrl = 'https://cdn.artstation.com/p/thumbnails/001/253/239/thumb.jpg';
+      document.body.style.backgroundImage = `url('${defaultUrl}')`;
+      document.body.style.backgroundRepeat = 'repeat';
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const response = await fetch(`${apiUrl}/profile`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+          setCurrentView('menu');
+        } else {
+          setIsAuthenticated(false);
+          setCurrentView('login');
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        setCurrentView('login');
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuthentication();
+  }, []);
 
   const selectedCharacter = selectedCharacterId
     ? characters.find((char) => char.id === selectedCharacterId) || null
     : null;
 
-  const handleLogin = () => setCurrentView('menu');
+  const handleLogin = async () => {
+    setIsAuthenticated(true);
+    setCurrentView('menu');
+  };
 
   const handleSelectCharacter = (character: Character) => {
     setSelectedCharacterId(character.id || null);
@@ -84,18 +90,33 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // limpa autenticação real
-    localStorage.removeItem('auth_token');
+    document.cookie.split(';').forEach(cookie => {
+      const name = cookie.split('=')[0].trim();
+      if (name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      }
+    });
+    
+    setIsAuthenticated(false);
     setCurrentView('login');
-    setSelectedCharacterId(null);
+    
+    window.location.reload();
   };
+
+  if (isCheckingAuth) {
+    return (
+      <div className="App flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
-      {currentView === 'auth-success' && <AuthSuccess />}
-      
       {currentView === 'login' && <Login onLogin={handleLogin} />}
-
       {currentView === 'menu' && (
         <CharacterMenu
           onSelectCharacter={handleSelectCharacter}
@@ -103,9 +124,12 @@ const AppContent: React.FC = () => {
           onLogout={handleLogout}
         />
       )}
-
       {currentView === 'character' && selectedCharacter && (
-        <CharacterSheet character={selectedCharacter} onBack={handleBackToMenu} onLogout={handleLogout} />
+        <CharacterSheet 
+          character={selectedCharacter} 
+          onBack={handleBackToMenu} 
+          onLogout={handleLogout} 
+        />
       )}
     </div>
   );

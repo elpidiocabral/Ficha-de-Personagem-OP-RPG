@@ -1,7 +1,6 @@
 // Exemplo de como implementar login com Discord e salvar os dados do usuário
 
 import React, { useState } from 'react';
-import { AuthUtils } from '../lib/auth';
 
 const LoginExample: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -22,42 +21,7 @@ const LoginExample: React.FC = () => {
       window.location.href = discordAuthUrl;
       
     } catch (error) {
-      console.error('Erro no login:', error);
       setLoading(false);
-    }
-  };
-
-  // Função para processar callback do Discord (seria chamada na página de callback)
-  const handleDiscordCallback = async (code: string) => {
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
-      // 2. Trocar code por token no seu backend
-      const response = await fetch(`${apiUrl}/auth/discord/callback`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code })
-      });
-
-      if (response.ok) {
-        const { token, user } = await response.json();
-        
-        // 3. Salvar token no localStorage
-        AuthUtils.setAuthToken(token);
-        
-        console.log('✅ Login realizado com sucesso:', user);
-        console.log('🎯 Token salvo, UserDropdown vai buscar dados reais agora');
-        
-        // 4. Redirecionar para a aplicação principal
-        window.location.href = '/';
-        
-      } else {
-        console.error('Erro no callback:', response.status);
-      }
-    } catch (error) {
-      console.error('Erro no callback:', error);
     }
   };
 

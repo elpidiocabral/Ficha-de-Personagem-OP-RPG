@@ -35,10 +35,9 @@ export const useCharacterData = (): UseCharacterDataReturn => {
   // Save character to localStorage
   const saveCharacter = useCallback(() => {
     try {
-      localStorage.setItem('fichaOnePiece', JSON.stringify(character));
-      console.log('Character saved to localStorage');
+      localStorage.setItem('character-data', JSON.stringify(character));
     } catch (error) {
-      console.error('Error saving character:', error);
+      // Error saving handled silently
     }
   }, [character]);
 
@@ -61,9 +60,7 @@ export const useCharacterData = (): UseCharacterDataReturn => {
       };
 
       updateCharacter(mergedData);
-      console.log('Character loaded from JSON data');
     } catch (error) {
-      console.error('Error loading character from JSON:', error);
       alert('Erro ao importar personagem: ' + (error as Error).message);
     }
   }, [character, updateCharacter]);
@@ -73,7 +70,6 @@ export const useCharacterData = (): UseCharacterDataReturn => {
     try {
       return JSON.stringify(character, null, 2);
     } catch (error) {
-      console.error('Error exporting character:', error);
       return '{}';
     }
   }, [character]);
@@ -95,9 +91,9 @@ export const useCharacterData = (): UseCharacterDataReturn => {
       vidaMax: 10,
       vigorAtual: 6,
       vigorMax: 6,
-      determinacao: 0,
+      determinacao: '',
       bonusMaestria: 1,
-      sorte: 0,
+      sorte: '',
       classeAcerto: 1,
       classeDificuldade: 1,
       deslocamento: '3m',
@@ -211,7 +207,6 @@ export const useCharacterData = (): UseCharacterDataReturn => {
     };
     
     updateCharacter(defaultCharacter);
-    console.log('Character reset to default values');
   }, [updateCharacter]);
 
   // Auto-save when character changes

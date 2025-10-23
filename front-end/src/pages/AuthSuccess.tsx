@@ -22,15 +22,12 @@ const AuthSuccess: React.FC = () => {
           token = query.get('token') || '';
         }
         
-        console.log('🔍 Token encontrado:', token ? 'Sim' : 'Não');
-        console.log('🔗 URL completa:', window.location.href);
-        console.log('🔗 Hash:', window.location.hash);
-        console.log('🔗 Search:', window.location.search);
+
         
         if (token && token !== 'undefined') {
           // Salvar token no localStorage
           localStorage.setItem('auth_token', token);
-          console.log('✅ Token salvo no localStorage');
+
           
           setStatus('success');
           setMessage('Login realizado com sucesso! Redirecionando...');
@@ -41,13 +38,13 @@ const AuthSuccess: React.FC = () => {
           }, 2000);
           
         } else {
-          console.error('❌ Token não encontrado na URL');
+
           setStatus('error');
           setMessage('Token de autenticação não encontrado. Tente fazer login novamente.');
         }
         
       } catch (error) {
-        console.error('🚨 Erro ao processar autenticação:', error);
+
         setStatus('error');
         setMessage('Erro ao processar autenticação. Tente novamente.');
       }

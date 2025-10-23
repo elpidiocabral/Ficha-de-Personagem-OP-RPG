@@ -6,6 +6,7 @@ import { Input } from '../components/ui/input';
 import { Character } from '../types';
 import { Anchor, Trash2, Play, Copy, Download, FolderOpen } from 'lucide-react';
 import UserDropdown from './UserDropdown';
+import Settings from './Settings';
 
 interface CharacterMenuProps {
   onSelectCharacter: (character: Character) => void;
@@ -24,6 +25,7 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
   } = useCharacter();
   
   const [showImportExport, setShowImportExport] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -56,6 +58,16 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
     }
   };
 
+  // Se estiver na página de configurações, mostrar apenas ela
+  if (showSettings) {
+    return (
+      <Settings 
+        onBack={() => setShowSettings(false)}
+        onLogout={onLogout}
+      />
+    );
+  }
+
   return (
     <div className="menu-inicial">
       <div className="container mx-auto px-4 py-8">
@@ -63,7 +75,10 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
         <div className="relative mb-8">
           {/* UserDropdown no canto superior direito */}
           <div className="absolute top-0 right-0 z-20">
-            <UserDropdown onLogout={onLogout} />
+            <UserDropdown 
+              onLogout={onLogout}
+              onSettings={() => setShowSettings(true)}
+            />
           </div>
 
           {/* Título centralizado */}

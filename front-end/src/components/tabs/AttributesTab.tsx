@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -251,17 +251,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
     }
   ];
 
-  // Debug log para ver os dados recebidos
-  console.log('AttributesTab recebeu character:', character);
-  console.log('Character raca:', character.raca);
-  console.log('Character classe:', character.classe);
-  console.log('Character potencial:', character.potencial);
-  console.log('Character profissao:', character.profissao);
 
-  // Monitor character changes
-  useEffect(() => {
-    console.log('Character changed in AttributesTab:', character);
-  }, [character]);
 
   // Função para calcular os dados de vida e vigor baseado na tabela
   const calcularDadosVitalidade = (pontos: number): string => {
@@ -284,7 +274,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const handleImportJSON = () => {
     setIsImporting(true);
     importCharacterFromFile((importedData) => {
-      console.log('Dados importados no handleImportJSON:', importedData);
+
       onUpdate(importedData);
       setIsImporting(false);
     });
@@ -297,7 +287,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
 
   // Update attribute handler
   const handleAttributeUpdate = (field: keyof Character, value: any) => {
-    console.log(`🔄 handleAttributeUpdate chamado - Campo: ${field}, Valor:`, value);
+
     
     // Garantir que valores numéricos sejam convertidos corretamente
     const numericFields = [
@@ -351,12 +341,6 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
       };
       
       // Atualizar tudo de uma vez
-      console.log('📊 Atualizando atributos calculados:', {
-        ...updateData,
-        ...updatedTotals,
-        ...calculatedAttributes,
-        ...combatInfo,
-      });
       onUpdate({
         ...updateData,
         ...updatedTotals,
@@ -365,7 +349,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
       });
     } else {
       // Para campos não relacionados a atributos, apenas atualizar o campo
-      console.log('🔧 Atualizando campo não-atributo:', updateData);
+
       onUpdate(updateData);
     }
   };
@@ -407,17 +391,16 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const dadosVigor = calcularDadosVitalidade(vontadeTotal);
 
   const classeAcerto = 1 + Math.max(resistenciaTotal, agilidadeTotal);
-  const classeDificuldade = 1 + Math.max(persistenciaTotal, disciplinaTotal);
+  const classeDificuldade = (Number(character.bonusMaestria) || 1) + Math.max(persistenciaTotal, disciplinaTotal);
   
-  // Cálculo correto do deslocamento baseado na tabela de Agilidade
+  // Cálculo do deslocamento igual ao legado
   const calcularDeslocamento = (agilidade: number): string => {
-    if (agilidade <= 0) return '1.5m p/min';
-    if (agilidade >= 1 && agilidade <= 4) return '3m p/min';
-    if (agilidade >= 5 && agilidade <= 9) return '15m p/min';
-    if (agilidade >= 10 && agilidade <= 19) return '30m p/min';
-    if (agilidade >= 20 && agilidade <= 39) return '60m p/min';
-    if (agilidade >= 40) return '120m p/min';
-    return '3m p/min';
+    if (agilidade >= 1) {
+      const metros = 3 * agilidade;
+      const quadrados = Math.round((metros) / 1.5);
+      return `${metros}m (${quadrados} quadrados)`;
+    }
+    return '1.5m';
   };
   
   const deslocamento = calcularDeslocamento(agilidadeTotal);
@@ -507,9 +490,9 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   const profissoes = ['Capitão', 'Combatente','Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Marinheiro', 'Caçador de Recompensas', 'Revolucionário', 'Outro'];
 
   return (
-    <div className="space-y-6">
-      {/* Layout com informações compactas à esquerda e atributos à direita */}
-      <div className="grid grid-cols-12 gap-6">
+    <div className="space-y-6 relative">
+        {/* Layout com informações compactas à esquerda e atributos à direita */}
+        <div className="grid grid-cols-12 gap-6">
         {/* Coluna da esquerda - Informações + Vida e Vigor */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
           {/* Informações do Personagem */}
@@ -902,6 +885,95 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
             </CardContent>
           </Card>
 
+          <Card className="glass-card shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-indigo-50/20 to-blue-50/30 dark:from-purple-900/10 dark:via-indigo-900/10 dark:to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <CardHeader className="pb-4 relative z-10">
+              <CardTitle className="text-lg text-purple-700 dark:text-purple-300 flex items-center justify-center gap-2">
+                <span className="w-3 h-3 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full animate-pulse"></span>
+                Informações de Combate
+                <span className="w-3 h-3 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full animate-pulse"></span>
+              </CardTitle>
+              <div className="w-256 h-1 bg-purple-500 rounded-full"></div>
+            </CardHeader>
+            <CardContent className="space-y-4 p-4 relative z-10">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
+                    Classe de Acerto (CA)
+                  </label>
+                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                    {classeAcerto}
+                  </div>
+                  <div className="w-12 h-1 bg-purple-500 rounded-full mx-auto"></div>
+                </div>
+                <div className="text-center">
+                  <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
+                    Classe de Dificuldade (CD)
+                  </label>
+                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                    {classeDificuldade}
+                  </div>
+                  <div className="w-12 h-1 bg-purple-500 rounded-full mx-auto"></div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
+                  Deslocamento
+                </label>
+                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                  {deslocamento}
+                </div>
+                <div className="w-16 h-1 bg-purple-500 rounded-full mx-auto"></div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-red-800 dark:text-red-400">
+                    Determinação %
+                  </label>
+                  <input
+                    type="number"
+                    value={character.determinacao || ''}
+                    onChange={(e) => handleAttributeUpdate('determinacao', e.target.value)}
+                    className="w-full px-3 py-2 border border-red-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:border-red-600 dark:text-white text-center"
+                    placeholder="Ex: 90%"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-black dark:text-gray-300">
+                    Don!
+                  </label>
+                  <input
+                    type="number"
+                    value={character.bonusMaestria || 1}
+                    onChange={(e) => handleAttributeUpdate('bonusMaestria', Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-700 dark:border-gray-500 dark:text-white text-center"
+                    min="1"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-blue-700 dark:text-blue-400">
+                    Sorte
+                  </label>
+                  <input
+                    type="number"
+                    value={character.sorte || ''}
+                    onChange={(e) => handleAttributeUpdate('sorte', e.target.value)}
+                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-blue-600 dark:text-white text-center"
+                    placeholder="Ex: 1d20"
+                  />
+                </div>
+              </div>
+
+              <div className="text-xs text-muted-foreground space-y-1 mt-4 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                <div>CA: 1 + Maior entre Resistência ({resistenciaTotal}) e Agilidade ({agilidadeTotal})</div>
+                <div>CD: Don ({Number(character.bonusMaestria) || 1}) + Maior entre Persistência ({persistenciaTotal}) e Disciplina ({disciplinaTotal})</div>
+                <div>Deslocamento: {agilidadeTotal >= 1 ? `3 × Agilidade (${agilidadeTotal})` : 'Mínimo 1.5m'}</div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Card de Ferimentos e Lesões / Reservas */}
           <Card className="glass-card shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-red-50/20 to-blue-50/30 dark:from-orange-900/10 dark:via-red-900/10 dark:to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -1075,56 +1147,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
             </CardContent>
           </Card>
 
-          {/* Informações de Combate - EMBAIXO da Vida e Vigor */}
-          <Card className="glass-card shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-indigo-50/20 to-blue-50/30 dark:from-purple-900/10 dark:via-indigo-900/10 dark:to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="text-lg text-purple-700 dark:text-purple-300 flex items-center justify-center gap-2">
-                <span className="w-3 h-3 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full animate-pulse"></span>
-                Informações de Combate
-                <span className="w-3 h-3 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full animate-pulse"></span>
-              </CardTitle>
-              <div className="w-16 h-1 bg-purple-500 rounded-full"></div>
-            </CardHeader>
-            <CardContent className="space-y-4 p-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
-                    Classe de Acerto (CA)
-                  </label>
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                    {classeAcerto}
-                  </div>
-                  <div className="w-12 h-1 bg-purple-500 rounded-full mx-auto"></div>
-                </div>
-                <div className="text-center">
-                  <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
-                    Classe de Dificuldade (CD)
-                  </label>
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                    {classeDificuldade}
-                  </div>
-                  <div className="w-12 h-1 bg-purple-500 rounded-full mx-auto"></div>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <label className="block text-sm font-bold text-purple-700 dark:text-purple-300 mb-2">
-                  Deslocamento
-                </label>
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                  {deslocamento}
-                </div>
-                <div className="w-16 h-1 bg-purple-500 rounded-full mx-auto"></div>
-              </div>
 
-              <div className="text-xs text-muted-foreground space-y-1 mt-4 p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                <div>CA: 1 + Maior entre Resistência ({resistenciaTotal}) e Agilidade ({agilidadeTotal})</div>
-                <div>CD: 1 + Maior entre Persistência ({persistenciaTotal}) e Disciplina ({disciplinaTotal})</div>
-                <div>Deslocamento: Baseado na tabela de Agilidade ({agilidadeTotal})</div>
-              </div>
-            </CardContent>
-          </Card>
 
         </div>
 
@@ -1343,7 +1366,7 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
                       bonusInput.value = '';
                       danoInput.value = '';
                       
-                      console.log('Ataque adicionado:', novosAtaques);
+
                     } else {
                       alert('Preencha todos os campos do ataque!');
                     }

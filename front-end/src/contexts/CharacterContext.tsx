@@ -32,9 +32,9 @@ const createDefaultCharacter = (): Omit<Character, 'id' | 'criadoEm' | 'atualiza
   vigorMax: 6,
   classeAcerto: 1,
   classeDificuldade: 1,
-  determinacao: 0,
+  determinacao: '',
   bonusMaestria: 1,
-  sorte: 0,
+  sorte: '',
   deslocamento: '3m',
   
   // Atributos principais - Base
@@ -170,8 +170,7 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         localStorage.setItem('onePieceTheme', 'dark');
         localStorage.setItem('temaRPG', 'escuro');
       } catch (e) {
-        // não crítico
-        console.warn('CharacterContext: não foi possível salvar tema padrão no localStorage', e);
+        // Theme save error handled silently
       }
     }
   }, []);
@@ -202,7 +201,7 @@ export const CharacterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         const parsed = JSON.parse(savedCharacters);
         setCharacters(parsed);
       } catch (error) {
-        console.error('Erro ao carregar personagens:', error);
+
       }
     }
   }, []);
