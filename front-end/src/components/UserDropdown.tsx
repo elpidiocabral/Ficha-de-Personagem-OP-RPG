@@ -80,10 +80,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
       } catch (error) {
         setUserData({
           id: '123456789',
-          username: 'erro_conexao',
+          username: 'visitante',
           discriminator: '0001',
           avatar: null,
-          global_name: 'Erro de Conexão'
+          global_name: 'Visitante'
         });
       } finally {
         setLoading(false);
