@@ -76,7 +76,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
         <>
           <button
             onClick={() => setIsHakiModalOpen(!isHakiModalOpen)}
-            className="fixed top-40 right-4 z-50 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
+            className="fixed top-40 right-8 z-50 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 animate-pulse"
             title="Gerenciar Haki"
           >
             <span className="text-lg font-bold">覇</span>
@@ -84,7 +84,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ character, onBack, onLo
 
           {/* Modal de Haki */}
           {isHakiModalOpen && (
-            <div className="fixed top-40 right-20 z-50 w-80 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-2xl border border-purple-200 dark:border-purple-700">
+            <div className="fixed top-40 right-24 z-50 w-80 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-2xl border border-purple-200 dark:border-purple-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-purple-700 dark:text-purple-300 flex items-center gap-2">
                   <span className="text-xl">覇</span>

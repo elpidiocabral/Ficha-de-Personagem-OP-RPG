@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacter } from '../contexts/CharacterContext';
 import { Button } from './ui/button';
-import { LogOut, Sun, Moon, User, Settings } from 'lucide-react';
+import { LogOut, Sun, Moon, Settings } from 'lucide-react';
 
 interface UserData {
   id: string;
@@ -9,6 +9,7 @@ interface UserData {
   discriminator: string;
   avatar: string | null;
   global_name: string | null;
+  avatarUrl?: string;
 }
 
 interface UserDropdownProps {
@@ -38,42 +39,25 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
   // Buscar dados do usuário
   useEffect(() => {
     const fetchUserData = async () => {
-      let token = localStorage.getItem('auth_token');
-      
-      if (!token) {
-        const mockData = {
-          id: '123456789',
-          username: 'visitante',
-          discriminator: '0001',
-          avatar: null,
-          global_name: 'Visitante'
-        };
-        setUserData(mockData);
-        setLoading(false);
-        return;
-      }
-
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
         
-        const response = await fetch(`${apiUrl}/auth/me`, {
+        const response = await fetch(`${apiUrl}/profile`, {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+          credentials: 'include'
         });
 
         if (response.ok) {
           const data = await response.json();
           
-          if (data.id && data.username) {
+          if (data.id && data.name) {
             setUserData({
               id: data.id,
-              username: data.username,
-              discriminator: data.discriminator || '0000',
-              avatar: data.avatar,
-              global_name: data.global_name || data.display_name
+              username: data.name,
+              discriminator: '0000',
+              avatar: data.avatar ? data.avatar.split('/').pop()?.split('.')[0] : null,
+              global_name: data.name,
+              avatarUrl: data.avatar
             });
           } else {
             setUserData({
@@ -84,68 +68,34 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
               global_name: 'Dados Incompletos'
             });
           }
-        } else if (response.status === 401) {
-          setUserData({
-            id: '876543212789454321',
-            username: 'token_invalido',
-            discriminator: '0401',
-            avatar: null,
-            global_name: 'Token Inválido (Mock)'
-          });
-        } else if (response.status === 404) {
-          setUserData({
-            id: '876543212789454321',
-            username: 'endpoint_404',
-            discriminator: '0404',
-            avatar: null,
-            global_name: 'Endpoint Não Encontrado'
-          });
         } else {
           setUserData({
-            id: '876543212789454321',
-            username: 'erro_api',
-            discriminator: '0500',
+            id: '123456789',
+            username: 'visitante',
+            discriminator: '0001',
             avatar: null,
-            global_name: `Erro API (${response.status})`
+            global_name: 'Visitante'
           });
         }
       } catch (error) {
-        if (error instanceof TypeError && error.message.includes('fetch')) {
-          setUserData({
-            id: '876543212789454321',
-            username: 'CapitaoLoffy',
-            discriminator: '1234',
-            avatar: 'a_1234567890abcdef1234567890abcdef',
-            global_name: 'Monkey D. Luffy (CORS Error)'
-          });
-        } else if (error instanceof Error && error.message.includes('CORS')) {
-          setUserData({
-            id: '876543212789454321',
-            username: 'cors_error',
-            discriminator: '0999',
-            avatar: null,
-            global_name: 'Erro CORS - Configure Backend'
-          });
-        } else {
-          setUserData({
-            id: '876543212789454321',
-            username: 'dev_offline',
-            discriminator: '0000',
-            avatar: null,
-            global_name: 'Modo Desenvolvimento (Offline)'
-          });
-        }
+        setUserData({
+          id: '123456789',
+          username: 'erro_conexao',
+          discriminator: '0001',
+          avatar: null,
+          global_name: 'Erro de Conexão'
+        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [onLogout]);
+  }, []);
 
   const getAvatarUrl = (userData: UserData) => {
-    if (userData.avatar) {
-      return `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=128`;
+    if (userData.avatarUrl) {
+      return userData.avatarUrl;
     }
     // Avatar padrão do Discord
     const defaultAvatar = (parseInt(userData.discriminator) || 0) % 5;
@@ -169,7 +119,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
+        <div className="w-14 h-14 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse"></div>
       </div>
     );
   }
@@ -203,21 +153,19 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, onSettings }) => 
       {/* Avatar e botão */}
       <Button
         variant="ghost"
-        className="relative h-10 w-10 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="relative h-14 w-14 rounded-full p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
         onClick={() => setIsOpen(!isOpen)}
       >
         <img
           src={getAvatarUrl(userData)}
           alt={`Avatar de ${getDisplayName(userData)}`}
-          className="h-8 w-8 rounded-full object-cover"
+          className="h-12 w-12 rounded-full object-cover"
           onError={(e) => {
             // Fallback para avatar padrão se a imagem falhar
             const defaultAvatar = (parseInt(userData.discriminator) || 0) % 5;
             (e.target as HTMLImageElement).src = `https://cdn.discordapp.com/embed/avatars/${defaultAvatar}.png`;
           }}
         />
-        {/* Indicador online */}
-        <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
       </Button>
 
       {/* Dropdown Menu */}
