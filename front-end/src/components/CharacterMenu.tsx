@@ -115,7 +115,7 @@ const CharacterMenu: React.FC<CharacterMenuProps> = ({ onSelectCharacter, onCrea
           
           {/* Botão para abrir a Ficha Legado (abre em nova aba) */}
           <Button
-            onClick={() => window.open('/legado/index.html', '_blank', 'noopener,noreferrer')}
+            onClick={() => window.open('https://ficha-de-personagem-op-rpg.vercel.app', '_blank', 'noopener,noreferrer')}
             size="lg"
             className="btn-one-piece bg-white text-gray-800 px-8 py-4 text-lg font-semibold shadow-sm"
           >
