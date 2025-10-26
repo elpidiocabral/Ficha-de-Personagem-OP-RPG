@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { CharacterProvider, useCharacter } from './contexts/CharacterContext';
 import CharacterMenu from './components/CharacterMenu';
 import CharacterSheet from './components/CharacterSheet';
 import Login from './components/Login';
 import { Character } from './types';
-import { useAuthBootstrap } from './hooks/useAuthBootstrap';
 import './index.css';
 
 const AppContent: React.FC = () => {
-  useAuthBootstrap();
 
+  //const [cookies, setCookie, removeCookie] = useCookies(["connect.sid"]);
+  const [, , removeCookie] = useCookies(["connect.sid"]);
   const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>('login');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [, setIsAuthenticated] = useState<boolean>(false);
+  //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
 
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
@@ -90,40 +92,19 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    console.log('🚪 Iniciando logout...');
-    console.log('🍪 Cookies antes:', document.cookie);
+    // Remove o cookie usando react-cookie
+    removeCookie('connect.sid', { path: '/' });
+    removeCookie('connect.sid', { path: '/', domain: 'localhost' });
     
-    // Método 1: Limpar todos os cookies encontrados
-    const cookies = document.cookie.split(';');
-    cookies.forEach(cookie => {
-      const name = cookie.split('=')[0].trim();
-      if (name) {
-        console.log('🗑️ Limpando cookie:', name);
-        // Tentar múltiplas combinações
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost`;
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.localhost`;
-      }
-    });
-    
-    // Método 2: Limpar cookies conhecidos do Express Session
-    const knownCookies = ['connect.sid', 'session', 'sessionid'];
-    knownCookies.forEach(name => {
-      console.log('🗑️ Forçando limpeza de:', name);
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost`;
-    });
-    
-    console.log('🍪 Cookies depois:', document.cookie);
-    
+    // Remove manualmente também para garantir
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost';
+      
     setIsAuthenticated(false);
     setCurrentView('login');
     
-    // Aguardar um pouco antes de recarregar
-    setTimeout(() => {
-      console.log('🔄 Recarregando página...');
-      //window.location.reload();
-    }, 500);
+    // Recarrega a página para limpar completamente o estado
+    window.location.reload();
   };
 
   if (isCheckingAuth) {

@@ -48,12 +48,19 @@ app.use(session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+<<<<<<< HEAD
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
     secure: false, // true em produção atrás de HTTPS
     maxAge: 1000 * 60 * 10, // 10 min só pro fluxo de login
   },
+=======
+  cookie: { 
+    secure: false,
+    httpOnly: false, // adicionei essa linha pq um corno safado não deixou o cookie acessível via JS e não fez endpoint de logout.
+  }
+>>>>>>> 1291392b25b2acc8568ad5123ea1cc11a78471d5
 }));
 
 app.use(passport.initialize());
