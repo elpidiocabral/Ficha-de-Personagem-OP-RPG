@@ -9,6 +9,8 @@ import session from 'express-session';
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 const allowedOrigins = [
   'http://localhost:5173', 
   'http://localhost:5174', 
@@ -46,6 +48,6 @@ app.use(express.json({ limit: '10mb' }));
 
 app.use(router);
 
-app.listen(Number(3000), () => {
-  console.log(`Servidor rodando na porta ${3000}`);
+app.listen(Number(PORT), '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb"
 import { z } from "zod";
 
-
 export const AkumanoMiSchema = z.object({
     _id: z.string(),
      nome: z.string(),
