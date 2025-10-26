@@ -11,7 +11,8 @@ const AppContent: React.FC = () => {
 
   const [cookies, setCookie, removeCookie] = useCookies(["connect.sid"]);
   const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>('login');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [, setIsAuthenticated] = useState<boolean>(false);
+  //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
 
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
