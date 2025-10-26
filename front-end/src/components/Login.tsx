@@ -9,7 +9,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleDiscordLogin = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://germa66-backend.onrender.com';
     window.location.href = `${apiUrl}/auth/discord`;
   };
 
