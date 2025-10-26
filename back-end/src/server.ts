@@ -9,6 +9,8 @@ import session from 'express-session';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
@@ -35,9 +37,11 @@ app.use(session({
     : 'default_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
-    secure: false,
-    httpOnly: false, // adicionei essa linha pq um corno safado não deixou o cookie acessível via JS e não fez endpoint de logout.
+  cookie: { // Configurações do cookie da sessão para prod
+    secure: true, 
+    httpOnly: false,
+    sameSite: 'none',   
+    maxAge: 1000 * 60 * 60 * 24 * 7 
   }
 }));
 
