@@ -33,7 +33,10 @@ app.use(session({
     : 'default_secret_key',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { 
+    secure: false,
+    httpOnly: false, // adicionei essa linha pq um corno safado não deixou o cookie acessível via JS e não fez endpoint de logout.
+  }
 }));
 
 app.use(passport.initialize());

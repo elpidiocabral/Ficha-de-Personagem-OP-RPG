@@ -484,8 +484,8 @@ const AttributesTab: React.FC<AttributesTabProps> = ({ character, onUpdate }) =>
   };
 
   // Definir listas de opções
-  const racas = ['Humano', 'Humano-Peixe', 'Tritão', 'Mink', 'Povo do Céu', 'Anão Tontatta'];
-  const potenciais = ['Desastre Sobrenatural', 'Monstro', 'Sobre-Humano', 'Humano', 'Ciborgue'];
+  const racas = ['Humano', 'Homem-Peixe', 'Tritão', 'Meio-Tritão', 'Mink', 'Meio-Mink', 'Povo do Céu', 'Anão Tontatta', 'Gigante', 'Wotan', 'Oni', 'Dosundada'];
+  const potenciais = ['Desastre Sobrenatural', 'Monstro', 'Sobre-Humano', 'Humano', 'Ciborgue', 'Gigante', 'Gigante Maligno', 'Clã D.', 'Outro'];
   const classes = ['Lutador', 'Guerrilheiro', 'Artista Marcial', 'Espadachim', 'Atirador', 'Especialista', 'Assassino', 'Ladrão'];
   const profissoes = ['Capitão', 'Combatente','Imediato', 'Navegador', 'Cozinheiro', 'Médico', 'Arqueólogo', 'Carpinteiro', 'Músico', 'Atirador', 'Marinheiro', 'Caçador de Recompensas', 'Revolucionário', 'Outro'];
 

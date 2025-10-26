@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { CharacterProvider, useCharacter } from './contexts/CharacterContext';
 import CharacterMenu from './components/CharacterMenu';
 import CharacterSheet from './components/CharacterSheet';
 import Login from './components/Login';
 import { Character } from './types';
-import { useAuthBootstrap } from './hooks/useAuthBootstrap';
 import './index.css';
 
 const AppContent: React.FC = () => {
-  useAuthBootstrap();
 
+  const [cookies, setCookie, removeCookie] = useCookies(["connect.sid"]);
   const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>('login');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
@@ -90,16 +90,18 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    document.cookie.split(';').forEach(cookie => {
-      const name = cookie.split('=')[0].trim();
-      if (name) {
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-      }
-    });
+    // Remove o cookie usando react-cookie
+    removeCookie('connect.sid', { path: '/' });
+    removeCookie('connect.sid', { path: '/', domain: 'localhost' });
     
+    // Remove manualmente também para garantir
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost';
+      
     setIsAuthenticated(false);
     setCurrentView('login');
     
+    // Recarrega a página para limpar completamente o estado
     window.location.reload();
   };
 

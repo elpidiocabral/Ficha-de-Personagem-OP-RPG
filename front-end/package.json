@@ -23,6 +23,7 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.290.0",
     "react": "^18.2.0",
+    "react-cookie": "^8.0.1",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7"
