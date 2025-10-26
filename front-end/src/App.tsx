@@ -9,8 +9,7 @@ import './index.css';
 
 const AppContent: React.FC = () => {
 
-  //const [cookies, setCookie, removeCookie] = useCookies(["connect.sid"]);
-  const [, , removeCookie] = useCookies(["connect.sid"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["connect.sid"]);
   const [currentView, setCurrentView] = useState<'login' | 'menu' | 'character'>('login');
   const [, setIsAuthenticated] = useState<boolean>(false);
   //const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
