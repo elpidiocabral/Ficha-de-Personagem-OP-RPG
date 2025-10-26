@@ -90,17 +90,40 @@ const AppContent: React.FC = () => {
   };
 
   const handleLogout = () => {
-    document.cookie.split(';').forEach(cookie => {
+    console.log('🚪 Iniciando logout...');
+    console.log('🍪 Cookies antes:', document.cookie);
+    
+    // Método 1: Limpar todos os cookies encontrados
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
       const name = cookie.split('=')[0].trim();
       if (name) {
+        console.log('🗑️ Limpando cookie:', name);
+        // Tentar múltiplas combinações
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.localhost`;
       }
     });
+    
+    // Método 2: Limpar cookies conhecidos do Express Session
+    const knownCookies = ['connect.sid', 'session', 'sessionid'];
+    knownCookies.forEach(name => {
+      console.log('🗑️ Forçando limpeza de:', name);
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost`;
+    });
+    
+    console.log('🍪 Cookies depois:', document.cookie);
     
     setIsAuthenticated(false);
     setCurrentView('login');
     
-    window.location.reload();
+    // Aguardar um pouco antes de recarregar
+    setTimeout(() => {
+      console.log('🔄 Recarregando página...');
+      //window.location.reload();
+    }, 500);
   };
 
   if (isCheckingAuth) {
