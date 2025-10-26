@@ -8,9 +8,6 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "types": [
-      "node"
-    ]
+    "allowSyntheticDefaultImports": true
   }
 }
